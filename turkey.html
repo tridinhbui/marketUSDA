@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USDA Turkey Weekly Prices</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* turkey-page overrides */
+    #loadBtn   { background: #7c3aed; color: #fff; }
+    #exportBtn { background: #1a9e6b; color: #fff; }
+
+    .metric.fresh   { color: #d97706; }
+    .metric.frozen  { color: #1d6fca; }
+    .metric.weeks   { color: #7c3aed; }
+
+    .val-fresh  { color: #d97706; font-weight: 600; }
+    .val-frozen { color: #1d6fca; font-weight: 600; }
+    .val-null   { color: #9ca3af; }
+
+    .nav-link {
+      display: inline-block;
+      margin-bottom: 6px;
+      font-size: .82rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .nav-link:hover { text-decoration: underline; }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .filter-row label {
+      font-size: .82rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    select {
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      padding: 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: .88rem;
+      cursor: pointer;
+    }
+    select:focus { outline: none; border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <a class="nav-link" href="index.html">← Hog Prices</a>
+      <p class="eyebrow">USDA MARS API · AMS_3647</p>
+      <h1>Weekly Turkey Prices</h1>
+      <p class="sub">Whole Young Hen · 8–16 lb · U.S. Grade A — cents per lb.</p>
+    </header>
+
+    <section class="panel controls">
+      <div class="field">
+        <label for="startDate">Start date</label>
+        <input id="startDate" type="date" value="2023-01-01" />
+      </div>
+      <div class="field">
+        <label for="endDate">End date</label>
+        <input id="endDate" type="date" />
+      </div>
+      <button id="loadBtn" type="button">Load Prices</button>
+      <button id="exportBtn" type="button" disabled>Export Excel</button>
+      <p id="status" class="status">Initializing…</p>
+    </section>
+
+    <!-- condition filter -->
+    <section class="panel" style="padding:12px 20px;">
+      <div class="filter-row">
+        <label for="condFilter">Show condition:</label>
+        <select id="condFilter">
+          <option value="all">Fresh + Frozen</option>
+          <option value="Fresh">Fresh only</option>
+          <option value="Frozen">Frozen only</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="panel metrics">
+      <article>
+        <h2>Latest Fresh (¢/lb)</h2>
+        <p id="latestFresh" class="metric fresh">-</p>
+      </article>
+      <article>
+        <h2>Latest Frozen (¢/lb)</h2>
+        <p id="latestFrozen" class="metric frozen">-</p>
+      </article>
+      <article>
+        <h2>Avg Fresh YTD</h2>
+        <p id="avgFresh" class="metric fresh">-</p>
+      </article>
+      <article>
+        <h2>Total Weeks</h2>
+        <p id="totalWeeks" class="metric weeks">0</p>
+      </article>
+    </section>
+
+    <section class="panel chart-wrap">
+      <h2>Price Trend</h2>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#d97706"></span>Fresh</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1d6fca"></span>Frozen</span>
+      </div>
+      <canvas id="priceChart" width="1200" height="420" aria-label="Weekly turkey price trend"></canvas>
+    </section>
+
+    <section class="panel table-wrap">
+      <h2>Weekly Data</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Week Start</th>
+              <th>Week End</th>
+              <th>Condition</th>
+              <th>Low (¢)</th>
+              <th>High (¢)</th>
+              <th>Wtd Avg (¢)</th>
+              <th>Volume (lbs)</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="turkey_app.js"></script>
+</body>
+</html>

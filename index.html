@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USDA Hog Daily Prices</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+
+  <main class="shell">
+    <header class="hero">
+      <a class="nav-link" href="turkey.html" style="display:inline-block;margin-bottom:6px;font-size:.82rem;color:var(--accent);text-decoration:none;font-weight:500;">→ Turkey Prices</a>
+      <p class="eyebrow">USDA MPR Datamart · LM_HG217</p>
+      <h1>Daily Hog Prices</h1>
+      <p class="sub">Negotiated carcass basis — National, Iowa/Minnesota, Western Cornbelt.</p>
+    </header>
+
+    <section class="panel controls">
+      <div class="field">
+        <label for="startDate">Start date</label>
+        <input id="startDate" type="date" value="2023-01-01" />
+      </div>
+      <div class="field">
+        <label for="endDate">End date</label>
+        <input id="endDate" type="date" />
+      </div>
+      <button id="loadBtn" type="button">Load Prices</button>
+      <button id="exportBtn" type="button" disabled>Export Excel</button>
+      <p id="status" class="status">Initializing…</p>
+    </section>
+
+    <section class="panel metrics">
+      <article>
+        <h2>Latest National</h2>
+        <p id="latestNational" class="metric national">-</p>
+      </article>
+      <article>
+        <h2>Latest Iowa/MN</h2>
+        <p id="latestIowaMn" class="metric iowamn">-</p>
+      </article>
+      <article>
+        <h2>Latest W. Cornbelt</h2>
+        <p id="latestWestern" class="metric western">-</p>
+      </article>
+      <article>
+        <h2>Total Days</h2>
+        <p id="totalDays" class="metric days">0</p>
+      </article>
+    </section>
+
+    <section class="panel chart-wrap">
+      <h2>Price Trend</h2>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#d97706"></span>National</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1d6fca"></span>Iowa/MN</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1a9e6b"></span>Western Cornbelt</span>
+      </div>
+      <canvas id="priceChart" width="1200" height="420" aria-label="Daily price trend"></canvas>
+    </section>
+
+    <section class="panel table-wrap">
+      <h2>Daily Data</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>National</th>
+              <th>Iowa/MN</th>
+              <th>W. Cornbelt</th>
+            </tr>
+          </thead>
+          <tbody id="priceTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

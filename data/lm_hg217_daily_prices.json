@@ -1,0 +1,5096 @@
+{
+  "source": "https://mpr.datamart.ams.usda.gov/ws/report/v1/hogs/LM_HG217",
+  "report": "LM_HG217",
+  "purchaseType": "Negotiated (carcass basis)",
+  "series": [
+    "national",
+    "iowaMn",
+    "western"
+  ],
+  "startDate": "2023-01-01",
+  "endDate": "2026-04-29",
+  "rows": [
+    {
+      "date": "2023-01-03",
+      "national": 74.69,
+      "iowaMn": 75.61,
+      "western": 75.45
+    },
+    {
+      "date": "2023-01-04",
+      "national": 73.47,
+      "iowaMn": 75.2,
+      "western": 75.15
+    },
+    {
+      "date": "2023-01-05",
+      "national": 74.39,
+      "iowaMn": 74.35,
+      "western": 74.55
+    },
+    {
+      "date": "2023-01-06",
+      "national": 74.47,
+      "iowaMn": 76.01,
+      "western": 75.57
+    },
+    {
+      "date": "2023-01-09",
+      "national": 73.88,
+      "iowaMn": 72.32,
+      "western": 73.59
+    },
+    {
+      "date": "2023-01-10",
+      "national": 73.31,
+      "iowaMn": 73.92,
+      "western": 73.91
+    },
+    {
+      "date": "2023-01-11",
+      "national": 72.99,
+      "iowaMn": 74.14,
+      "western": 73.97
+    },
+    {
+      "date": "2023-01-12",
+      "national": 72.6,
+      "iowaMn": 73.77,
+      "western": 73.14
+    },
+    {
+      "date": "2023-01-13",
+      "national": 71.8,
+      "iowaMn": null,
+      "western": 73.38
+    },
+    {
+      "date": "2023-01-16",
+      "national": 71.17,
+      "iowaMn": 72.26,
+      "western": 72.26
+    },
+    {
+      "date": "2023-01-17",
+      "national": 71.39,
+      "iowaMn": 71.9,
+      "western": 71.92
+    },
+    {
+      "date": "2023-01-18",
+      "national": 71.21,
+      "iowaMn": 71.66,
+      "western": 71.62
+    },
+    {
+      "date": "2023-01-19",
+      "national": 70.35,
+      "iowaMn": 69.4,
+      "western": 69.82
+    },
+    {
+      "date": "2023-01-20",
+      "national": 70.9,
+      "iowaMn": 69.92,
+      "western": 69.67
+    },
+    {
+      "date": "2023-01-23",
+      "national": 70.62,
+      "iowaMn": 70.74,
+      "western": 70.56
+    },
+    {
+      "date": "2023-01-24",
+      "national": 71.17,
+      "iowaMn": 72.05,
+      "western": 71.68
+    },
+    {
+      "date": "2023-01-25",
+      "national": 72.27,
+      "iowaMn": 72.74,
+      "western": 72.71
+    },
+    {
+      "date": "2023-01-26",
+      "national": 70.93,
+      "iowaMn": 71.54,
+      "western": 71.26
+    },
+    {
+      "date": "2023-01-27",
+      "national": 70.63,
+      "iowaMn": 71.52,
+      "western": 71.45
+    },
+    {
+      "date": "2023-01-30",
+      "national": 70.08,
+      "iowaMn": 70.49,
+      "western": 70.49
+    },
+    {
+      "date": "2023-01-31",
+      "national": 70.85,
+      "iowaMn": 71.19,
+      "western": 71.07
+    },
+    {
+      "date": "2023-02-01",
+      "national": 73.03,
+      "iowaMn": 74.24,
+      "western": 74.08
+    },
+    {
+      "date": "2023-02-02",
+      "national": 72.93,
+      "iowaMn": 75.04,
+      "western": 74.83
+    },
+    {
+      "date": "2023-02-03",
+      "national": 72.65,
+      "iowaMn": 73.1,
+      "western": 73.09
+    },
+    {
+      "date": "2023-02-06",
+      "national": 72.34,
+      "iowaMn": 74.63,
+      "western": 74.63
+    },
+    {
+      "date": "2023-02-07",
+      "national": 74.07,
+      "iowaMn": 76.07,
+      "western": 75.96
+    },
+    {
+      "date": "2023-02-08",
+      "national": 77.58,
+      "iowaMn": 78.46,
+      "western": 78.41
+    },
+    {
+      "date": "2023-02-09",
+      "national": 77.33,
+      "iowaMn": 78.79,
+      "western": 78.57
+    },
+    {
+      "date": "2023-02-10",
+      "national": 77.05,
+      "iowaMn": 78.47,
+      "western": 78.47
+    },
+    {
+      "date": "2023-02-13",
+      "national": 75.4,
+      "iowaMn": 78.12,
+      "western": 77.78
+    },
+    {
+      "date": "2023-02-14",
+      "national": 76.19,
+      "iowaMn": 78.95,
+      "western": 78.77
+    },
+    {
+      "date": "2023-02-15",
+      "national": 77.36,
+      "iowaMn": 78.86,
+      "western": 78.76
+    },
+    {
+      "date": "2023-02-16",
+      "national": 76.82,
+      "iowaMn": 78.37,
+      "western": 78.11
+    },
+    {
+      "date": "2023-02-17",
+      "national": 76.49,
+      "iowaMn": 77.46,
+      "western": 77.31
+    },
+    {
+      "date": "2023-02-20",
+      "national": 77.97,
+      "iowaMn": 78.43,
+      "western": 78.34
+    },
+    {
+      "date": "2023-02-21",
+      "national": 78.12,
+      "iowaMn": 79.51,
+      "western": 79.53
+    },
+    {
+      "date": "2023-02-22",
+      "national": 77.8,
+      "iowaMn": null,
+      "western": 78.35
+    },
+    {
+      "date": "2023-02-23",
+      "national": 77.53,
+      "iowaMn": 78.55,
+      "western": 78.45
+    },
+    {
+      "date": "2023-02-24",
+      "national": 77.68,
+      "iowaMn": 78.04,
+      "western": 77.72
+    },
+    {
+      "date": "2023-02-27",
+      "national": 78.02,
+      "iowaMn": 78.1,
+      "western": 78.04
+    },
+    {
+      "date": "2023-02-28",
+      "national": 77.91,
+      "iowaMn": 78.51,
+      "western": 78.57
+    },
+    {
+      "date": "2023-03-01",
+      "national": 79.5,
+      "iowaMn": 79.87,
+      "western": 79.85
+    },
+    {
+      "date": "2023-03-02",
+      "national": 78.7,
+      "iowaMn": 79.26,
+      "western": 79.06
+    },
+    {
+      "date": "2023-03-03",
+      "national": 78.04,
+      "iowaMn": 78.56,
+      "western": 78.46
+    },
+    {
+      "date": "2023-03-06",
+      "national": 77.91,
+      "iowaMn": 78.09,
+      "western": 78.09
+    },
+    {
+      "date": "2023-03-07",
+      "national": 78.47,
+      "iowaMn": 78.48,
+      "western": 78.42
+    },
+    {
+      "date": "2023-03-08",
+      "national": 79.02,
+      "iowaMn": 79.69,
+      "western": 79.61
+    },
+    {
+      "date": "2023-03-09",
+      "national": 78.58,
+      "iowaMn": 79.57,
+      "western": 79.43
+    },
+    {
+      "date": "2023-03-10",
+      "national": 78.17,
+      "iowaMn": 78.88,
+      "western": 78.48
+    },
+    {
+      "date": "2023-03-13",
+      "national": 75.4,
+      "iowaMn": 77.21,
+      "western": 77.19
+    },
+    {
+      "date": "2023-03-14",
+      "national": 78.11,
+      "iowaMn": 80.45,
+      "western": 80.38
+    },
+    {
+      "date": "2023-03-15",
+      "national": 79.2,
+      "iowaMn": 79.76,
+      "western": 79.79
+    },
+    {
+      "date": "2023-03-16",
+      "national": 78.83,
+      "iowaMn": 79.36,
+      "western": 79.95
+    },
+    {
+      "date": "2023-03-17",
+      "national": 77.61,
+      "iowaMn": 77.04,
+      "western": 76.76
+    },
+    {
+      "date": "2023-03-20",
+      "national": 76.46,
+      "iowaMn": 77.28,
+      "western": 77.07
+    },
+    {
+      "date": "2023-03-21",
+      "national": 78.01,
+      "iowaMn": 78.52,
+      "western": 78.53
+    },
+    {
+      "date": "2023-03-22",
+      "national": 77.63,
+      "iowaMn": 78.01,
+      "western": 78.06
+    },
+    {
+      "date": "2023-03-23",
+      "national": 76.71,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-03-24",
+      "national": 76.58,
+      "iowaMn": null,
+      "western": 76.09
+    },
+    {
+      "date": "2023-03-27",
+      "national": 75.84,
+      "iowaMn": 75.81,
+      "western": 75.73
+    },
+    {
+      "date": "2023-03-28",
+      "national": 75.64,
+      "iowaMn": 75.99,
+      "western": 75.99
+    },
+    {
+      "date": "2023-03-29",
+      "national": 75.51,
+      "iowaMn": 75.89,
+      "western": 75.72
+    },
+    {
+      "date": "2023-03-30",
+      "national": 75.95,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-03-31",
+      "national": 71.9,
+      "iowaMn": null,
+      "western": 74.34
+    },
+    {
+      "date": "2023-04-03",
+      "national": 72.66,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-04-04",
+      "national": 72.38,
+      "iowaMn": 72.53,
+      "western": 72.67
+    },
+    {
+      "date": "2023-04-05",
+      "national": 71.58,
+      "iowaMn": 72.1,
+      "western": 71.74
+    },
+    {
+      "date": "2023-04-06",
+      "national": 70.86,
+      "iowaMn": 71.62,
+      "western": 71.42
+    },
+    {
+      "date": "2023-04-07",
+      "national": 70.61,
+      "iowaMn": 71.39,
+      "western": 71.39
+    },
+    {
+      "date": "2023-04-10",
+      "national": 70.92,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-04-11",
+      "national": 70.59,
+      "iowaMn": 71.94,
+      "western": 71.92
+    },
+    {
+      "date": "2023-04-12",
+      "national": 70.54,
+      "iowaMn": 70.79,
+      "western": 70.98
+    },
+    {
+      "date": "2023-04-13",
+      "national": 69.26,
+      "iowaMn": 71.85,
+      "western": 70.67
+    },
+    {
+      "date": "2023-04-14",
+      "national": 68.96,
+      "iowaMn": 70.54,
+      "western": 70.16
+    },
+    {
+      "date": "2023-04-17",
+      "national": 68.63,
+      "iowaMn": 68.55,
+      "western": 68.55
+    },
+    {
+      "date": "2023-04-18",
+      "national": 67.98,
+      "iowaMn": 68.02,
+      "western": 67.96
+    },
+    {
+      "date": "2023-04-19",
+      "national": 67.67,
+      "iowaMn": 68.44,
+      "western": 68.41
+    },
+    {
+      "date": "2023-04-20",
+      "national": 66.92,
+      "iowaMn": 68.49,
+      "western": 68.47
+    },
+    {
+      "date": "2023-04-21",
+      "national": 66.02,
+      "iowaMn": null,
+      "western": 68.86
+    },
+    {
+      "date": "2023-04-24",
+      "national": 65.93,
+      "iowaMn": 67.44,
+      "western": 68.14
+    },
+    {
+      "date": "2023-04-25",
+      "national": 67.08,
+      "iowaMn": 68.97,
+      "western": 68.99
+    },
+    {
+      "date": "2023-04-26",
+      "national": 69.59,
+      "iowaMn": 71.58,
+      "western": 71.58
+    },
+    {
+      "date": "2023-04-27",
+      "national": 72.05,
+      "iowaMn": 74.73,
+      "western": 74.61
+    },
+    {
+      "date": "2023-04-28",
+      "national": 71.67,
+      "iowaMn": 75.14,
+      "western": 75.11
+    },
+    {
+      "date": "2023-05-01",
+      "national": 72.85,
+      "iowaMn": 75.59,
+      "western": 75.41
+    },
+    {
+      "date": "2023-05-02",
+      "national": 73.89,
+      "iowaMn": 75.25,
+      "western": 75.21
+    },
+    {
+      "date": "2023-05-03",
+      "national": 73.33,
+      "iowaMn": 75.63,
+      "western": 75.52
+    },
+    {
+      "date": "2023-05-04",
+      "national": 71.99,
+      "iowaMn": 74.62,
+      "western": 73.81
+    },
+    {
+      "date": "2023-05-05",
+      "national": 70.89,
+      "iowaMn": 74.38,
+      "western": 74.31
+    },
+    {
+      "date": "2023-05-08",
+      "national": 72.8,
+      "iowaMn": 74.92,
+      "western": 74.92
+    },
+    {
+      "date": "2023-05-09",
+      "national": 73.59,
+      "iowaMn": 77.1,
+      "western": 76.97
+    },
+    {
+      "date": "2023-05-10",
+      "national": 77.12,
+      "iowaMn": 78.54,
+      "western": 78.44
+    },
+    {
+      "date": "2023-05-11",
+      "national": 77.31,
+      "iowaMn": 80.37,
+      "western": 80.16
+    },
+    {
+      "date": "2023-05-12",
+      "national": 74.36,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-05-15",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-05-16",
+      "national": 82.79,
+      "iowaMn": 84.94,
+      "western": 84.8
+    },
+    {
+      "date": "2023-05-17",
+      "national": 84.74,
+      "iowaMn": 87.49,
+      "western": 87.39
+    },
+    {
+      "date": "2023-05-18",
+      "national": 78.98,
+      "iowaMn": 87.31,
+      "western": 86.86
+    },
+    {
+      "date": "2023-05-19",
+      "national": 80.43,
+      "iowaMn": 87.68,
+      "western": 87.68
+    },
+    {
+      "date": "2023-05-22",
+      "national": 76.52,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-05-23",
+      "national": 83.83,
+      "iowaMn": 87.43,
+      "western": 87.38
+    },
+    {
+      "date": "2023-05-24",
+      "national": 82.19,
+      "iowaMn": 86.88,
+      "western": 86.88
+    },
+    {
+      "date": "2023-05-25",
+      "national": 79.46,
+      "iowaMn": 83.62,
+      "western": 83.13
+    },
+    {
+      "date": "2023-05-26",
+      "national": 75.69,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-05-30",
+      "national": 75.15,
+      "iowaMn": null,
+      "western": 79.8
+    },
+    {
+      "date": "2023-05-31",
+      "national": 86.62,
+      "iowaMn": 88.79,
+      "western": 88.45
+    },
+    {
+      "date": "2023-06-01",
+      "national": 86.58,
+      "iowaMn": 88.48,
+      "western": 87.92
+    },
+    {
+      "date": "2023-06-02",
+      "national": 81.76,
+      "iowaMn": null,
+      "western": 86.53
+    },
+    {
+      "date": "2023-06-05",
+      "national": 85.29,
+      "iowaMn": 90.03,
+      "western": 89.51
+    },
+    {
+      "date": "2023-06-06",
+      "national": 92.13,
+      "iowaMn": 93.58,
+      "western": 93.55
+    },
+    {
+      "date": "2023-06-07",
+      "national": 93.11,
+      "iowaMn": 93.94,
+      "western": 93.52
+    },
+    {
+      "date": "2023-06-08",
+      "national": 94.12,
+      "iowaMn": 94.35,
+      "western": 94.36
+    },
+    {
+      "date": "2023-06-09",
+      "national": 85.52,
+      "iowaMn": 88.94,
+      "western": 88.94
+    },
+    {
+      "date": "2023-06-12",
+      "national": 93.24,
+      "iowaMn": 93.67,
+      "western": 93.67
+    },
+    {
+      "date": "2023-06-13",
+      "national": 94.09,
+      "iowaMn": 94.38,
+      "western": 94.37
+    },
+    {
+      "date": "2023-06-14",
+      "national": 94.26,
+      "iowaMn": 94.55,
+      "western": 94.55
+    },
+    {
+      "date": "2023-06-15",
+      "national": 93.32,
+      "iowaMn": 94.75,
+      "western": 93.78
+    },
+    {
+      "date": "2023-06-16",
+      "national": 85.17,
+      "iowaMn": 87.66,
+      "western": 87.51
+    },
+    {
+      "date": "2023-06-19",
+      "national": 94.83,
+      "iowaMn": 95.35,
+      "western": 95.35
+    },
+    {
+      "date": "2023-06-20",
+      "national": 95.56,
+      "iowaMn": 95.78,
+      "western": 95.76
+    },
+    {
+      "date": "2023-06-21",
+      "national": 96.34,
+      "iowaMn": 96.97,
+      "western": 96.93
+    },
+    {
+      "date": "2023-06-22",
+      "national": 94.79,
+      "iowaMn": 95.96,
+      "western": 95.28
+    },
+    {
+      "date": "2023-06-23",
+      "national": 93.04,
+      "iowaMn": 94.57,
+      "western": 95.19
+    },
+    {
+      "date": "2023-06-26",
+      "national": 92.97,
+      "iowaMn": 94.65,
+      "western": 93.13
+    },
+    {
+      "date": "2023-06-27",
+      "national": 94.51,
+      "iowaMn": 95.39,
+      "western": 95.35
+    },
+    {
+      "date": "2023-06-28",
+      "national": 94.21,
+      "iowaMn": 94.93,
+      "western": 94.91
+    },
+    {
+      "date": "2023-06-29",
+      "national": 94.0,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-06-30",
+      "national": 90.96,
+      "iowaMn": 92.52,
+      "western": 92.52
+    },
+    {
+      "date": "2023-07-03",
+      "national": 96.66,
+      "iowaMn": 97.26,
+      "western": 97.24
+    },
+    {
+      "date": "2023-07-05",
+      "national": 98.32,
+      "iowaMn": 98.32,
+      "western": 98.31
+    },
+    {
+      "date": "2023-07-06",
+      "national": 100.2,
+      "iowaMn": 100.61,
+      "western": 100.4
+    },
+    {
+      "date": "2023-07-07",
+      "national": 97.25,
+      "iowaMn": 97.56,
+      "western": 97.71
+    },
+    {
+      "date": "2023-07-10",
+      "national": 97.89,
+      "iowaMn": 97.54,
+      "western": 98.57
+    },
+    {
+      "date": "2023-07-11",
+      "national": 100.39,
+      "iowaMn": 100.59,
+      "western": 100.68
+    },
+    {
+      "date": "2023-07-12",
+      "national": 100.76,
+      "iowaMn": 100.51,
+      "western": 101.03
+    },
+    {
+      "date": "2023-07-13",
+      "national": 101.54,
+      "iowaMn": 102.08,
+      "western": 101.92
+    },
+    {
+      "date": "2023-07-14",
+      "national": 99.91,
+      "iowaMn": null,
+      "western": 100.91
+    },
+    {
+      "date": "2023-07-17",
+      "national": 102.0,
+      "iowaMn": 103.06,
+      "western": 102.71
+    },
+    {
+      "date": "2023-07-18",
+      "national": 104.25,
+      "iowaMn": 104.46,
+      "western": 104.46
+    },
+    {
+      "date": "2023-07-19",
+      "national": 104.48,
+      "iowaMn": 105.14,
+      "western": 105.07
+    },
+    {
+      "date": "2023-07-20",
+      "national": 104.29,
+      "iowaMn": 105.1,
+      "western": 104.58
+    },
+    {
+      "date": "2023-07-21",
+      "national": 101.03,
+      "iowaMn": 103.96,
+      "western": 103.83
+    },
+    {
+      "date": "2023-07-24",
+      "national": 104.82,
+      "iowaMn": 105.59,
+      "western": 105.59
+    },
+    {
+      "date": "2023-07-25",
+      "national": 105.73,
+      "iowaMn": 106.03,
+      "western": 105.91
+    },
+    {
+      "date": "2023-07-26",
+      "national": 106.31,
+      "iowaMn": 106.56,
+      "western": 106.53
+    },
+    {
+      "date": "2023-07-27",
+      "national": 103.53,
+      "iowaMn": 105.23,
+      "western": 105.17
+    },
+    {
+      "date": "2023-07-28",
+      "national": 100.47,
+      "iowaMn": 103.44,
+      "western": 103.44
+    },
+    {
+      "date": "2023-07-31",
+      "national": 101.71,
+      "iowaMn": 104.22,
+      "western": 103.48
+    },
+    {
+      "date": "2023-08-01",
+      "national": 104.0,
+      "iowaMn": 104.26,
+      "western": 104.21
+    },
+    {
+      "date": "2023-08-02",
+      "national": 101.87,
+      "iowaMn": 102.96,
+      "western": 102.51
+    },
+    {
+      "date": "2023-08-03",
+      "national": 100.55,
+      "iowaMn": 99.77,
+      "western": 100.16
+    },
+    {
+      "date": "2023-08-04",
+      "national": 99.67,
+      "iowaMn": null,
+      "western": 101.47
+    },
+    {
+      "date": "2023-08-07",
+      "national": 97.42,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-08-08",
+      "national": 99.25,
+      "iowaMn": 98.88,
+      "western": 98.82
+    },
+    {
+      "date": "2023-08-09",
+      "national": 99.56,
+      "iowaMn": 100.83,
+      "western": 99.68
+    },
+    {
+      "date": "2023-08-10",
+      "national": 95.98,
+      "iowaMn": 94.65,
+      "western": 95.72
+    },
+    {
+      "date": "2023-08-11",
+      "national": 95.95,
+      "iowaMn": 96.02,
+      "western": 95.76
+    },
+    {
+      "date": "2023-08-14",
+      "national": 96.15,
+      "iowaMn": 96.33,
+      "western": 96.2
+    },
+    {
+      "date": "2023-08-15",
+      "national": 95.17,
+      "iowaMn": 95.03,
+      "western": 94.93
+    },
+    {
+      "date": "2023-08-16",
+      "national": 93.45,
+      "iowaMn": 93.52,
+      "western": 93.65
+    },
+    {
+      "date": "2023-08-17",
+      "national": 93.01,
+      "iowaMn": null,
+      "western": 92.34
+    },
+    {
+      "date": "2023-08-18",
+      "national": 93.52,
+      "iowaMn": 92.6,
+      "western": 92.33
+    },
+    {
+      "date": "2023-08-21",
+      "national": 91.65,
+      "iowaMn": null,
+      "western": 94.39
+    },
+    {
+      "date": "2023-08-22",
+      "national": 89.75,
+      "iowaMn": 90.26,
+      "western": 89.91
+    },
+    {
+      "date": "2023-08-23",
+      "national": 88.42,
+      "iowaMn": 89.5,
+      "western": 88.3
+    },
+    {
+      "date": "2023-08-24",
+      "national": 87.65,
+      "iowaMn": 87.73,
+      "western": 86.47
+    },
+    {
+      "date": "2023-08-25",
+      "national": 84.62,
+      "iowaMn": 85.4,
+      "western": 84.68
+    },
+    {
+      "date": "2023-08-28",
+      "national": 86.92,
+      "iowaMn": 86.39,
+      "western": 86.03
+    },
+    {
+      "date": "2023-08-29",
+      "national": 81.41,
+      "iowaMn": 82.01,
+      "western": 82.01
+    },
+    {
+      "date": "2023-08-30",
+      "national": 80.55,
+      "iowaMn": 81.55,
+      "western": 80.33
+    },
+    {
+      "date": "2023-08-31",
+      "national": 80.13,
+      "iowaMn": 81.03,
+      "western": 81.03
+    },
+    {
+      "date": "2023-09-01",
+      "national": 80.06,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-09-05",
+      "national": 78.19,
+      "iowaMn": null,
+      "western": 78.49
+    },
+    {
+      "date": "2023-09-06",
+      "national": 79.13,
+      "iowaMn": 80.18,
+      "western": 79.22
+    },
+    {
+      "date": "2023-09-07",
+      "national": 80.26,
+      "iowaMn": 80.6,
+      "western": 80.1
+    },
+    {
+      "date": "2023-09-08",
+      "national": 79.14,
+      "iowaMn": 79.54,
+      "western": 79.45
+    },
+    {
+      "date": "2023-09-11",
+      "national": 79.17,
+      "iowaMn": 79.63,
+      "western": 79.63
+    },
+    {
+      "date": "2023-09-12",
+      "national": 78.56,
+      "iowaMn": 78.86,
+      "western": 78.83
+    },
+    {
+      "date": "2023-09-13",
+      "national": 79.09,
+      "iowaMn": 79.37,
+      "western": 79.29
+    },
+    {
+      "date": "2023-09-14",
+      "national": 78.44,
+      "iowaMn": 79.12,
+      "western": 78.65
+    },
+    {
+      "date": "2023-09-15",
+      "national": 77.53,
+      "iowaMn": null,
+      "western": 79.27
+    },
+    {
+      "date": "2023-09-18",
+      "national": 77.86,
+      "iowaMn": 78.2,
+      "western": 78.14
+    },
+    {
+      "date": "2023-09-19",
+      "national": 77.81,
+      "iowaMn": 78.51,
+      "western": 78.4
+    },
+    {
+      "date": "2023-09-20",
+      "national": 78.8,
+      "iowaMn": 79.27,
+      "western": 79.03
+    },
+    {
+      "date": "2023-09-21",
+      "national": 78.09,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-09-22",
+      "national": 77.59,
+      "iowaMn": 78.73,
+      "western": 78.14
+    },
+    {
+      "date": "2023-09-25",
+      "national": 77.54,
+      "iowaMn": 77.85,
+      "western": 77.82
+    },
+    {
+      "date": "2023-09-26",
+      "national": 76.99,
+      "iowaMn": 77.63,
+      "western": 77.17
+    },
+    {
+      "date": "2023-09-27",
+      "national": 76.62,
+      "iowaMn": 76.46,
+      "western": 76.14
+    },
+    {
+      "date": "2023-09-28",
+      "national": 74.76,
+      "iowaMn": 75.71,
+      "western": 75.55
+    },
+    {
+      "date": "2023-09-29",
+      "national": 73.56,
+      "iowaMn": 74.95,
+      "western": 72.19
+    },
+    {
+      "date": "2023-10-02",
+      "national": 74.42,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-10-03",
+      "national": 71.24,
+      "iowaMn": 71.85,
+      "western": 71.43
+    },
+    {
+      "date": "2023-10-04",
+      "national": 71.77,
+      "iowaMn": 72.24,
+      "western": 71.71
+    },
+    {
+      "date": "2023-10-05",
+      "national": 70.29,
+      "iowaMn": 70.85,
+      "western": 70.85
+    },
+    {
+      "date": "2023-10-06",
+      "national": 73.92,
+      "iowaMn": 75.28,
+      "western": 74.52
+    },
+    {
+      "date": "2023-10-09",
+      "national": 74.81,
+      "iowaMn": 75.04,
+      "western": 74.86
+    },
+    {
+      "date": "2023-10-10",
+      "national": 73.96,
+      "iowaMn": 74.75,
+      "western": 73.98
+    },
+    {
+      "date": "2023-10-11",
+      "national": 74.3,
+      "iowaMn": 74.83,
+      "western": 74.48
+    },
+    {
+      "date": "2023-10-12",
+      "national": 73.61,
+      "iowaMn": 73.76,
+      "western": 73.63
+    },
+    {
+      "date": "2023-10-13",
+      "national": 72.07,
+      "iowaMn": 72.85,
+      "western": 72.85
+    },
+    {
+      "date": "2023-10-16",
+      "national": 74.82,
+      "iowaMn": 72.96,
+      "western": 72.96
+    },
+    {
+      "date": "2023-10-17",
+      "national": 73.29,
+      "iowaMn": 73.47,
+      "western": 72.74
+    },
+    {
+      "date": "2023-10-18",
+      "national": 73.75,
+      "iowaMn": 74.26,
+      "western": 74.01
+    },
+    {
+      "date": "2023-10-19",
+      "national": 73.16,
+      "iowaMn": 73.78,
+      "western": 73.41
+    },
+    {
+      "date": "2023-10-20",
+      "national": 69.57,
+      "iowaMn": 70.01,
+      "western": 69.79
+    },
+    {
+      "date": "2023-10-23",
+      "national": 73.42,
+      "iowaMn": 71.74,
+      "western": 71.05
+    },
+    {
+      "date": "2023-10-24",
+      "national": 72.58,
+      "iowaMn": 72.87,
+      "western": 72.69
+    },
+    {
+      "date": "2023-10-25",
+      "national": 71.9,
+      "iowaMn": 73.53,
+      "western": 72.12
+    },
+    {
+      "date": "2023-10-26",
+      "national": 70.7,
+      "iowaMn": 71.76,
+      "western": 70.86
+    },
+    {
+      "date": "2023-10-27",
+      "national": 70.07,
+      "iowaMn": 70.62,
+      "western": 70.58
+    },
+    {
+      "date": "2023-10-30",
+      "national": 70.73,
+      "iowaMn": 68.72,
+      "western": 68.72
+    },
+    {
+      "date": "2023-10-31",
+      "national": 69.6,
+      "iowaMn": 70.03,
+      "western": 69.66
+    },
+    {
+      "date": "2023-11-01",
+      "national": 68.82,
+      "iowaMn": 68.02,
+      "western": 67.94
+    },
+    {
+      "date": "2023-11-02",
+      "national": 68.49,
+      "iowaMn": 68.87,
+      "western": 68.25
+    },
+    {
+      "date": "2023-11-03",
+      "national": 67.18,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-11-06",
+      "national": 68.65,
+      "iowaMn": 67.45,
+      "western": 67.47
+    },
+    {
+      "date": "2023-11-07",
+      "national": 68.07,
+      "iowaMn": 67.71,
+      "western": 67.47
+    },
+    {
+      "date": "2023-11-08",
+      "national": 68.27,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-11-09",
+      "national": 67.01,
+      "iowaMn": null,
+      "western": 65.03
+    },
+    {
+      "date": "2023-11-10",
+      "national": 65.95,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-11-13",
+      "national": 66.09,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-11-14",
+      "national": 63.81,
+      "iowaMn": 64.18,
+      "western": 63.75
+    },
+    {
+      "date": "2023-11-15",
+      "national": 63.08,
+      "iowaMn": 62.2,
+      "western": 61.98
+    },
+    {
+      "date": "2023-11-16",
+      "national": 63.99,
+      "iowaMn": 63.9,
+      "western": 63.86
+    },
+    {
+      "date": "2023-11-17",
+      "national": 61.8,
+      "iowaMn": 61.6,
+      "western": 61.2
+    },
+    {
+      "date": "2023-11-20",
+      "national": 67.22,
+      "iowaMn": 61.41,
+      "western": 61.24
+    },
+    {
+      "date": "2023-11-21",
+      "national": 61.03,
+      "iowaMn": 61.1,
+      "western": 60.98
+    },
+    {
+      "date": "2023-11-22",
+      "national": 59.19,
+      "iowaMn": 58.82,
+      "western": 58.87
+    },
+    {
+      "date": "2023-11-24",
+      "national": 57.49,
+      "iowaMn": null,
+      "western": 56.68
+    },
+    {
+      "date": "2023-11-27",
+      "national": 58.85,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-11-28",
+      "national": 58.43,
+      "iowaMn": 58.18,
+      "western": 57.98
+    },
+    {
+      "date": "2023-11-29",
+      "national": 58.06,
+      "iowaMn": 57.47,
+      "western": 57.15
+    },
+    {
+      "date": "2023-11-30",
+      "national": 58.6,
+      "iowaMn": 56.93,
+      "western": 56.76
+    },
+    {
+      "date": "2023-12-01",
+      "national": 55.6,
+      "iowaMn": 53.94,
+      "western": 53.97
+    },
+    {
+      "date": "2023-12-04",
+      "national": 55.53,
+      "iowaMn": 55.38,
+      "western": 55.1
+    },
+    {
+      "date": "2023-12-05",
+      "national": 53.83,
+      "iowaMn": 53.88,
+      "western": 53.7
+    },
+    {
+      "date": "2023-12-06",
+      "national": 54.32,
+      "iowaMn": 52.19,
+      "western": 52.19
+    },
+    {
+      "date": "2023-12-07",
+      "national": 51.71,
+      "iowaMn": 53.14,
+      "western": 51.71
+    },
+    {
+      "date": "2023-12-08",
+      "national": 51.88,
+      "iowaMn": 51.86,
+      "western": 51.52
+    },
+    {
+      "date": "2023-12-11",
+      "national": 49.66,
+      "iowaMn": 49.64,
+      "western": 49.64
+    },
+    {
+      "date": "2023-12-12",
+      "national": 48.77,
+      "iowaMn": 48.91,
+      "western": 48.66
+    },
+    {
+      "date": "2023-12-13",
+      "national": 49.65,
+      "iowaMn": 49.6,
+      "western": 49.6
+    },
+    {
+      "date": "2023-12-14",
+      "national": 49.21,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-12-15",
+      "national": 47.99,
+      "iowaMn": 47.94,
+      "western": 47.95
+    },
+    {
+      "date": "2023-12-18",
+      "national": 48.39,
+      "iowaMn": 48.66,
+      "western": 48.06
+    },
+    {
+      "date": "2023-12-19",
+      "national": 46.97,
+      "iowaMn": 49.01,
+      "western": 46.97
+    },
+    {
+      "date": "2023-12-20",
+      "national": 47.82,
+      "iowaMn": 47.86,
+      "western": 47.89
+    },
+    {
+      "date": "2023-12-21",
+      "national": 47.96,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2023-12-22",
+      "national": 47.76,
+      "iowaMn": 47.93,
+      "western": 47.93
+    },
+    {
+      "date": "2023-12-26",
+      "national": 46.55,
+      "iowaMn": 47.67,
+      "western": 46.91
+    },
+    {
+      "date": "2023-12-27",
+      "national": 46.26,
+      "iowaMn": null,
+      "western": 47.02
+    },
+    {
+      "date": "2023-12-28",
+      "national": 46.36,
+      "iowaMn": 47.69,
+      "western": 46.36
+    },
+    {
+      "date": "2023-12-29",
+      "national": 43.57,
+      "iowaMn": 45.32,
+      "western": 43.89
+    },
+    {
+      "date": "2024-01-02",
+      "national": 45.13,
+      "iowaMn": 46.03,
+      "western": 45.94
+    },
+    {
+      "date": "2024-01-03",
+      "national": 44.88,
+      "iowaMn": 46.0,
+      "western": 45.99
+    },
+    {
+      "date": "2024-01-04",
+      "national": 45.31,
+      "iowaMn": 45.6,
+      "western": 45.29
+    },
+    {
+      "date": "2024-01-05",
+      "national": 44.56,
+      "iowaMn": 44.96,
+      "western": 44.85
+    },
+    {
+      "date": "2024-01-08",
+      "national": 44.9,
+      "iowaMn": 44.88,
+      "western": 44.88
+    },
+    {
+      "date": "2024-01-09",
+      "national": 45.31,
+      "iowaMn": 46.13,
+      "western": 45.81
+    },
+    {
+      "date": "2024-01-10",
+      "national": 45.27,
+      "iowaMn": 45.74,
+      "western": 45.67
+    },
+    {
+      "date": "2024-01-11",
+      "national": 45.49,
+      "iowaMn": 45.35,
+      "western": 45.49
+    },
+    {
+      "date": "2024-01-12",
+      "national": 44.96,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-01-15",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-01-16",
+      "national": 45.9,
+      "iowaMn": 45.97,
+      "western": 45.94
+    },
+    {
+      "date": "2024-01-17",
+      "national": 47.07,
+      "iowaMn": 47.14,
+      "western": 47.23
+    },
+    {
+      "date": "2024-01-18",
+      "national": 48.04,
+      "iowaMn": 48.04,
+      "western": 48.04
+    },
+    {
+      "date": "2024-01-19",
+      "national": 46.62,
+      "iowaMn": 47.11,
+      "western": 46.62
+    },
+    {
+      "date": "2024-01-22",
+      "national": 46.53,
+      "iowaMn": 46.22,
+      "western": 46.53
+    },
+    {
+      "date": "2024-01-23",
+      "national": 47.34,
+      "iowaMn": 47.12,
+      "western": 47.12
+    },
+    {
+      "date": "2024-01-24",
+      "national": 53.1,
+      "iowaMn": 54.01,
+      "western": 54.01
+    },
+    {
+      "date": "2024-01-25",
+      "national": 54.63,
+      "iowaMn": 55.26,
+      "western": 54.63
+    },
+    {
+      "date": "2024-01-26",
+      "national": 56.27,
+      "iowaMn": 57.23,
+      "western": 57.16
+    },
+    {
+      "date": "2024-01-29",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-01-30",
+      "national": 59.4,
+      "iowaMn": 60.96,
+      "western": 60.8
+    },
+    {
+      "date": "2024-01-31",
+      "national": 62.56,
+      "iowaMn": 62.8,
+      "western": 62.91
+    },
+    {
+      "date": "2024-02-01",
+      "national": 63.35,
+      "iowaMn": 63.45,
+      "western": 63.1
+    },
+    {
+      "date": "2024-02-02",
+      "national": 61.76,
+      "iowaMn": 63.4,
+      "western": 63.4
+    },
+    {
+      "date": "2024-02-05",
+      "national": 60.87,
+      "iowaMn": 60.97,
+      "western": 60.68
+    },
+    {
+      "date": "2024-02-06",
+      "national": 65.45,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-02-07",
+      "national": 66.37,
+      "iowaMn": null,
+      "western": 67.02
+    },
+    {
+      "date": "2024-02-08",
+      "national": 65.06,
+      "iowaMn": 64.39,
+      "western": 65.06
+    },
+    {
+      "date": "2024-02-09",
+      "national": 63.79,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-02-12",
+      "national": 65.21,
+      "iowaMn": 65.49,
+      "western": 65.37
+    },
+    {
+      "date": "2024-02-13",
+      "national": 68.19,
+      "iowaMn": 68.64,
+      "western": 68.45
+    },
+    {
+      "date": "2024-02-14",
+      "national": 68.21,
+      "iowaMn": 68.51,
+      "western": 68.49
+    },
+    {
+      "date": "2024-02-15",
+      "national": 67.34,
+      "iowaMn": 68.53,
+      "western": 68.08
+    },
+    {
+      "date": "2024-02-16",
+      "national": 69.45,
+      "iowaMn": 69.58,
+      "western": 69.58
+    },
+    {
+      "date": "2024-02-19",
+      "national": 69.43,
+      "iowaMn": 69.75,
+      "western": 69.58
+    },
+    {
+      "date": "2024-02-20",
+      "national": 70.25,
+      "iowaMn": 69.87,
+      "western": 69.48
+    },
+    {
+      "date": "2024-02-21",
+      "national": 72.62,
+      "iowaMn": 72.81,
+      "western": 72.83
+    },
+    {
+      "date": "2024-02-22",
+      "national": 73.2,
+      "iowaMn": 73.74,
+      "western": 73.62
+    },
+    {
+      "date": "2024-02-23",
+      "national": 71.49,
+      "iowaMn": 71.84,
+      "western": 71.78
+    },
+    {
+      "date": "2024-02-26",
+      "national": 70.91,
+      "iowaMn": 72.05,
+      "western": 70.91
+    },
+    {
+      "date": "2024-02-27",
+      "national": 72.7,
+      "iowaMn": 72.68,
+      "western": 72.7
+    },
+    {
+      "date": "2024-02-28",
+      "national": 74.47,
+      "iowaMn": null,
+      "western": 74.77
+    },
+    {
+      "date": "2024-02-29",
+      "national": 75.49,
+      "iowaMn": 75.49,
+      "western": 75.49
+    },
+    {
+      "date": "2024-03-01",
+      "national": 72.67,
+      "iowaMn": 74.16,
+      "western": 74.07
+    },
+    {
+      "date": "2024-03-04",
+      "national": 74.16,
+      "iowaMn": 74.53,
+      "western": 74.42
+    },
+    {
+      "date": "2024-03-05",
+      "national": 74.63,
+      "iowaMn": 74.91,
+      "western": 74.56
+    },
+    {
+      "date": "2024-03-06",
+      "national": 76.22,
+      "iowaMn": 76.79,
+      "western": 76.4
+    },
+    {
+      "date": "2024-03-07",
+      "national": 77.17,
+      "iowaMn": 77.42,
+      "western": 77.17
+    },
+    {
+      "date": "2024-03-08",
+      "national": 76.18,
+      "iowaMn": 76.35,
+      "western": 76.25
+    },
+    {
+      "date": "2024-03-11",
+      "national": 76.16,
+      "iowaMn": 76.16,
+      "western": 76.16
+    },
+    {
+      "date": "2024-03-12",
+      "national": 77.35,
+      "iowaMn": 77.84,
+      "western": 77.35
+    },
+    {
+      "date": "2024-03-13",
+      "national": 78.43,
+      "iowaMn": 78.58,
+      "western": 78.49
+    },
+    {
+      "date": "2024-03-14",
+      "national": 79.7,
+      "iowaMn": 79.77,
+      "western": 79.71
+    },
+    {
+      "date": "2024-03-15",
+      "national": 79.94,
+      "iowaMn": 80.7,
+      "western": 80.32
+    },
+    {
+      "date": "2024-03-18",
+      "national": 79.66,
+      "iowaMn": 79.88,
+      "western": 79.67
+    },
+    {
+      "date": "2024-03-19",
+      "national": 80.78,
+      "iowaMn": 80.8,
+      "western": 80.55
+    },
+    {
+      "date": "2024-03-20",
+      "national": 81.24,
+      "iowaMn": null,
+      "western": 81.14
+    },
+    {
+      "date": "2024-03-21",
+      "national": 80.3,
+      "iowaMn": 80.86,
+      "western": 80.32
+    },
+    {
+      "date": "2024-03-22",
+      "national": 79.3,
+      "iowaMn": 79.72,
+      "western": 79.72
+    },
+    {
+      "date": "2024-03-25",
+      "national": 81.17,
+      "iowaMn": 81.17,
+      "western": 81.17
+    },
+    {
+      "date": "2024-03-26",
+      "national": 80.63,
+      "iowaMn": 80.62,
+      "western": 79.59
+    },
+    {
+      "date": "2024-03-27",
+      "national": 79.26,
+      "iowaMn": 79.86,
+      "western": 79.21
+    },
+    {
+      "date": "2024-03-28",
+      "national": 81.47,
+      "iowaMn": 81.27,
+      "western": 80.96
+    },
+    {
+      "date": "2024-03-29",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-04-01",
+      "national": 80.16,
+      "iowaMn": 80.18,
+      "western": 80.18
+    },
+    {
+      "date": "2024-04-02",
+      "national": 84.71,
+      "iowaMn": 84.5,
+      "western": 84.71
+    },
+    {
+      "date": "2024-04-03",
+      "national": 86.04,
+      "iowaMn": 86.4,
+      "western": 86.43
+    },
+    {
+      "date": "2024-04-04",
+      "national": 87.23,
+      "iowaMn": 88.6,
+      "western": 88.09
+    },
+    {
+      "date": "2024-04-05",
+      "national": 86.7,
+      "iowaMn": 87.91,
+      "western": 87.53
+    },
+    {
+      "date": "2024-04-08",
+      "national": 86.32,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-04-09",
+      "national": 93.77,
+      "iowaMn": 93.2,
+      "western": 93.98
+    },
+    {
+      "date": "2024-04-10",
+      "national": 90.63,
+      "iowaMn": 91.58,
+      "western": 90.7
+    },
+    {
+      "date": "2024-04-11",
+      "national": 87.05,
+      "iowaMn": 91.48,
+      "western": 90.05
+    },
+    {
+      "date": "2024-04-12",
+      "national": 86.6,
+      "iowaMn": 88.16,
+      "western": 88.16
+    },
+    {
+      "date": "2024-04-15",
+      "national": 85.71,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-04-16",
+      "national": 89.04,
+      "iowaMn": 90.9,
+      "western": 90.36
+    },
+    {
+      "date": "2024-04-17",
+      "national": 89.13,
+      "iowaMn": 90.15,
+      "western": 89.35
+    },
+    {
+      "date": "2024-04-18",
+      "national": 89.78,
+      "iowaMn": 90.59,
+      "western": 90.03
+    },
+    {
+      "date": "2024-04-19",
+      "national": 88.49,
+      "iowaMn": 90.02,
+      "western": 88.07
+    },
+    {
+      "date": "2024-04-22",
+      "national": 90.31,
+      "iowaMn": 90.91,
+      "western": 90.91
+    },
+    {
+      "date": "2024-04-23",
+      "national": 91.85,
+      "iowaMn": 91.62,
+      "western": 91.74
+    },
+    {
+      "date": "2024-04-24",
+      "national": 91.49,
+      "iowaMn": 91.99,
+      "western": 92.33
+    },
+    {
+      "date": "2024-04-25",
+      "national": 88.71,
+      "iowaMn": 90.12,
+      "western": 89.53
+    },
+    {
+      "date": "2024-04-26",
+      "national": 90.38,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-04-29",
+      "national": 89.63,
+      "iowaMn": null,
+      "western": 89.93
+    },
+    {
+      "date": "2024-04-30",
+      "national": 92.03,
+      "iowaMn": 93.12,
+      "western": 92.83
+    },
+    {
+      "date": "2024-05-01",
+      "national": 92.02,
+      "iowaMn": 92.4,
+      "western": 92.43
+    },
+    {
+      "date": "2024-05-02",
+      "national": 91.78,
+      "iowaMn": 93.53,
+      "western": 93.48
+    },
+    {
+      "date": "2024-05-03",
+      "national": 89.38,
+      "iowaMn": 91.03,
+      "western": 89.91
+    },
+    {
+      "date": "2024-05-06",
+      "national": 92.41,
+      "iowaMn": 93.83,
+      "western": 93.83
+    },
+    {
+      "date": "2024-05-07",
+      "national": 93.25,
+      "iowaMn": 93.26,
+      "western": 93.34
+    },
+    {
+      "date": "2024-05-08",
+      "national": 91.79,
+      "iowaMn": 93.12,
+      "western": 92.47
+    },
+    {
+      "date": "2024-05-09",
+      "national": 89.35,
+      "iowaMn": 90.07,
+      "western": 90.07
+    },
+    {
+      "date": "2024-05-10",
+      "national": 88.41,
+      "iowaMn": 90.75,
+      "western": 89.09
+    },
+    {
+      "date": "2024-05-13",
+      "national": 89.78,
+      "iowaMn": 90.23,
+      "western": 89.83
+    },
+    {
+      "date": "2024-05-14",
+      "national": 90.83,
+      "iowaMn": 90.37,
+      "western": 90.51
+    },
+    {
+      "date": "2024-05-15",
+      "national": 88.73,
+      "iowaMn": 89.41,
+      "western": 88.82
+    },
+    {
+      "date": "2024-05-16",
+      "national": 89.33,
+      "iowaMn": 89.56,
+      "western": 89.53
+    },
+    {
+      "date": "2024-05-17",
+      "national": 88.57,
+      "iowaMn": 89.41,
+      "western": 88.72
+    },
+    {
+      "date": "2024-05-20",
+      "national": 86.43,
+      "iowaMn": 85.82,
+      "western": 85.79
+    },
+    {
+      "date": "2024-05-21",
+      "national": 88.2,
+      "iowaMn": 88.29,
+      "western": 88.16
+    },
+    {
+      "date": "2024-05-22",
+      "national": 87.83,
+      "iowaMn": 88.52,
+      "western": 88.34
+    },
+    {
+      "date": "2024-05-23",
+      "national": 88.27,
+      "iowaMn": 88.63,
+      "western": 88.63
+    },
+    {
+      "date": "2024-05-24",
+      "national": 86.64,
+      "iowaMn": null,
+      "western": 86.2
+    },
+    {
+      "date": "2024-05-28",
+      "national": 87.83,
+      "iowaMn": 88.45,
+      "western": 87.26
+    },
+    {
+      "date": "2024-05-29",
+      "national": 89.05,
+      "iowaMn": 89.58,
+      "western": 89.48
+    },
+    {
+      "date": "2024-05-30",
+      "national": 87.36,
+      "iowaMn": 87.93,
+      "western": 87.73
+    },
+    {
+      "date": "2024-05-31",
+      "national": 86.9,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-06-03",
+      "national": 89.35,
+      "iowaMn": 90.28,
+      "western": 89.35
+    },
+    {
+      "date": "2024-06-04",
+      "national": 88.78,
+      "iowaMn": 88.37,
+      "western": 88.71
+    },
+    {
+      "date": "2024-06-05",
+      "national": 88.72,
+      "iowaMn": 89.13,
+      "western": 88.87
+    },
+    {
+      "date": "2024-06-06",
+      "national": 86.23,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-06-07",
+      "national": 85.98,
+      "iowaMn": null,
+      "western": 85.68
+    },
+    {
+      "date": "2024-06-10",
+      "national": 88.58,
+      "iowaMn": 88.58,
+      "western": 88.58
+    },
+    {
+      "date": "2024-06-11",
+      "national": 87.5,
+      "iowaMn": 87.9,
+      "western": 87.47
+    },
+    {
+      "date": "2024-06-12",
+      "national": 87.59,
+      "iowaMn": 87.71,
+      "western": 87.69
+    },
+    {
+      "date": "2024-06-13",
+      "national": 86.87,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-06-14",
+      "national": 87.61,
+      "iowaMn": 86.3,
+      "western": 88.07
+    },
+    {
+      "date": "2024-06-17",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-06-18",
+      "national": 89.02,
+      "iowaMn": 89.05,
+      "western": 89.04
+    },
+    {
+      "date": "2024-06-19",
+      "national": 87.51,
+      "iowaMn": 87.71,
+      "western": 87.6
+    },
+    {
+      "date": "2024-06-20",
+      "national": 87.21,
+      "iowaMn": null,
+      "western": 86.74
+    },
+    {
+      "date": "2024-06-21",
+      "national": 86.04,
+      "iowaMn": 86.46,
+      "western": 86.27
+    },
+    {
+      "date": "2024-06-24",
+      "national": 86.64,
+      "iowaMn": 86.95,
+      "western": 86.76
+    },
+    {
+      "date": "2024-06-25",
+      "national": 89.21,
+      "iowaMn": 89.39,
+      "western": 89.21
+    },
+    {
+      "date": "2024-06-26",
+      "national": 88.64,
+      "iowaMn": 88.66,
+      "western": 88.94
+    },
+    {
+      "date": "2024-06-27",
+      "national": 89.03,
+      "iowaMn": 90.25,
+      "western": 90.25
+    },
+    {
+      "date": "2024-06-28",
+      "national": 89.17,
+      "iowaMn": 89.33,
+      "western": 89.67
+    },
+    {
+      "date": "2024-07-01",
+      "national": 88.74,
+      "iowaMn": 91.17,
+      "western": 91.17
+    },
+    {
+      "date": "2024-07-02",
+      "national": 91.65,
+      "iowaMn": 92.12,
+      "western": 91.77
+    },
+    {
+      "date": "2024-07-03",
+      "national": 90.97,
+      "iowaMn": 91.35,
+      "western": 91.35
+    },
+    {
+      "date": "2024-07-05",
+      "national": 89.45,
+      "iowaMn": 89.43,
+      "western": 90.92
+    },
+    {
+      "date": "2024-07-08",
+      "national": 90.63,
+      "iowaMn": 90.93,
+      "western": 90.93
+    },
+    {
+      "date": "2024-07-09",
+      "national": 90.72,
+      "iowaMn": 90.8,
+      "western": 90.94
+    },
+    {
+      "date": "2024-07-10",
+      "national": 87.31,
+      "iowaMn": 87.31,
+      "western": 87.33
+    },
+    {
+      "date": "2024-07-11",
+      "national": 86.77,
+      "iowaMn": 88.16,
+      "western": 86.99
+    },
+    {
+      "date": "2024-07-12",
+      "national": 83.04,
+      "iowaMn": null,
+      "western": 81.66
+    },
+    {
+      "date": "2024-07-15",
+      "national": 83.12,
+      "iowaMn": 83.36,
+      "western": 83.36
+    },
+    {
+      "date": "2024-07-16",
+      "national": 85.05,
+      "iowaMn": 85.51,
+      "western": 85.39
+    },
+    {
+      "date": "2024-07-17",
+      "national": 85.08,
+      "iowaMn": 85.95,
+      "western": 85.36
+    },
+    {
+      "date": "2024-07-18",
+      "national": 85.39,
+      "iowaMn": 87.09,
+      "western": 85.76
+    },
+    {
+      "date": "2024-07-19",
+      "national": 82.42,
+      "iowaMn": 81.77,
+      "western": 81.88
+    },
+    {
+      "date": "2024-07-22",
+      "national": 84.04,
+      "iowaMn": 84.38,
+      "western": 84.38
+    },
+    {
+      "date": "2024-07-23",
+      "national": 84.35,
+      "iowaMn": 84.47,
+      "western": 84.37
+    },
+    {
+      "date": "2024-07-24",
+      "national": 85.3,
+      "iowaMn": 85.69,
+      "western": 85.69
+    },
+    {
+      "date": "2024-07-25",
+      "national": 84.51,
+      "iowaMn": 85.12,
+      "western": 85.12
+    },
+    {
+      "date": "2024-07-26",
+      "national": 82.13,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-07-29",
+      "national": 84.07,
+      "iowaMn": 84.4,
+      "western": 84.4
+    },
+    {
+      "date": "2024-07-30",
+      "national": 84.68,
+      "iowaMn": 85.61,
+      "western": 85.5
+    },
+    {
+      "date": "2024-07-31",
+      "national": 85.76,
+      "iowaMn": 85.94,
+      "western": 85.83
+    },
+    {
+      "date": "2024-08-01",
+      "national": 85.23,
+      "iowaMn": 86.08,
+      "western": 85.76
+    },
+    {
+      "date": "2024-08-02",
+      "national": 84.07,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-08-05",
+      "national": 76.91,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-08-06",
+      "national": 85.88,
+      "iowaMn": 85.38,
+      "western": 85.52
+    },
+    {
+      "date": "2024-08-07",
+      "national": 85.92,
+      "iowaMn": 85.83,
+      "western": 85.96
+    },
+    {
+      "date": "2024-08-08",
+      "national": 84.87,
+      "iowaMn": 85.6,
+      "western": 85.6
+    },
+    {
+      "date": "2024-08-09",
+      "national": 83.53,
+      "iowaMn": null,
+      "western": 83.55
+    },
+    {
+      "date": "2024-08-12",
+      "national": 82.48,
+      "iowaMn": 83.0,
+      "western": 83.0
+    },
+    {
+      "date": "2024-08-13",
+      "national": 83.17,
+      "iowaMn": 83.24,
+      "western": 83.31
+    },
+    {
+      "date": "2024-08-14",
+      "national": 84.43,
+      "iowaMn": 83.83,
+      "western": 84.55
+    },
+    {
+      "date": "2024-08-15",
+      "national": 85.31,
+      "iowaMn": 86.06,
+      "western": 85.75
+    },
+    {
+      "date": "2024-08-16",
+      "national": 83.0,
+      "iowaMn": 83.05,
+      "western": 83.0
+    },
+    {
+      "date": "2024-08-19",
+      "national": 82.72,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-08-20",
+      "national": 83.26,
+      "iowaMn": 82.86,
+      "western": 83.33
+    },
+    {
+      "date": "2024-08-21",
+      "national": 82.06,
+      "iowaMn": 82.47,
+      "western": 82.09
+    },
+    {
+      "date": "2024-08-22",
+      "national": 83.36,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-08-23",
+      "national": 80.76,
+      "iowaMn": 81.25,
+      "western": 81.19
+    },
+    {
+      "date": "2024-08-26",
+      "national": 80.17,
+      "iowaMn": 79.93,
+      "western": 79.92
+    },
+    {
+      "date": "2024-08-27",
+      "national": 79.55,
+      "iowaMn": 79.41,
+      "western": 79.51
+    },
+    {
+      "date": "2024-08-28",
+      "national": 77.75,
+      "iowaMn": 77.35,
+      "western": 77.75
+    },
+    {
+      "date": "2024-08-29",
+      "national": 76.55,
+      "iowaMn": null,
+      "western": 76.58
+    },
+    {
+      "date": "2024-08-30",
+      "national": 76.64,
+      "iowaMn": 76.98,
+      "western": 76.78
+    },
+    {
+      "date": "2024-09-03",
+      "national": 78.9,
+      "iowaMn": 79.01,
+      "western": 79.0
+    },
+    {
+      "date": "2024-09-04",
+      "national": 78.67,
+      "iowaMn": 77.76,
+      "western": 78.66
+    },
+    {
+      "date": "2024-09-05",
+      "national": 77.84,
+      "iowaMn": 77.88,
+      "western": 77.75
+    },
+    {
+      "date": "2024-09-06",
+      "national": 76.79,
+      "iowaMn": 77.28,
+      "western": 77.24
+    },
+    {
+      "date": "2024-09-09",
+      "national": 78.48,
+      "iowaMn": 78.59,
+      "western": 78.54
+    },
+    {
+      "date": "2024-09-10",
+      "national": 78.34,
+      "iowaMn": 78.5,
+      "western": 78.53
+    },
+    {
+      "date": "2024-09-11",
+      "national": 77.25,
+      "iowaMn": 78.73,
+      "western": 77.29
+    },
+    {
+      "date": "2024-09-12",
+      "national": 76.0,
+      "iowaMn": 76.61,
+      "western": 75.97
+    },
+    {
+      "date": "2024-09-13",
+      "national": 76.0,
+      "iowaMn": 76.07,
+      "western": 76.04
+    },
+    {
+      "date": "2024-09-16",
+      "national": 76.96,
+      "iowaMn": 77.2,
+      "western": 77.14
+    },
+    {
+      "date": "2024-09-17",
+      "national": 77.33,
+      "iowaMn": 77.26,
+      "western": 77.34
+    },
+    {
+      "date": "2024-09-18",
+      "national": 74.88,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-09-19",
+      "national": 76.27,
+      "iowaMn": 75.74,
+      "western": 75.7
+    },
+    {
+      "date": "2024-09-20",
+      "national": 76.88,
+      "iowaMn": 77.03,
+      "western": 77.03
+    },
+    {
+      "date": "2024-09-23",
+      "national": 75.01,
+      "iowaMn": 75.89,
+      "western": 75.89
+    },
+    {
+      "date": "2024-09-24",
+      "national": 76.54,
+      "iowaMn": 76.41,
+      "western": 76.41
+    },
+    {
+      "date": "2024-09-25",
+      "national": 77.04,
+      "iowaMn": 77.96,
+      "western": 77.57
+    },
+    {
+      "date": "2024-09-26",
+      "national": 78.18,
+      "iowaMn": 78.18,
+      "western": 78.18
+    },
+    {
+      "date": "2024-09-27",
+      "national": 75.11,
+      "iowaMn": null,
+      "western": 75.42
+    },
+    {
+      "date": "2024-09-30",
+      "national": 76.68,
+      "iowaMn": null,
+      "western": 77.15
+    },
+    {
+      "date": "2024-10-01",
+      "national": 77.79,
+      "iowaMn": 77.92,
+      "western": 77.79
+    },
+    {
+      "date": "2024-10-02",
+      "national": 75.91,
+      "iowaMn": null,
+      "western": 76.47
+    },
+    {
+      "date": "2024-10-03",
+      "national": 73.99,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-10-04",
+      "national": 74.89,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-10-07",
+      "national": 76.68,
+      "iowaMn": 76.65,
+      "western": 76.65
+    },
+    {
+      "date": "2024-10-08",
+      "national": 76.48,
+      "iowaMn": 76.52,
+      "western": 76.5
+    },
+    {
+      "date": "2024-10-09",
+      "national": 75.16,
+      "iowaMn": 74.3,
+      "western": 75.23
+    },
+    {
+      "date": "2024-10-10",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-10-11",
+      "national": 74.34,
+      "iowaMn": null,
+      "western": 74.39
+    },
+    {
+      "date": "2024-10-14",
+      "national": 74.47,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-10-15",
+      "national": 76.8,
+      "iowaMn": 75.81,
+      "western": 75.68
+    },
+    {
+      "date": "2024-10-16",
+      "national": 77.43,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-10-17",
+      "national": 76.15,
+      "iowaMn": 75.71,
+      "western": 76.24
+    },
+    {
+      "date": "2024-10-18",
+      "national": 72.05,
+      "iowaMn": 72.43,
+      "western": 72.29
+    },
+    {
+      "date": "2024-10-21",
+      "national": 75.22,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-10-22",
+      "national": 77.11,
+      "iowaMn": 77.47,
+      "western": 77.41
+    },
+    {
+      "date": "2024-10-23",
+      "national": 77.84,
+      "iowaMn": 78.5,
+      "western": 78.5
+    },
+    {
+      "date": "2024-10-24",
+      "national": 75.25,
+      "iowaMn": 75.51,
+      "western": 75.18
+    },
+    {
+      "date": "2024-10-25",
+      "national": 75.66,
+      "iowaMn": 75.93,
+      "western": 75.61
+    },
+    {
+      "date": "2024-10-28",
+      "national": 80.95,
+      "iowaMn": 82.01,
+      "western": 81.61
+    },
+    {
+      "date": "2024-10-29",
+      "national": 82.04,
+      "iowaMn": 82.11,
+      "western": 82.84
+    },
+    {
+      "date": "2024-10-30",
+      "national": 84.8,
+      "iowaMn": 85.72,
+      "western": 85.81
+    },
+    {
+      "date": "2024-10-31",
+      "national": 82.7,
+      "iowaMn": 82.66,
+      "western": 82.7
+    },
+    {
+      "date": "2024-11-01",
+      "national": 79.06,
+      "iowaMn": 79.21,
+      "western": 79.21
+    },
+    {
+      "date": "2024-11-04",
+      "national": 77.5,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-11-05",
+      "national": 83.37,
+      "iowaMn": 84.24,
+      "western": 83.57
+    },
+    {
+      "date": "2024-11-06",
+      "national": 82.72,
+      "iowaMn": 82.53,
+      "western": 83.03
+    },
+    {
+      "date": "2024-11-07",
+      "national": 85.03,
+      "iowaMn": 85.04,
+      "western": 84.9
+    },
+    {
+      "date": "2024-11-08",
+      "national": 81.67,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-11-11",
+      "national": 83.52,
+      "iowaMn": 83.92,
+      "western": 83.88
+    },
+    {
+      "date": "2024-11-12",
+      "national": 84.79,
+      "iowaMn": 85.52,
+      "western": 84.9
+    },
+    {
+      "date": "2024-11-13",
+      "national": 88.94,
+      "iowaMn": 88.96,
+      "western": 88.96
+    },
+    {
+      "date": "2024-11-14",
+      "national": 86.14,
+      "iowaMn": 87.05,
+      "western": 86.8
+    },
+    {
+      "date": "2024-11-15",
+      "national": 84.67,
+      "iowaMn": 86.05,
+      "western": 85.53
+    },
+    {
+      "date": "2024-11-18",
+      "national": 83.32,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-11-19",
+      "national": 82.49,
+      "iowaMn": 83.57,
+      "western": 82.98
+    },
+    {
+      "date": "2024-11-20",
+      "national": 85.04,
+      "iowaMn": 85.37,
+      "western": 85.2
+    },
+    {
+      "date": "2024-11-21",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-11-22",
+      "national": 82.72,
+      "iowaMn": null,
+      "western": 82.7
+    },
+    {
+      "date": "2024-11-25",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-11-26",
+      "national": 87.86,
+      "iowaMn": 87.8,
+      "western": 87.82
+    },
+    {
+      "date": "2024-11-27",
+      "national": 87.46,
+      "iowaMn": 87.53,
+      "western": 87.71
+    },
+    {
+      "date": "2024-11-29",
+      "national": 83.79,
+      "iowaMn": null,
+      "western": 83.39
+    },
+    {
+      "date": "2024-12-02",
+      "national": 83.97,
+      "iowaMn": 84.57,
+      "western": 83.97
+    },
+    {
+      "date": "2024-12-03",
+      "national": 86.89,
+      "iowaMn": 88.69,
+      "western": 88.77
+    },
+    {
+      "date": "2024-12-04",
+      "national": 87.62,
+      "iowaMn": 87.63,
+      "western": 87.63
+    },
+    {
+      "date": "2024-12-05",
+      "national": 85.34,
+      "iowaMn": 85.48,
+      "western": 85.48
+    },
+    {
+      "date": "2024-12-06",
+      "national": 80.13,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-12-09",
+      "national": 81.02,
+      "iowaMn": 80.5,
+      "western": 81.4
+    },
+    {
+      "date": "2024-12-10",
+      "national": 82.11,
+      "iowaMn": 82.56,
+      "western": 82.21
+    },
+    {
+      "date": "2024-12-11",
+      "national": 81.39,
+      "iowaMn": 81.97,
+      "western": 81.73
+    },
+    {
+      "date": "2024-12-12",
+      "national": 79.02,
+      "iowaMn": 79.16,
+      "western": 79.09
+    },
+    {
+      "date": "2024-12-13",
+      "national": 78.93,
+      "iowaMn": 79.55,
+      "western": 79.37
+    },
+    {
+      "date": "2024-12-16",
+      "national": 79.39,
+      "iowaMn": 79.65,
+      "western": 79.43
+    },
+    {
+      "date": "2024-12-17",
+      "national": 77.79,
+      "iowaMn": 77.67,
+      "western": 77.61
+    },
+    {
+      "date": "2024-12-18",
+      "national": 78.03,
+      "iowaMn": 78.02,
+      "western": 78.02
+    },
+    {
+      "date": "2024-12-19",
+      "national": 79.45,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-12-20",
+      "national": 76.95,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2024-12-23",
+      "national": 79.56,
+      "iowaMn": 79.6,
+      "western": 79.56
+    },
+    {
+      "date": "2024-12-26",
+      "national": 79.08,
+      "iowaMn": 79.36,
+      "western": 79.31
+    },
+    {
+      "date": "2024-12-27",
+      "national": 77.27,
+      "iowaMn": 78.41,
+      "western": 78.19
+    },
+    {
+      "date": "2024-12-30",
+      "national": 78.81,
+      "iowaMn": 79.67,
+      "western": 79.67
+    },
+    {
+      "date": "2024-12-31",
+      "national": 80.08,
+      "iowaMn": null,
+      "western": 80.08
+    },
+    {
+      "date": "2025-01-02",
+      "national": 80.08,
+      "iowaMn": 80.35,
+      "western": 79.86
+    },
+    {
+      "date": "2025-01-03",
+      "national": 79.59,
+      "iowaMn": 79.92,
+      "western": 79.83
+    },
+    {
+      "date": "2025-01-06",
+      "national": 79.65,
+      "iowaMn": 79.8,
+      "western": 79.65
+    },
+    {
+      "date": "2025-01-07",
+      "national": 78.89,
+      "iowaMn": 78.91,
+      "western": 78.91
+    },
+    {
+      "date": "2025-01-08",
+      "national": 78.51,
+      "iowaMn": 78.72,
+      "western": 78.59
+    },
+    {
+      "date": "2025-01-09",
+      "national": 78.85,
+      "iowaMn": 78.1,
+      "western": 77.91
+    },
+    {
+      "date": "2025-01-10",
+      "national": 79.0,
+      "iowaMn": 80.5,
+      "western": 80.3
+    },
+    {
+      "date": "2025-01-13",
+      "national": 79.14,
+      "iowaMn": 79.2,
+      "western": 79.2
+    },
+    {
+      "date": "2025-01-14",
+      "national": 80.14,
+      "iowaMn": 80.25,
+      "western": 80.14
+    },
+    {
+      "date": "2025-01-15",
+      "national": 80.21,
+      "iowaMn": 80.44,
+      "western": 80.4
+    },
+    {
+      "date": "2025-01-16",
+      "national": 80.24,
+      "iowaMn": 80.57,
+      "western": 80.57
+    },
+    {
+      "date": "2025-01-17",
+      "national": 78.5,
+      "iowaMn": 78.64,
+      "western": 78.64
+    },
+    {
+      "date": "2025-01-20",
+      "national": 79.17,
+      "iowaMn": 80.39,
+      "western": 80.39
+    },
+    {
+      "date": "2025-01-21",
+      "national": 79.75,
+      "iowaMn": 79.78,
+      "western": 79.84
+    },
+    {
+      "date": "2025-01-22",
+      "national": 81.26,
+      "iowaMn": 81.78,
+      "western": 81.78
+    },
+    {
+      "date": "2025-01-23",
+      "national": 82.25,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-01-24",
+      "national": 80.38,
+      "iowaMn": 81.05,
+      "western": 80.83
+    },
+    {
+      "date": "2025-01-27",
+      "national": 80.39,
+      "iowaMn": 82.26,
+      "western": 81.51
+    },
+    {
+      "date": "2025-01-28",
+      "national": 84.32,
+      "iowaMn": 84.32,
+      "western": 84.32
+    },
+    {
+      "date": "2025-01-29",
+      "national": 83.49,
+      "iowaMn": 84.35,
+      "western": 84.35
+    },
+    {
+      "date": "2025-01-30",
+      "national": 80.62,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-01-31",
+      "national": 83.43,
+      "iowaMn": 84.31,
+      "western": 84.05
+    },
+    {
+      "date": "2025-02-03",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-02-04",
+      "national": 85.4,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-02-05",
+      "national": 86.71,
+      "iowaMn": 87.2,
+      "western": 86.91
+    },
+    {
+      "date": "2025-02-06",
+      "national": 86.23,
+      "iowaMn": 86.98,
+      "western": 86.98
+    },
+    {
+      "date": "2025-02-07",
+      "national": 83.17,
+      "iowaMn": 83.02,
+      "western": 83.45
+    },
+    {
+      "date": "2025-02-10",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-02-11",
+      "national": 88.55,
+      "iowaMn": 88.86,
+      "western": 88.85
+    },
+    {
+      "date": "2025-02-12",
+      "national": 89.25,
+      "iowaMn": 90.25,
+      "western": 90.21
+    },
+    {
+      "date": "2025-02-13",
+      "national": 90.75,
+      "iowaMn": 90.73,
+      "western": 90.73
+    },
+    {
+      "date": "2025-02-14",
+      "national": 88.23,
+      "iowaMn": 88.92,
+      "western": 88.75
+    },
+    {
+      "date": "2025-02-17",
+      "national": 89.51,
+      "iowaMn": 90.78,
+      "western": 90.55
+    },
+    {
+      "date": "2025-02-18",
+      "national": 91.79,
+      "iowaMn": 92.21,
+      "western": 92.21
+    },
+    {
+      "date": "2025-02-19",
+      "national": 91.98,
+      "iowaMn": 91.44,
+      "western": 91.44
+    },
+    {
+      "date": "2025-02-20",
+      "national": 89.44,
+      "iowaMn": 90.12,
+      "western": 90.12
+    },
+    {
+      "date": "2025-02-21",
+      "national": 90.08,
+      "iowaMn": 90.4,
+      "western": 90.37
+    },
+    {
+      "date": "2025-02-24",
+      "national": 88.6,
+      "iowaMn": 87.66,
+      "western": 87.66
+    },
+    {
+      "date": "2025-02-25",
+      "national": 88.84,
+      "iowaMn": 89.65,
+      "western": 89.51
+    },
+    {
+      "date": "2025-02-26",
+      "national": 89.86,
+      "iowaMn": 90.32,
+      "western": 90.09
+    },
+    {
+      "date": "2025-02-27",
+      "national": 89.49,
+      "iowaMn": 89.44,
+      "western": 89.07
+    },
+    {
+      "date": "2025-02-28",
+      "national": 90.02,
+      "iowaMn": 89.16,
+      "western": 89.52
+    },
+    {
+      "date": "2025-03-03",
+      "national": 88.41,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-03-04",
+      "national": 89.21,
+      "iowaMn": 89.48,
+      "western": 89.44
+    },
+    {
+      "date": "2025-03-05",
+      "national": 90.28,
+      "iowaMn": 90.29,
+      "western": 90.17
+    },
+    {
+      "date": "2025-03-06",
+      "national": 90.77,
+      "iowaMn": 91.31,
+      "western": 91.31
+    },
+    {
+      "date": "2025-03-07",
+      "national": 88.89,
+      "iowaMn": 88.49,
+      "western": 88.47
+    },
+    {
+      "date": "2025-03-10",
+      "national": 88.9,
+      "iowaMn": 88.98,
+      "western": 88.93
+    },
+    {
+      "date": "2025-03-11",
+      "national": 90.98,
+      "iowaMn": 90.98,
+      "western": 90.98
+    },
+    {
+      "date": "2025-03-12",
+      "national": 91.64,
+      "iowaMn": 91.89,
+      "western": 91.88
+    },
+    {
+      "date": "2025-03-13",
+      "national": 89.15,
+      "iowaMn": 89.53,
+      "western": 89.53
+    },
+    {
+      "date": "2025-03-14",
+      "national": 89.05,
+      "iowaMn": 88.66,
+      "western": 88.46
+    },
+    {
+      "date": "2025-03-17",
+      "national": 88.05,
+      "iowaMn": null,
+      "western": 88.05
+    },
+    {
+      "date": "2025-03-18",
+      "national": 88.28,
+      "iowaMn": 88.21,
+      "western": 88.21
+    },
+    {
+      "date": "2025-03-19",
+      "national": 91.02,
+      "iowaMn": 91.18,
+      "western": 91.29
+    },
+    {
+      "date": "2025-03-20",
+      "national": 89.39,
+      "iowaMn": 89.59,
+      "western": 89.45
+    },
+    {
+      "date": "2025-03-21",
+      "national": 88.4,
+      "iowaMn": 88.2,
+      "western": 88.16
+    },
+    {
+      "date": "2025-03-24",
+      "national": 90.29,
+      "iowaMn": 90.46,
+      "western": 90.3
+    },
+    {
+      "date": "2025-03-25",
+      "national": 88.65,
+      "iowaMn": 88.76,
+      "western": 88.75
+    },
+    {
+      "date": "2025-03-26",
+      "national": 88.19,
+      "iowaMn": 87.8,
+      "western": 88.23
+    },
+    {
+      "date": "2025-03-27",
+      "national": 88.09,
+      "iowaMn": 87.88,
+      "western": 87.92
+    },
+    {
+      "date": "2025-03-28",
+      "national": 88.3,
+      "iowaMn": 89.08,
+      "western": 89.24
+    },
+    {
+      "date": "2025-03-31",
+      "national": 88.49,
+      "iowaMn": 88.78,
+      "western": 88.78
+    },
+    {
+      "date": "2025-04-01",
+      "national": 88.26,
+      "iowaMn": 88.21,
+      "western": 88.31
+    },
+    {
+      "date": "2025-04-02",
+      "national": 88.88,
+      "iowaMn": 89.43,
+      "western": 89.41
+    },
+    {
+      "date": "2025-04-03",
+      "national": 87.67,
+      "iowaMn": 87.74,
+      "western": 87.74
+    },
+    {
+      "date": "2025-04-04",
+      "national": 87.4,
+      "iowaMn": 87.68,
+      "western": 87.61
+    },
+    {
+      "date": "2025-04-07",
+      "national": 84.98,
+      "iowaMn": 84.36,
+      "western": 84.36
+    },
+    {
+      "date": "2025-04-08",
+      "national": 86.83,
+      "iowaMn": 87.3,
+      "western": 87.1
+    },
+    {
+      "date": "2025-04-09",
+      "national": 86.08,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-04-10",
+      "national": 85.67,
+      "iowaMn": 86.25,
+      "western": 86.16
+    },
+    {
+      "date": "2025-04-11",
+      "national": 83.1,
+      "iowaMn": 83.17,
+      "western": 82.8
+    },
+    {
+      "date": "2025-04-14",
+      "national": 81.99,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-04-15",
+      "national": 85.84,
+      "iowaMn": 86.41,
+      "western": 86.39
+    },
+    {
+      "date": "2025-04-16",
+      "national": 86.22,
+      "iowaMn": 86.58,
+      "western": 87.18
+    },
+    {
+      "date": "2025-04-17",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-04-18",
+      "national": 83.35,
+      "iowaMn": null,
+      "western": 84.39
+    },
+    {
+      "date": "2025-04-21",
+      "national": 83.59,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-04-22",
+      "national": 90.0,
+      "iowaMn": 89.01,
+      "western": 90.25
+    },
+    {
+      "date": "2025-04-23",
+      "national": 91.87,
+      "iowaMn": 91.96,
+      "western": 92.18
+    },
+    {
+      "date": "2025-04-24",
+      "national": 91.31,
+      "iowaMn": 92.02,
+      "western": 91.61
+    },
+    {
+      "date": "2025-04-25",
+      "national": 91.39,
+      "iowaMn": 92.35,
+      "western": 92.27
+    },
+    {
+      "date": "2025-04-28",
+      "national": 90.14,
+      "iowaMn": 90.99,
+      "western": 90.51
+    },
+    {
+      "date": "2025-04-29",
+      "national": 93.02,
+      "iowaMn": 93.06,
+      "western": 93.02
+    },
+    {
+      "date": "2025-04-30",
+      "national": 93.0,
+      "iowaMn": 93.35,
+      "western": 93.45
+    },
+    {
+      "date": "2025-05-01",
+      "national": 92.39,
+      "iowaMn": 92.93,
+      "western": 92.97
+    },
+    {
+      "date": "2025-05-02",
+      "national": 91.51,
+      "iowaMn": null,
+      "western": 92.29
+    },
+    {
+      "date": "2025-05-05",
+      "national": 89.96,
+      "iowaMn": null,
+      "western": 90.09
+    },
+    {
+      "date": "2025-05-06",
+      "national": 93.58,
+      "iowaMn": 93.57,
+      "western": 93.57
+    },
+    {
+      "date": "2025-05-07",
+      "national": 93.02,
+      "iowaMn": 93.34,
+      "western": 93.17
+    },
+    {
+      "date": "2025-05-08",
+      "national": 94.02,
+      "iowaMn": 94.05,
+      "western": 95.44
+    },
+    {
+      "date": "2025-05-09",
+      "national": 94.47,
+      "iowaMn": 94.92,
+      "western": 94.86
+    },
+    {
+      "date": "2025-05-12",
+      "national": 95.29,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-05-13",
+      "national": 94.27,
+      "iowaMn": 94.62,
+      "western": 94.4
+    },
+    {
+      "date": "2025-05-14",
+      "national": 93.61,
+      "iowaMn": 95.0,
+      "western": 94.48
+    },
+    {
+      "date": "2025-05-15",
+      "national": 94.79,
+      "iowaMn": 95.04,
+      "western": 94.44
+    },
+    {
+      "date": "2025-05-16",
+      "national": 88.1,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-05-19",
+      "national": 92.51,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-05-20",
+      "national": 93.4,
+      "iowaMn": 93.92,
+      "western": 93.91
+    },
+    {
+      "date": "2025-05-21",
+      "national": 95.3,
+      "iowaMn": 91.63,
+      "western": 95.56
+    },
+    {
+      "date": "2025-05-22",
+      "national": 95.29,
+      "iowaMn": 96.45,
+      "western": 96.45
+    },
+    {
+      "date": "2025-05-23",
+      "national": 94.86,
+      "iowaMn": null,
+      "western": 96.9
+    },
+    {
+      "date": "2025-05-27",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-05-28",
+      "national": 98.29,
+      "iowaMn": 100.07,
+      "western": 99.85
+    },
+    {
+      "date": "2025-05-29",
+      "national": 98.95,
+      "iowaMn": 100.28,
+      "western": 100.58
+    },
+    {
+      "date": "2025-05-30",
+      "national": 95.4,
+      "iowaMn": 96.45,
+      "western": 96.91
+    },
+    {
+      "date": "2025-06-02",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-06-03",
+      "national": 98.84,
+      "iowaMn": 102.31,
+      "western": 102.19
+    },
+    {
+      "date": "2025-06-04",
+      "national": 103.05,
+      "iowaMn": 103.29,
+      "western": 103.46
+    },
+    {
+      "date": "2025-06-05",
+      "national": 101.85,
+      "iowaMn": 102.55,
+      "western": 102.71
+    },
+    {
+      "date": "2025-06-06",
+      "national": 100.55,
+      "iowaMn": 102.83,
+      "western": 102.5
+    },
+    {
+      "date": "2025-06-09",
+      "national": 103.22,
+      "iowaMn": 104.33,
+      "western": 104.71
+    },
+    {
+      "date": "2025-06-10",
+      "national": 105.84,
+      "iowaMn": 106.18,
+      "western": 106.21
+    },
+    {
+      "date": "2025-06-11",
+      "national": 107.33,
+      "iowaMn": 107.25,
+      "western": 107.74
+    },
+    {
+      "date": "2025-06-12",
+      "national": 105.95,
+      "iowaMn": 106.0,
+      "western": 106.45
+    },
+    {
+      "date": "2025-06-13",
+      "national": 104.95,
+      "iowaMn": 105.81,
+      "western": 105.71
+    },
+    {
+      "date": "2025-06-16",
+      "national": 106.12,
+      "iowaMn": 107.81,
+      "western": 107.58
+    },
+    {
+      "date": "2025-06-17",
+      "national": 109.24,
+      "iowaMn": 109.83,
+      "western": 109.92
+    },
+    {
+      "date": "2025-06-18",
+      "national": 114.07,
+      "iowaMn": 114.19,
+      "western": 114.26
+    },
+    {
+      "date": "2025-06-19",
+      "national": 113.12,
+      "iowaMn": 114.09,
+      "western": 114.26
+    },
+    {
+      "date": "2025-06-20",
+      "national": 110.46,
+      "iowaMn": 111.94,
+      "western": 111.74
+    },
+    {
+      "date": "2025-06-23",
+      "national": 109.35,
+      "iowaMn": null,
+      "western": 109.91
+    },
+    {
+      "date": "2025-06-24",
+      "national": 111.49,
+      "iowaMn": 111.81,
+      "western": 111.49
+    },
+    {
+      "date": "2025-06-25",
+      "national": 110.51,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-06-26",
+      "national": 108.0,
+      "iowaMn": 108.59,
+      "western": 108.51
+    },
+    {
+      "date": "2025-06-27",
+      "national": 108.09,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-06-30",
+      "national": 111.88,
+      "iowaMn": 111.85,
+      "western": 111.79
+    },
+    {
+      "date": "2025-07-01",
+      "national": 111.55,
+      "iowaMn": 111.45,
+      "western": 111.41
+    },
+    {
+      "date": "2025-07-02",
+      "national": 112.06,
+      "iowaMn": 111.51,
+      "western": 112.06
+    },
+    {
+      "date": "2025-07-03",
+      "national": 110.21,
+      "iowaMn": 110.59,
+      "western": 110.82
+    },
+    {
+      "date": "2025-07-07",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-07-08",
+      "national": 112.02,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-07-09",
+      "national": 111.9,
+      "iowaMn": 111.88,
+      "western": 111.99
+    },
+    {
+      "date": "2025-07-10",
+      "national": 112.43,
+      "iowaMn": 113.21,
+      "western": 113.22
+    },
+    {
+      "date": "2025-07-11",
+      "national": 106.69,
+      "iowaMn": 108.16,
+      "western": 107.32
+    },
+    {
+      "date": "2025-07-14",
+      "national": 109.58,
+      "iowaMn": 107.43,
+      "western": 109.58
+    },
+    {
+      "date": "2025-07-15",
+      "national": 112.6,
+      "iowaMn": 113.48,
+      "western": 112.96
+    },
+    {
+      "date": "2025-07-16",
+      "national": 112.72,
+      "iowaMn": 112.43,
+      "western": 112.43
+    },
+    {
+      "date": "2025-07-17",
+      "national": 110.7,
+      "iowaMn": 111.09,
+      "western": 110.96
+    },
+    {
+      "date": "2025-07-18",
+      "national": 105.55,
+      "iowaMn": null,
+      "western": 106.14
+    },
+    {
+      "date": "2025-07-21",
+      "national": 110.47,
+      "iowaMn": 110.44,
+      "western": 110.3
+    },
+    {
+      "date": "2025-07-22",
+      "national": 113.95,
+      "iowaMn": 113.98,
+      "western": 113.95
+    },
+    {
+      "date": "2025-07-23",
+      "national": 114.97,
+      "iowaMn": 114.79,
+      "western": 114.76
+    },
+    {
+      "date": "2025-07-24",
+      "national": 113.61,
+      "iowaMn": 114.28,
+      "western": 112.89
+    },
+    {
+      "date": "2025-07-25",
+      "national": 110.27,
+      "iowaMn": 110.79,
+      "western": 110.67
+    },
+    {
+      "date": "2025-07-28",
+      "national": 111.35,
+      "iowaMn": null,
+      "western": 112.32
+    },
+    {
+      "date": "2025-07-29",
+      "national": 112.14,
+      "iowaMn": 111.95,
+      "western": 112.24
+    },
+    {
+      "date": "2025-07-30",
+      "national": 113.34,
+      "iowaMn": 114.17,
+      "western": 114.14
+    },
+    {
+      "date": "2025-07-31",
+      "national": 111.67,
+      "iowaMn": 111.82,
+      "western": 111.82
+    },
+    {
+      "date": "2025-08-01",
+      "national": 108.91,
+      "iowaMn": 107.65,
+      "western": 109.15
+    },
+    {
+      "date": "2025-08-04",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-08-05",
+      "national": 113.52,
+      "iowaMn": 112.97,
+      "western": 113.11
+    },
+    {
+      "date": "2025-08-06",
+      "national": 113.77,
+      "iowaMn": 114.9,
+      "western": 115.19
+    },
+    {
+      "date": "2025-08-07",
+      "national": 111.22,
+      "iowaMn": 112.83,
+      "western": 112.07
+    },
+    {
+      "date": "2025-08-08",
+      "national": 106.73,
+      "iowaMn": 106.64,
+      "western": 106.45
+    },
+    {
+      "date": "2025-08-11",
+      "national": 108.25,
+      "iowaMn": null,
+      "western": 108.63
+    },
+    {
+      "date": "2025-08-12",
+      "national": 112.41,
+      "iowaMn": 112.77,
+      "western": 112.68
+    },
+    {
+      "date": "2025-08-13",
+      "national": 110.48,
+      "iowaMn": 111.16,
+      "western": 111.33
+    },
+    {
+      "date": "2025-08-14",
+      "national": 110.37,
+      "iowaMn": 110.4,
+      "western": 110.0
+    },
+    {
+      "date": "2025-08-15",
+      "national": 107.88,
+      "iowaMn": 107.58,
+      "western": 108.9
+    },
+    {
+      "date": "2025-08-18",
+      "national": 107.7,
+      "iowaMn": null,
+      "western": 107.76
+    },
+    {
+      "date": "2025-08-19",
+      "national": 109.66,
+      "iowaMn": 108.95,
+      "western": 109.66
+    },
+    {
+      "date": "2025-08-20",
+      "national": 109.81,
+      "iowaMn": 109.94,
+      "western": 109.9
+    },
+    {
+      "date": "2025-08-21",
+      "national": 108.35,
+      "iowaMn": 109.09,
+      "western": 108.51
+    },
+    {
+      "date": "2025-08-22",
+      "national": 107.66,
+      "iowaMn": 108.27,
+      "western": 108.27
+    },
+    {
+      "date": "2025-08-25",
+      "national": 105.67,
+      "iowaMn": 105.26,
+      "western": 105.27
+    },
+    {
+      "date": "2025-08-26",
+      "national": 108.4,
+      "iowaMn": 108.33,
+      "western": 108.59
+    },
+    {
+      "date": "2025-08-27",
+      "national": 108.8,
+      "iowaMn": 108.94,
+      "western": 108.75
+    },
+    {
+      "date": "2025-08-28",
+      "national": 108.19,
+      "iowaMn": 108.0,
+      "western": 108.85
+    },
+    {
+      "date": "2025-08-29",
+      "national": 104.91,
+      "iowaMn": null,
+      "western": 107.27
+    },
+    {
+      "date": "2025-09-02",
+      "national": 106.37,
+      "iowaMn": 106.46,
+      "western": 106.44
+    },
+    {
+      "date": "2025-09-03",
+      "national": 105.67,
+      "iowaMn": 106.52,
+      "western": 106.5
+    },
+    {
+      "date": "2025-09-04",
+      "national": 104.43,
+      "iowaMn": 104.63,
+      "western": 104.33
+    },
+    {
+      "date": "2025-09-05",
+      "national": 101.25,
+      "iowaMn": 101.07,
+      "western": 102.1
+    },
+    {
+      "date": "2025-09-08",
+      "national": 103.83,
+      "iowaMn": 104.36,
+      "western": 104.21
+    },
+    {
+      "date": "2025-09-09",
+      "national": 106.1,
+      "iowaMn": 103.92,
+      "western": 106.24
+    },
+    {
+      "date": "2025-09-10",
+      "national": 107.76,
+      "iowaMn": 108.39,
+      "western": 108.36
+    },
+    {
+      "date": "2025-09-11",
+      "national": 107.29,
+      "iowaMn": 107.4,
+      "western": null
+    },
+    {
+      "date": "2025-09-12",
+      "national": 103.94,
+      "iowaMn": 104.89,
+      "western": 104.89
+    },
+    {
+      "date": "2025-09-15",
+      "national": 105.87,
+      "iowaMn": 106.65,
+      "western": 106.55
+    },
+    {
+      "date": "2025-09-16",
+      "national": 106.29,
+      "iowaMn": 106.2,
+      "western": 106.36
+    },
+    {
+      "date": "2025-09-17",
+      "national": 106.71,
+      "iowaMn": 106.96,
+      "western": 106.96
+    },
+    {
+      "date": "2025-09-18",
+      "national": 105.6,
+      "iowaMn": 106.13,
+      "western": 106.16
+    },
+    {
+      "date": "2025-09-19",
+      "national": 103.61,
+      "iowaMn": 104.36,
+      "western": 104.52
+    },
+    {
+      "date": "2025-09-22",
+      "national": 106.83,
+      "iowaMn": 106.94,
+      "western": 106.84
+    },
+    {
+      "date": "2025-09-23",
+      "national": 106.99,
+      "iowaMn": 107.15,
+      "western": 107.17
+    },
+    {
+      "date": "2025-09-24",
+      "national": 104.67,
+      "iowaMn": 104.86,
+      "western": 104.77
+    },
+    {
+      "date": "2025-09-25",
+      "national": 104.5,
+      "iowaMn": 104.82,
+      "western": 105.01
+    },
+    {
+      "date": "2025-09-26",
+      "national": 103.18,
+      "iowaMn": 103.95,
+      "western": 103.93
+    },
+    {
+      "date": "2025-09-29",
+      "national": 102.44,
+      "iowaMn": 102.06,
+      "western": 102.24
+    },
+    {
+      "date": "2025-09-30",
+      "national": 102.25,
+      "iowaMn": 102.44,
+      "western": 102.43
+    },
+    {
+      "date": "2025-10-01",
+      "national": 100.43,
+      "iowaMn": 100.59,
+      "western": 100.24
+    },
+    {
+      "date": "2025-10-02",
+      "national": 98.92,
+      "iowaMn": 98.8,
+      "western": 98.91
+    },
+    {
+      "date": "2025-10-03",
+      "national": 98.72,
+      "iowaMn": 98.86,
+      "western": 98.86
+    },
+    {
+      "date": "2025-10-06",
+      "national": 99.39,
+      "iowaMn": 99.35,
+      "western": 99.39
+    },
+    {
+      "date": "2025-10-07",
+      "national": 98.63,
+      "iowaMn": 98.62,
+      "western": 98.6
+    },
+    {
+      "date": "2025-10-08",
+      "national": 99.05,
+      "iowaMn": 99.1,
+      "western": 99.09
+    },
+    {
+      "date": "2025-10-09",
+      "national": 96.33,
+      "iowaMn": null,
+      "western": 96.87
+    },
+    {
+      "date": "2025-10-10",
+      "national": 96.4,
+      "iowaMn": 96.43,
+      "western": 96.42
+    },
+    {
+      "date": "2025-10-13",
+      "national": 92.29,
+      "iowaMn": 92.43,
+      "western": 92.4
+    },
+    {
+      "date": "2025-10-14",
+      "national": 93.05,
+      "iowaMn": 92.13,
+      "western": 92.03
+    },
+    {
+      "date": "2025-10-15",
+      "national": 93.42,
+      "iowaMn": 93.84,
+      "western": 93.43
+    },
+    {
+      "date": "2025-10-16",
+      "national": 91.47,
+      "iowaMn": 93.29,
+      "western": 93.29
+    },
+    {
+      "date": "2025-10-17",
+      "national": 90.14,
+      "iowaMn": 90.06,
+      "western": 90.18
+    },
+    {
+      "date": "2025-10-20",
+      "national": 89.74,
+      "iowaMn": 90.5,
+      "western": 90.41
+    },
+    {
+      "date": "2025-10-21",
+      "national": 89.52,
+      "iowaMn": 89.61,
+      "western": 89.58
+    },
+    {
+      "date": "2025-10-22",
+      "national": 88.16,
+      "iowaMn": 88.17,
+      "western": 88.15
+    },
+    {
+      "date": "2025-10-23",
+      "national": 86.38,
+      "iowaMn": null,
+      "western": 86.74
+    },
+    {
+      "date": "2025-10-24",
+      "national": 85.56,
+      "iowaMn": 85.75,
+      "western": 85.75
+    },
+    {
+      "date": "2025-10-27",
+      "national": 85.29,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-10-28",
+      "national": 88.03,
+      "iowaMn": 88.13,
+      "western": 88.05
+    },
+    {
+      "date": "2025-10-29",
+      "national": 85.53,
+      "iowaMn": 86.66,
+      "western": 85.91
+    },
+    {
+      "date": "2025-10-30",
+      "national": 84.74,
+      "iowaMn": 84.12,
+      "western": 84.71
+    },
+    {
+      "date": "2025-10-31",
+      "national": 84.17,
+      "iowaMn": null,
+      "western": 84.19
+    },
+    {
+      "date": "2025-11-03",
+      "national": 84.66,
+      "iowaMn": 84.76,
+      "western": 84.76
+    },
+    {
+      "date": "2025-11-04",
+      "national": 84.71,
+      "iowaMn": 84.54,
+      "western": 84.81
+    },
+    {
+      "date": "2025-11-05",
+      "national": 86.0,
+      "iowaMn": 86.82,
+      "western": 86.09
+    },
+    {
+      "date": "2025-11-06",
+      "national": 84.31,
+      "iowaMn": 84.54,
+      "western": 84.34
+    },
+    {
+      "date": "2025-11-07",
+      "national": 83.99,
+      "iowaMn": 83.22,
+      "western": 83.22
+    },
+    {
+      "date": "2025-11-10",
+      "national": 83.95,
+      "iowaMn": 83.69,
+      "western": 83.69
+    },
+    {
+      "date": "2025-11-11",
+      "national": 82.12,
+      "iowaMn": 83.2,
+      "western": 82.93
+    },
+    {
+      "date": "2025-11-12",
+      "national": 78.78,
+      "iowaMn": 78.91,
+      "western": 79.56
+    },
+    {
+      "date": "2025-11-13",
+      "national": 77.86,
+      "iowaMn": 77.68,
+      "western": 77.57
+    },
+    {
+      "date": "2025-11-14",
+      "national": 75.84,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-11-17",
+      "national": 76.14,
+      "iowaMn": 76.51,
+      "western": 76.51
+    },
+    {
+      "date": "2025-11-18",
+      "national": 75.56,
+      "iowaMn": 75.5,
+      "western": 75.57
+    },
+    {
+      "date": "2025-11-19",
+      "national": 74.61,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-11-20",
+      "national": 71.87,
+      "iowaMn": 70.24,
+      "western": 70.29
+    },
+    {
+      "date": "2025-11-21",
+      "national": 70.64,
+      "iowaMn": 70.2,
+      "western": 70.2
+    },
+    {
+      "date": "2025-11-24",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-11-25",
+      "national": 71.72,
+      "iowaMn": 71.72,
+      "western": 71.72
+    },
+    {
+      "date": "2025-11-26",
+      "national": 73.57,
+      "iowaMn": 67.85,
+      "western": 68.16
+    },
+    {
+      "date": "2025-11-28",
+      "national": 72.09,
+      "iowaMn": 72.56,
+      "western": 72.56
+    },
+    {
+      "date": "2025-12-01",
+      "national": 71.68,
+      "iowaMn": 74.24,
+      "western": 73.67
+    },
+    {
+      "date": "2025-12-02",
+      "national": 71.33,
+      "iowaMn": 71.46,
+      "western": 71.5
+    },
+    {
+      "date": "2025-12-03",
+      "national": 72.09,
+      "iowaMn": 72.88,
+      "western": 72.88
+    },
+    {
+      "date": "2025-12-04",
+      "national": 72.65,
+      "iowaMn": null,
+      "western": 70.92
+    },
+    {
+      "date": "2025-12-05",
+      "national": 71.53,
+      "iowaMn": 70.49,
+      "western": 70.23
+    },
+    {
+      "date": "2025-12-08",
+      "national": 70.04,
+      "iowaMn": 71.18,
+      "western": 71.01
+    },
+    {
+      "date": "2025-12-09",
+      "national": 71.43,
+      "iowaMn": 70.39,
+      "western": 70.39
+    },
+    {
+      "date": "2025-12-10",
+      "national": 70.05,
+      "iowaMn": 69.23,
+      "western": 69.23
+    },
+    {
+      "date": "2025-12-11",
+      "national": 71.69,
+      "iowaMn": 71.53,
+      "western": 71.16
+    },
+    {
+      "date": "2025-12-12",
+      "national": 71.28,
+      "iowaMn": 71.37,
+      "western": 71.37
+    },
+    {
+      "date": "2025-12-15",
+      "national": 72.68,
+      "iowaMn": 71.68,
+      "western": 71.89
+    },
+    {
+      "date": "2025-12-16",
+      "national": 69.56,
+      "iowaMn": 70.16,
+      "western": 69.76
+    },
+    {
+      "date": "2025-12-17",
+      "national": 69.71,
+      "iowaMn": 68.91,
+      "western": 68.91
+    },
+    {
+      "date": "2025-12-18",
+      "national": 68.65,
+      "iowaMn": 68.76,
+      "western": 68.62
+    },
+    {
+      "date": "2025-12-19",
+      "national": 67.45,
+      "iowaMn": 67.38,
+      "western": 67.38
+    },
+    {
+      "date": "2025-12-22",
+      "national": 67.16,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-12-23",
+      "national": 69.43,
+      "iowaMn": null,
+      "western": 69.43
+    },
+    {
+      "date": "2025-12-24",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-12-26",
+      "national": 67.19,
+      "iowaMn": 67.19,
+      "western": 67.19
+    },
+    {
+      "date": "2025-12-29",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2025-12-30",
+      "national": 70.38,
+      "iowaMn": null,
+      "western": 70.38
+    },
+    {
+      "date": "2025-12-31",
+      "national": 70.19,
+      "iowaMn": 69.08,
+      "western": 69.81
+    },
+    {
+      "date": "2026-01-02",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-05",
+      "national": 66.36,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-06",
+      "national": 76.36,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-07",
+      "national": 72.61,
+      "iowaMn": 74.18,
+      "western": 74.18
+    },
+    {
+      "date": "2026-01-08",
+      "national": 69.37,
+      "iowaMn": 70.55,
+      "western": 70.33
+    },
+    {
+      "date": "2026-01-09",
+      "national": 68.08,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-12",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-13",
+      "national": 70.0,
+      "iowaMn": 70.0,
+      "western": 70.0
+    },
+    {
+      "date": "2026-01-14",
+      "national": 80.29,
+      "iowaMn": 80.34,
+      "western": 80.34
+    },
+    {
+      "date": "2026-01-15",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-16",
+      "national": 74.78,
+      "iowaMn": 75.5,
+      "western": 75.5
+    },
+    {
+      "date": "2026-01-19",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-20",
+      "national": 80.19,
+      "iowaMn": 82.65,
+      "western": 82.37
+    },
+    {
+      "date": "2026-01-21",
+      "national": 85.13,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-22",
+      "national": 83.09,
+      "iowaMn": 83.09,
+      "western": 83.09
+    },
+    {
+      "date": "2026-01-23",
+      "national": 83.56,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-26",
+      "national": 83.25,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-27",
+      "national": 84.82,
+      "iowaMn": 85.06,
+      "western": 85.06
+    },
+    {
+      "date": "2026-01-28",
+      "national": 86.28,
+      "iowaMn": 86.54,
+      "western": 86.57
+    },
+    {
+      "date": "2026-01-29",
+      "national": 84.38,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-01-30",
+      "national": 83.57,
+      "iowaMn": 84.87,
+      "western": 84.87
+    },
+    {
+      "date": "2026-02-02",
+      "national": 82.22,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-02-03",
+      "national": 86.37,
+      "iowaMn": 86.71,
+      "western": 86.59
+    },
+    {
+      "date": "2026-02-04",
+      "national": 86.82,
+      "iowaMn": 86.9,
+      "western": 86.9
+    },
+    {
+      "date": "2026-02-05",
+      "national": 86.58,
+      "iowaMn": null,
+      "western": 87.48
+    },
+    {
+      "date": "2026-02-06",
+      "national": 85.39,
+      "iowaMn": null,
+      "western": 85.66
+    },
+    {
+      "date": "2026-02-09",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-02-10",
+      "national": 87.74,
+      "iowaMn": 87.3,
+      "western": 87.74
+    },
+    {
+      "date": "2026-02-11",
+      "national": 88.17,
+      "iowaMn": 88.41,
+      "western": 88.22
+    },
+    {
+      "date": "2026-02-12",
+      "national": 86.95,
+      "iowaMn": 87.32,
+      "western": 86.98
+    },
+    {
+      "date": "2026-02-13",
+      "national": 85.22,
+      "iowaMn": 86.1,
+      "western": 86.1
+    },
+    {
+      "date": "2026-02-16",
+      "national": 85.24,
+      "iowaMn": 85.43,
+      "western": 85.43
+    },
+    {
+      "date": "2026-02-17",
+      "national": 88.23,
+      "iowaMn": 88.23,
+      "western": 88.23
+    },
+    {
+      "date": "2026-02-18",
+      "national": 88.34,
+      "iowaMn": null,
+      "western": 90.9
+    },
+    {
+      "date": "2026-02-19",
+      "national": 91.04,
+      "iowaMn": 91.36,
+      "western": 91.27
+    },
+    {
+      "date": "2026-02-20",
+      "national": 88.96,
+      "iowaMn": 89.36,
+      "western": 89.36
+    },
+    {
+      "date": "2026-02-23",
+      "national": 91.28,
+      "iowaMn": 91.74,
+      "western": 91.5
+    },
+    {
+      "date": "2026-02-24",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-02-25",
+      "national": 91.21,
+      "iowaMn": 91.5,
+      "western": 91.42
+    },
+    {
+      "date": "2026-02-26",
+      "national": 91.0,
+      "iowaMn": 91.07,
+      "western": 91.07
+    },
+    {
+      "date": "2026-02-27",
+      "national": 90.38,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-03-02",
+      "national": 91.87,
+      "iowaMn": 91.92,
+      "western": 91.92
+    },
+    {
+      "date": "2026-03-03",
+      "national": 91.41,
+      "iowaMn": 91.46,
+      "western": 91.46
+    },
+    {
+      "date": "2026-03-04",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-03-05",
+      "national": 89.74,
+      "iowaMn": 90.8,
+      "western": 89.73
+    },
+    {
+      "date": "2026-03-06",
+      "national": 91.69,
+      "iowaMn": 91.83,
+      "western": 91.83
+    },
+    {
+      "date": "2026-03-09",
+      "national": 91.95,
+      "iowaMn": 91.95,
+      "western": 91.95
+    },
+    {
+      "date": "2026-03-10",
+      "national": 92.77,
+      "iowaMn": 92.9,
+      "western": 92.9
+    },
+    {
+      "date": "2026-03-11",
+      "national": 92.89,
+      "iowaMn": 92.95,
+      "western": 92.95
+    },
+    {
+      "date": "2026-03-12",
+      "national": 91.39,
+      "iowaMn": null,
+      "western": 92.11
+    },
+    {
+      "date": "2026-03-13",
+      "national": 91.82,
+      "iowaMn": 92.19,
+      "western": 92.09
+    },
+    {
+      "date": "2026-03-16",
+      "national": 90.73,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-03-17",
+      "national": 92.18,
+      "iowaMn": 92.35,
+      "western": 92.34
+    },
+    {
+      "date": "2026-03-18",
+      "national": 93.29,
+      "iowaMn": 93.27,
+      "western": 93.29
+    },
+    {
+      "date": "2026-03-19",
+      "national": 92.8,
+      "iowaMn": 93.23,
+      "western": 93.23
+    },
+    {
+      "date": "2026-03-20",
+      "national": 90.38,
+      "iowaMn": 91.38,
+      "western": 91.38
+    },
+    {
+      "date": "2026-03-23",
+      "national": 91.96,
+      "iowaMn": 92.11,
+      "western": 92.06
+    },
+    {
+      "date": "2026-03-24",
+      "national": 92.62,
+      "iowaMn": 92.65,
+      "western": 92.63
+    },
+    {
+      "date": "2026-03-25",
+      "national": 91.65,
+      "iowaMn": 91.77,
+      "western": 91.64
+    },
+    {
+      "date": "2026-03-26",
+      "national": 90.89,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-03-27",
+      "national": 90.52,
+      "iowaMn": 91.02,
+      "western": 91.02
+    },
+    {
+      "date": "2026-03-30",
+      "national": 90.92,
+      "iowaMn": 90.95,
+      "western": 91.0
+    },
+    {
+      "date": "2026-03-31",
+      "national": 90.58,
+      "iowaMn": 90.79,
+      "western": 90.62
+    },
+    {
+      "date": "2026-04-01",
+      "national": 90.17,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-04-02",
+      "national": 90.35,
+      "iowaMn": 89.88,
+      "western": 90.16
+    },
+    {
+      "date": "2026-04-03",
+      "national": 89.39,
+      "iowaMn": 89.82,
+      "western": 89.82
+    },
+    {
+      "date": "2026-04-06",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-04-07",
+      "national": 90.82,
+      "iowaMn": 91.42,
+      "western": 91.36
+    },
+    {
+      "date": "2026-04-08",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-04-09",
+      "national": 89.92,
+      "iowaMn": null,
+      "western": 89.92
+    },
+    {
+      "date": "2026-04-10",
+      "national": 89.36,
+      "iowaMn": 90.18,
+      "western": 90.18
+    },
+    {
+      "date": "2026-04-13",
+      "national": 89.04,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-04-14",
+      "national": 90.77,
+      "iowaMn": 90.8,
+      "western": 90.94
+    },
+    {
+      "date": "2026-04-15",
+      "national": 91.88,
+      "iowaMn": 91.8,
+      "western": 91.88
+    },
+    {
+      "date": "2026-04-16",
+      "national": 90.16,
+      "iowaMn": 91.33,
+      "western": 91.33
+    },
+    {
+      "date": "2026-04-17",
+      "national": 90.28,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-04-20",
+      "national": 92.13,
+      "iowaMn": 92.4,
+      "western": 92.4
+    },
+    {
+      "date": "2026-04-21",
+      "national": 92.65,
+      "iowaMn": 93.21,
+      "western": 93.03
+    },
+    {
+      "date": "2026-04-22",
+      "national": 92.27,
+      "iowaMn": 92.67,
+      "western": 92.67
+    },
+    {
+      "date": "2026-04-23",
+      "national": null,
+      "iowaMn": null,
+      "western": null
+    },
+    {
+      "date": "2026-04-24",
+      "national": 90.42,
+      "iowaMn": 90.52,
+      "western": 90.4
+    },
+    {
+      "date": "2026-04-27",
+      "national": 90.24,
+      "iowaMn": 90.25,
+      "western": 90.25
+    },
+    {
+      "date": "2026-04-28",
+      "national": 92.56,
+      "iowaMn": 93.4,
+      "western": 92.77
+    }
+  ]
+}
