@@ -136,6 +136,26 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
   font-size: .8rem;
 }
 
+.data-updated {
+  margin: 12px 0 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.82rem;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.data-updated::before {
+  content: "";
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 2px rgba(26, 158, 107, 0.25);
+}
+
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

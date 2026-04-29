@@ -1,0 +1,41 @@
+# Refresh data/*.json from USDA APIs on a schedule (or manually).
+# After push, GitHub Pages or your host serves the new static JSON.
+
+name: Update USDA data
+
+on:
+  schedule:
+    # 12:00 AM America/New_York in standard time (EST) → 05:00 UTC.
+    # During EDT, same UTC time is 1:00 AM Eastern (GitHub cron is UTC-only).
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh all datasets
+        env:
+          USDA_MARS_API_KEY: ${{ secrets.USDA_MARS_API_KEY }}
+        run: python update_data.py
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "chore: refresh USDA data [skip ci]"
+            git push
+          fi

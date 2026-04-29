@@ -11,6 +11,33 @@ const latestWesternEl  = document.getElementById("latestWestern");
 const totalDaysEl      = document.getElementById("totalDays");
 const tableBodyEl      = document.getElementById("priceTableBody");
 const chartEl          = document.getElementById("priceChart");
+const dataUpdatedEl    = document.getElementById("dataUpdated");
+
+function formatDataUpdatedLabel(raw) {
+  if (raw == null || raw === "") return "";
+  const s = String(raw).trim();
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(s)
+    ? new Date(s + "T12:00:00")
+    : new Date(s);
+  if (Number.isNaN(d.getTime())) return "";
+  const hasTime = /T\d/.test(s);
+  return new Intl.DateTimeFormat("vi-VN", {
+    dateStyle: "medium",
+    ...(hasTime ? { timeStyle: "short" } : {}),
+  }).format(d);
+}
+
+function showDataUpdated(iso) {
+  if (!dataUpdatedEl) return;
+  const label = formatDataUpdatedLabel(iso);
+  if (!label) {
+    dataUpdatedEl.hidden = true;
+    dataUpdatedEl.textContent = "";
+    return;
+  }
+  dataUpdatedEl.hidden = false;
+  dataUpdatedEl.textContent = `Đã cập nhật: ${label}`;
+}
 
 function todayIso() {
   const d  = new Date();
@@ -33,6 +60,7 @@ async function loadDataset() {
   if (!res.ok) throw new Error(`Cannot load ${DATA_URL} (HTTP ${res.status})`);
   const payload = await res.json();
   fullRows = Array.isArray(payload.rows) ? payload.rows : [];
+  showDataUpdated(payload.generatedAt);
 }
 
 function filterRows(start, end) {
@@ -191,6 +219,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     await applyFilter();
   } catch (err) {
     statusEl.textContent = `Error: ${err.message}`;
+    showDataUpdated(null);
     loadBtn.disabled = false;
   }
 });

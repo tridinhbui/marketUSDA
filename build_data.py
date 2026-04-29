@@ -4,7 +4,7 @@ import json
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 API_BASE = "https://mpr.datamart.ams.usda.gov/ws/report/v1/hogs/LM_HG217"
@@ -124,6 +124,7 @@ def main():
         "series": ["national", "iowaMn", "western"],
         "startDate": START_DATE.isoformat(),
         "endDate": END_DATE.isoformat(),
+        "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "rows": rows,
     }
 

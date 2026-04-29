@@ -1,7 +1,11 @@
+import os
 import urllib.request, urllib.parse, json, base64
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 
-KEY   = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
+KEY   = os.environ.get(
+    "USDA_MARS_API_KEY",
+    "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs=",
+)
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 START = date(2023, 1, 1)
 END   = date.today()
@@ -51,7 +55,7 @@ output = {
     'report': 'AMS_3647 - Weekly National Turkey Report',
     'item': 'Whole Young Hen, 8-16 lb, U.S. Grade A',
     'priceUnit': 'Cents Per Lb',
-    'generatedAt': date.today().isoformat(),
+    'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
     'rows': [
         {
             'week_start': r['report_begin_date'],
