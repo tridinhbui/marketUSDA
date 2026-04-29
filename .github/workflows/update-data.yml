@@ -24,6 +24,7 @@ jobs:
           python-version: "3.12"
 
       - name: Refresh all datasets
+        # If USDA_MARS_API_KEY secret is unset, GitHub injects ""; scripts fall back to default key.
         env:
           USDA_MARS_API_KEY: ${{ secrets.USDA_MARS_API_KEY }}
         run: python update_data.py

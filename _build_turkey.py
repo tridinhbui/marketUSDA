@@ -2,10 +2,9 @@ import os
 import urllib.request, urllib.parse, json, base64
 from datetime import date, datetime, timedelta, timezone
 
-KEY   = os.environ.get(
-    "USDA_MARS_API_KEY",
-    "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs=",
-)
+# GitHub passes secrets as empty string when unset; get(..., default) does not fall back then.
+_MARS_DEFAULT = "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs="
+KEY = (os.environ.get("USDA_MARS_API_KEY") or "").strip() or _MARS_DEFAULT
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 START = date(2023, 1, 1)
 END   = date.today()

@@ -9,10 +9,8 @@ import os
 import urllib.request, urllib.parse, json, base64
 from datetime import date, timedelta
 
-KEY        = os.environ.get(
-    "USDA_MARS_API_KEY",
-    "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs=",
-)
+_MARS_DEFAULT = "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs="
+KEY = (os.environ.get("USDA_MARS_API_KEY") or "").strip() or _MARS_DEFAULT
 CREDS      = base64.b64encode(f'{KEY}:'.encode()).decode()
 BASE       = 'https://marsapi.ams.usda.gov/services/v1.1/reports/2868'
 CHUNK_DAYS = 90  # keep requests small enough
