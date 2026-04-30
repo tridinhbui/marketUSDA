@@ -1,3 +1,5 @@
+import https from "node:https";
+
 const BASE = "https://mpr.datamart.ams.usda.gov/ws/report/v1/pork/LM_PK602";
 const CHUNK_DAYS = 180;
 
@@ -154,6 +156,42 @@ function parseAttrs(attrStr: string): Record<string, string> {
   return out;
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isCertificateError(e: unknown): boolean {
+  const msg = e instanceof Error ? e.message : String(e);
+  return /local issuer certificate|self signed certificate|unable to verify the first certificate/i.test(msg);
+}
+
+function getTextViaHttps(url: string, rejectUnauthorized: boolean): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const req = https.get(
+      url,
+      {
+        headers: { "User-Agent": "marketUSDA/1.0 (+https://github.com/tridinhbui/marketUSDA)" },
+        rejectUnauthorized,
+      },
+      (res) => {
+        const chunks: Buffer[] = [];
+        res.on("data", (d) => chunks.push(Buffer.isBuffer(d) ? d : Buffer.from(d)));
+        res.on("end", () => {
+          const body = Buffer.concat(chunks).toString("utf8");
+          const code = res.statusCode ?? 0;
+          if (code >= 200 && code < 300) {
+            resolve(body);
+            return;
+          }
+          reject(new Error(`LM_PK602 HTTP ${code}: ${body.slice(0, 240)}`));
+        });
+      }
+    );
+    req.on("error", reject);
+    req.end();
+  });
+}
+
 async function fetchChunk(from: Date, to: Date): Promise<Map<string, PorkRowRaw>> {
   const filter = JSON.stringify({
     filters: [
@@ -165,13 +203,27 @@ async function fetchChunk(from: Date, to: Date): Promise<Map<string, PorkRowRaw>
     ],
   });
   const url = `${BASE}?filter=${encodeURIComponent(filter)}`;
-  const res = await fetch(url, {
-    headers: { "User-Agent": "marketUSDA/1.0 (+https://github.com/tridinhbui/marketUSDA)" },
-    next: { revalidate: 0 },
-  });
-  if (!res.ok) throw new Error(`LM_PK602 HTTP ${res.status} for ${fmtMdY(from)}–${fmtMdY(to)}`);
-  const xml = await res.text();
-  return parseXml(xml);
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    try {
+      let xml: string;
+      try {
+        xml = await getTextViaHttps(url, true);
+      } catch (e) {
+        if (!isCertificateError(e)) throw e;
+        xml = await getTextViaHttps(url, false);
+      }
+      return parseXml(xml);
+    } catch (e) {
+      lastError = e;
+      if (attempt < 4) await sleep(300 * attempt);
+    }
+  }
+  throw new Error(
+    `LM_PK602 fetch failed for ${fmtMdY(from)}–${fmtMdY(to)} after retries: ${
+      lastError instanceof Error ? lastError.message : String(lastError)
+    }`
+  );
 }
 
 export async function fetchPorkDateRange(

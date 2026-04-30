@@ -528,6 +528,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
 
         if (apiTab === "pork") {
           porkLogStickBottomRef.current = true;
+          setPorkFull([]);
+          setPorkRows([]);
           setPorkFetchLog([
             { t: new Date().toISOString(), message: `Start pull for ${start} -> ${end}` },
             { t: new Date().toISOString(), message: "Requesting /api/fetch-range?tab=pork" },
@@ -535,36 +537,28 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         }
 
         const res = await fetch(
-          `/api/fetch-range?tab=${apiTab}&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
+          `/api/fetch-range?tab=${apiTab}&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`,
+          { cache: "no-store" }
         );
         const data = (await res.json()) as {
           error?: string;
           rows?: unknown[];
           generatedAt?: string;
           tab?: string;
-          source?: "live" | "cache";
         };
         if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
         if (apiTab === "pork") {
           if (myGen !== porkPullGenRef.current) return;
           const rows = data.rows as PorkRow[];
-          setPorkFull((prev) => {
-            const map = new Map<string, PorkRow>();
-            for (const r of prev) map.set(r.date, r);
-            for (const r of rows) map.set(r.date, r);
-            return [...map.values()].sort((a, b) => a.date.localeCompare(b.date));
-          });
+          setPorkFull([...rows].sort((a, b) => a.date.localeCompare(b.date)));
           setPorkMeta(data.generatedAt);
           const count = data.rows?.length ?? 0;
           setPorkFetchLog((prev) => [
             ...prev,
             {
               t: new Date().toISOString(),
-              message:
-                data.source === "cache"
-                  ? "Live USDA failed, used local cache data (public/data/pork_cutout_daily.json)"
-                  : "Live USDA data received",
+              message: "Live USDA data received",
             },
             { t: new Date().toISOString(), message: `Done: ${count} row(s)` },
           ]);
