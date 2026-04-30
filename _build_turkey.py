@@ -1,7 +1,15 @@
+import os
 import urllib.request, urllib.parse, json, base64
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 
-KEY   = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
+# GitHub may pass a literal "null" for unset secrets; treat as missing.
+_MARS_DEFAULT = "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs="
+_raw = (os.environ.get("USDA_MARS_API_KEY") or "").strip()
+KEY = (
+    _MARS_DEFAULT
+    if (not _raw or _raw.lower() in ("null", "undefined", "none", ""))
+    else _raw
+)
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 START = date(2023, 1, 1)
 END   = date.today()
@@ -15,7 +23,14 @@ def fetch_chunk(d_from, d_to):
         'allSections': 'true'
     })
     url = f'https://marsapi.ams.usda.gov/services/v1.1/reports/3647?{params}'
-    req = urllib.request.Request(url, headers={'Authorization': f'Basic {CREDS}'})
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Authorization": f"Basic {CREDS}",
+            "User-Agent": "marketUSDA/1.0 (USDA public data; +https://github.com/tridinhbui/marketUSDA)",
+            "Accept": "application/json",
+        },
+    )
     with urllib.request.urlopen(req, timeout=30) as r:
         data = json.load(r)
     if isinstance(data, list):
@@ -45,13 +60,13 @@ print(f'Total: {len(all_rows)} records')
 
 # Write to JSON
 import os
-os.makedirs('data', exist_ok=True)
+os.makedirs('public/data', exist_ok=True)
 output = {
     'source': 'USDA MARS API v1.1',
     'report': 'AMS_3647 - Weekly National Turkey Report',
     'item': 'Whole Young Hen, 8-16 lb, U.S. Grade A',
     'priceUnit': 'Cents Per Lb',
-    'generatedAt': date.today().isoformat(),
+    'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
     'rows': [
         {
             'week_start': r['report_begin_date'],
@@ -65,6 +80,6 @@ output = {
         for r in all_rows
     ]
 }
-with open('data/turkey_hen_weekly.json', 'w') as f:
+with open('public/data/turkey_hen_weekly.json', 'w') as f:
     json.dump(output, f, indent=2)
-print('Wrote data/turkey_hen_weekly.json')
+print('Wrote public/data/turkey_hen_weekly.json')

@@ -21,16 +21,6 @@
     .val-frozen { color: #1d6fca; font-weight: 600; }
     .val-null   { color: #9ca3af; }
 
-    .nav-link {
-      display: inline-block;
-      margin-bottom: 6px;
-      font-size: .82rem;
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .nav-link:hover { text-decoration: underline; }
-
     .filter-row {
       display: flex;
       gap: 8px;
@@ -60,11 +50,14 @@
 <body>
   <main class="shell">
     <header class="hero">
-      <a class="nav-link" href="index.html">← Hog Prices</a>
-      <a class="nav-link" href="pork.html">→ Pork Cutout</a>
+      <div class="hero-top">
+        <a class="nav-link" href="index.html">← Hog Prices</a>
+        <button type="button" id="refreshBtn" class="btn-refresh" title="Reload page and fetch the latest JSON">Refresh</button>
+      </div>
       <p class="eyebrow">USDA MARS API · AMS_3647</p>
       <h1>Weekly Turkey Prices</h1>
       <p class="sub">Whole Young Hen · 8–16 lb · U.S. Grade A — cents per lb.</p>
+      <p id="dataUpdated" class="data-updated" hidden></p>
     </header>
 
     <section class="panel controls">
