@@ -76,13 +76,13 @@ export async function GET(request: Request) {
     return NextResponse.json({
       found: false,
       phase: "waiting",
-      label: "Đang chờ GitHub tạo run…",
+      label: "Waiting for GitHub to create the run…",
     });
   }
 
   let stepHint: string | null = null;
   if (run.status === "queued") {
-    stepHint = "Đang xếp hàng chờ runner…";
+    stepHint = "Queued — waiting for a runner…";
   } else if (run.status === "in_progress" || run.status === "waiting") {
     const jobsUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/actions/runs/${run.id}/jobs`;
     const jobsRes = await fetch(jobsUrl, {
@@ -104,16 +104,16 @@ export async function GET(request: Request) {
         stepHint = job.name;
       }
     }
-    if (!stepHint) stepHint = "Đang chạy workflow…";
+    if (!stepHint) stepHint = "Workflow running…";
   }
 
   const label =
     run.status === "completed"
       ? run.conclusion === "success"
-        ? "Hoàn thành thành công."
+        ? "Completed successfully."
         : run.conclusion === "failure"
-          ? "Workflow thất bại."
-          : `Kết thúc: ${run.conclusion ?? "unknown"}`
+          ? "Workflow failed."
+          : `Finished: ${run.conclusion ?? "unknown"}`
       : (stepHint ?? run.status);
 
   return NextResponse.json({

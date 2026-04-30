@@ -37,7 +37,7 @@ function showDataUpdated(iso) {
     return;
   }
   dataUpdatedEl.hidden = false;
-  dataUpdatedEl.textContent = `Đã cập nhật: ${label}`;
+  dataUpdatedEl.textContent = `Updated: ${label}`;
 }
 
 function todayIso() {
@@ -216,7 +216,7 @@ if (refreshBtn) {
       const res = await fetch(DATA_URL, { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
     } catch (e) {
-      statusEl.textContent = `Làm mới thất bại: ${e.message}`;
+      statusEl.textContent = `Refresh failed: ${e.message}`;
       refreshBtn.disabled = false;
       return;
     }

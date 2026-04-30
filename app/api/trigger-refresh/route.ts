@@ -48,7 +48,7 @@ export async function POST() {
     ok: true,
     pollSince,
     message:
-      "Đã gửi workflow. Theo dõi tiến độ bên dưới; khi xong hãy “Làm mới dữ liệu” hoặc đợi Vercel deploy.",
+      "Workflow dispatched. Poll status via API if needed, then hit Refresh on the site or wait for Vercel to deploy.",
   });
 }
 
