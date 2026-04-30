@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server";
+import { getGithubConfig, githubHeaders } from "@/lib/github-workflow";
 
 /**
  * POST — triggers GitHub Actions workflow_dispatch for update-data.yml
  *
- * Env (Vercel):
- *   GITHUB_TOKEN — fine-grained PAT with Actions: Write, or classic PAT with `workflow`
- *   GITHUB_OWNER / GITHUB_REPO — optional (defaults tridinhbui / marketUSDA)
- *
- * Confirmation is done in the UI (user must type CONFIRM); not a server secret.
+ * Response includes `pollSince` — pass to GET /api/workflow-status?since= for progress polling.
  */
 export async function POST() {
-  const token = process.env.GITHUB_TOKEN?.trim();
-  if (!token) {
+  const cfg = getGithubConfig();
+  if (!cfg) {
     return NextResponse.json(
       {
         error: "GITHUB_TOKEN is not configured",
@@ -21,18 +18,15 @@ export async function POST() {
     );
   }
 
-  const owner = process.env.GITHUB_OWNER?.trim() || "tridinhbui";
-  const repo = process.env.GITHUB_REPO?.trim() || "marketUSDA";
-  const workflow_id = "update-data.yml";
+  // Slightly early so clock skew / run creation delay still matches this run
+  const pollSince = new Date(Date.now() - 10_000).toISOString();
 
-  const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_id}/dispatches`;
+  const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/actions/workflows/${cfg.workflowId}/dispatches`;
 
   const ghRes = await fetch(url, {
     method: "POST",
     headers: {
-      Accept: "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2022-11-28",
-      Authorization: `Bearer ${token}`,
+      ...githubHeaders(cfg.token),
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ ref: "main" }),
@@ -52,7 +46,9 @@ export async function POST() {
 
   return NextResponse.json({
     ok: true,
-    message: "Workflow “Update USDA data” dispatched. Wait 2–5 minutes, then use “Làm mới dữ liệu” or redeploy.",
+    pollSince,
+    message:
+      "Đã gửi workflow. Theo dõi tiến độ bên dưới; khi xong hãy “Làm mới dữ liệu” hoặc đợi Vercel deploy.",
   });
 }
 
