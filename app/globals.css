@@ -12,10 +12,10 @@
   --brown-700: #a68968;
   --brown-600: #d97706;
   --brown-100: #fde8d4;
-  /* Flat UI browns (no gradients) — slightly lighter for readability */
-  --btn-brown: #6e5345;
-  --btn-brown-hover: #5d4539;
-  --btn-brown-border: #4d3a30;
+  /* Primary buttons & active tabs — warm brown, lighter fill */
+  --btn-brown: #a38774;
+  --btn-brown-hover: #8e7262;
+  --btn-brown-border: #6f5a4d;
   --tab-inactive-bg: #ffffff;
   --tab-inactive-border: #e7e5e4;
   --accent: var(--btn-brown);
@@ -200,7 +200,7 @@ input[type="date"] {
 input[type="date"]:focus {
   outline: none;
   border-color: var(--btn-brown);
-  box-shadow: 0 0 0 2px rgba(110, 83, 69, 0.22);
+  box-shadow: 0 0 0 2px rgba(163, 135, 116, 0.28);
 }
 
 .select-brown,
@@ -243,7 +243,7 @@ select:focus {
 
 .btn-brown:hover:not(:disabled) {
   background: var(--btn-brown-hover);
-  border-color: #3d2e26;
+  border-color: #5c4a40;
   filter: none;
 }
 
@@ -277,38 +277,36 @@ select:focus {
   line-height: 1.4;
 }
 
-.advanced-ops {
-  grid-column: 1 / -1;
-  margin-top: 6px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-
-.advanced-ops__summary {
-  cursor: pointer;
-  font-size: 0.85rem;
-  color: var(--muted);
-  font-weight: 600;
-  list-style-position: outside;
-  padding: 4px 0;
-}
-
-.advanced-ops__summary:hover {
-  color: var(--ink);
-}
-
-.advanced-ops__body {
-  margin-top: 10px;
+.admin-panel {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
-.advanced-ops__hint {
+.admin-panel__title {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 1.05rem;
+  color: var(--brown-950);
+}
+
+.admin-panel__hint {
+  margin: 0;
+  font-size: 0.9rem;
   color: var(--muted);
   line-height: 1.45;
-  max-width: 56ch;
+  max-width: 60ch;
+}
+
+.admin-panel__status {
+  margin: 4px 0 0;
+}
+
+.inline-code {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.86em;
+  background: #f5f5f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
 }
 
 .metrics {

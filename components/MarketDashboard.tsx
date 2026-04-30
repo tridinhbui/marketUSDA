@@ -15,7 +15,7 @@ import {
 const HOG_URL = "/data/lm_hg217_daily_prices.json";
 const TURKEY_URL = "/data/turkey_hen_weekly.json";
 
-type Tab = "hog" | "turkey";
+type Tab = "hog" | "turkey" | "admin";
 
 interface HogRow {
   date: string;
@@ -110,6 +110,12 @@ function mergeTurkeyRows(prev: TurkeyRow[], incoming: Omit<TurkeyRow, "isoDate">
 
 const TURKEY_LINE = { Fresh: "#92400e", Frozen: "#451a03" };
 
+const EMPTY_DATA_HINT =
+  "No data loaded yet. Set a date range and press Refresh to fetch from USDA.";
+
+const ADMIN_TAB_HINT =
+  "Run the background job below to rebuild the saved JSON files. Progress and the follow-up reload appear here.";
+
 function exportHog(rows: HogRow[]) {
   import("xlsx").then((XLSX) => {
     const data = [
@@ -160,14 +166,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [condition, setCondition] = useState<Condition>("all");
   const [tableDateOrder, setTableDateOrder] = useState<TableDateOrder>("asc");
 
-  const [status, setStatus] = useState("Loading…");
+  const [status, setStatus] = useState(() => (initialTab === "admin" ? ADMIN_TAB_HINT : EMPTY_DATA_HINT));
   const [fetchingRange, setFetchingRange] = useState(false);
   const [githubBusy, setGithubBusy] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hogUsdaAutoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  /** Skip first hog date-range evaluation (no duplicate USDA hit on load). */
-  const hogUsdaAutoInitRef = useRef(false);
-  const lastHogUsdaKeyRef = useRef<string>("");
   /** Invalidate in-flight hog USDA responses when a newer hog request starts. */
   const hogPullGenRef = useRef(0);
   const mountedRef = useRef(true);
@@ -183,6 +185,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     (t: Tab) => {
       const q = new URLSearchParams(searchParams?.toString() ?? "");
       if (t === "turkey") q.set("tab", "turkey");
+      else if (t === "admin") q.set("tab", "admin");
       else q.delete("tab");
       const s = q.toString();
       router.replace(s ? `/?${s}` : "/", { scroll: false });
@@ -242,24 +245,21 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     []
   );
 
-  /* Initial load both datasets */
-  useEffect(() => {
-    (async () => {
-      try {
-        setStatus("Loading datasets…");
-        await Promise.all([loadHog(false), loadTurkey(false)]);
-        setStatus("Select a date range. Data updates as you change dates.");
-      } catch (e) {
-        setStatus(`Error: ${e instanceof Error ? e.message : String(e)}`);
-      }
-    })();
-  }, [loadHog, loadTurkey]);
-
   /* Apply filters when dates / full data / condition change (debounced for date inputs) */
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      if (!hogFull.length && !turkeyFull.length) return;
+      if (tab === "admin") return;
+
+      if (!hogFull.length && !turkeyFull.length) {
+        if (!startDate || !endDate || startDate > endDate) {
+          setStatus("Choose a valid date range (start ≤ end).");
+        } else {
+          setStatus(EMPTY_DATA_HINT);
+        }
+        return;
+      }
+
       if (!startDate || !endDate || startDate > endDate) {
         setStatus("Choose a valid date range (start ≤ end).");
         return;
@@ -287,17 +287,15 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     const [h, t] = await Promise.all([loadHog(true), loadTurkey(true)]);
     filterHog(h, startDate, endDate);
     filterTurkey(t, startDate, endDate, condition);
-    const n =
-      tab === "hog"
-        ? h.filter((r) => r.date >= startDate && r.date <= endDate).length
-        : t.filter(
-            (r) =>
-              r.isoDate >= startDate &&
-              r.isoDate <= endDate &&
-              (condition === "all" || r.condition === condition)
-          ).length;
-    return n;
-  }, [loadHog, loadTurkey, filterHog, filterTurkey, startDate, endDate, condition, tab]);
+    const nHog = h.filter((r) => r.date >= startDate && r.date <= endDate).length;
+    const nTurkey = t.filter(
+      (r) =>
+        r.isoDate >= startDate &&
+        r.isoDate <= endDate &&
+        (condition === "all" || r.condition === condition)
+    ).length;
+    return { nHog, nTurkey };
+  }, [loadHog, loadTurkey, filterHog, filterTurkey, startDate, endDate, condition]);
 
   const pullUsdaRange = useCallback(
     async (apiTab: "hog" | "turkey", start: string, end: string, introStatus: string) => {
@@ -334,7 +332,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         if (apiTab === "hog" && myGen !== hogPullGenRef.current) return;
         setStatus(
           count > 0
-            ? `Loaded ${count} new row(s) from USDA for this range. Charts use merged data.`
+            ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
             : `USDA returned no rows for that range — try different dates.`
         );
       } catch (e) {
@@ -348,44 +346,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     []
   );
 
-  /* Daily hogs: after you change start/end, pull that window from USDA (debounced). */
-  useEffect(() => {
-    if (tab !== "hog") return;
-    if (!startDate || !endDate || startDate > endDate) return;
-
-    const key = `${startDate}|${endDate}`;
-    if (!hogUsdaAutoInitRef.current) {
-      hogUsdaAutoInitRef.current = true;
-      lastHogUsdaKeyRef.current = key;
-      return;
-    }
-    if (lastHogUsdaKeyRef.current === key) return;
-
-    if (hogUsdaAutoTimerRef.current) clearTimeout(hogUsdaAutoTimerRef.current);
-    hogUsdaAutoTimerRef.current = setTimeout(() => {
-      lastHogUsdaKeyRef.current = key;
-      void pullUsdaRange(
-        "hog",
-        startDate,
-        endDate,
-        `Loading daily hog prices from USDA for ${startDate} → ${endDate}…`
-      );
-    }, 650);
-
-    return () => {
-      if (hogUsdaAutoTimerRef.current) clearTimeout(hogUsdaAutoTimerRef.current);
-    };
-  }, [tab, startDate, endDate, pullUsdaRange]);
-
   async function fetchUsdaForRange() {
-    if (tab === "hog") {
-      const key = `${startDate}|${endDate}`;
-      lastHogUsdaKeyRef.current = key;
-      if (hogUsdaAutoTimerRef.current) {
-        clearTimeout(hogUsdaAutoTimerRef.current);
-        hogUsdaAutoTimerRef.current = null;
-      }
-    }
+    if (tab !== "hog" && tab !== "turkey") return;
     await pullUsdaRange(
       tab === "hog" ? "hog" : "turkey",
       startDate,
@@ -459,12 +421,12 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             if (!mountedRef.current) return;
             setStatus("Update finished. Loading the latest saved data…");
             try {
-              const n = await reloadDeployedJson();
+              const { nHog, nTurkey } = await reloadDeployedJson();
               if (!mountedRef.current) return;
               setStatus(
-                n > 0
-                  ? `Saved data refreshed · ${n} ${tab === "hog" ? "trading days" : "rows"} in your date range. If numbers look old, wait a minute and reload the page.`
-                  : "Saved data refreshed · no rows in your current date range."
+                nHog + nTurkey > 0
+                  ? `Saved data refreshed (${startDate} → ${endDate}): ${nHog} hog trading days, ${nTurkey} turkey rows in range. Open the Hog or Turkey tab to view. Reloading this page clears data until you Refresh or run this again.`
+                  : "Saved data refreshed — no rows in your current date range on either dataset. Try widening dates."
               );
             } catch (e) {
               if (!mountedRef.current) return;
@@ -497,6 +459,9 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   function selectTab(t: Tab) {
     setTab(t);
     syncTabToUrl(t);
+    if (t === "admin" && !githubBusy && !fetchingRange) {
+      setStatus(ADMIN_TAB_HINT);
+    }
   }
 
   const hogRowsChrono = useMemo(
@@ -555,7 +520,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   return (
     <main className="shell">
       <header className="top-bar">
-        <div className="tabs" role="tablist" aria-label="Dataset">
+        <div className="tabs" role="tablist" aria-label="Primary navigation">
           <button
             type="button"
             role="tab"
@@ -574,6 +539,15 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           >
             Weekly turkey (AMS_3647)
           </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "admin"}
+            className={`tab-btn ${tab === "admin" ? "tab-btn--active" : ""}`}
+            onClick={() => selectTab("admin")}
+          >
+            Site admin
+          </button>
         </div>
       </header>
 
@@ -582,92 +556,104 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           <>
             <p className="eyebrow">USDA MPR Datamart · negotiated carcass</p>
             <h1>Daily hog prices</h1>
-            <p className="sub">National, Iowa/Minnesota, and Western Cornbelt — $/cwt.</p>
+            <p className="sub">National, Iowa/Minnesota, and Western Cornbelt — $/cwt. Reloading this page clears all data until you press Refresh.</p>
             {hogMeta && <p className="data-updated">Dataset updated: {formatUpdatedEn(hogMeta)}</p>}
           </>
-        ) : (
+        ) : tab === "turkey" ? (
           <>
             <p className="eyebrow">USDA MARS · whole young hen 8–16 lb, Grade A</p>
             <h1>Weekly turkey prices</h1>
-            <p className="sub">Prices in cents per pound; frozen vs fresh.</p>
+            <p className="sub">Prices in cents per pound; frozen vs fresh. Reloading this page clears all data until you press Refresh.</p>
             {turkeyMeta && <p className="data-updated">Dataset updated: {formatUpdatedEn(turkeyMeta)}</p>}
+          </>
+        ) : (
+          <>
+            <p className="eyebrow">Administrators</p>
+            <h1>Update saved site data</h1>
+            <p className="sub">
+            Triggers a background job (GitHub Actions) that rebuilds the JSON files under{" "}
+            <code className="inline-code">/public/data/</code>. Status and loading the new files into this
+            browser session stay on this tab. A full page reload still clears Hog/Turkey until Refresh is pressed there.
+            </p>
           </>
         )}
       </header>
 
-      <section
-        className={`panel controls ${tab === "hog" ? "controls--dashboard--hog" : "controls--dashboard"}`}
-      >
-        <div className="field">
-          <label htmlFor="startDate">Start date</label>
-          <input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-        </div>
-        <div className="field">
-          <label htmlFor="endDate">End date</label>
-          <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-        </div>
-        <div className="field field--action">
-          <label htmlFor="fetch-usda-btn">Refresh</label>
-          <button
-            id="fetch-usda-btn"
-            type="button"
-            className="btn-brown"
-            onClick={() => void fetchUsdaForRange()}
-            disabled={fetchingRange || githubBusy}
-            title={
-              tab === "hog"
-                ? "Daily hogs: changing the dates above also loads USDA automatically after a short pause. Use Refresh for an immediate pull."
-                : "Pull the latest figures from USDA for the dates above (this browser tab only)."
-            }
-          >
-            {fetchingRange ? "Loading…" : "Refresh"}
-          </button>
-        </div>
-        {tab === "turkey" && (
-          <div className="field field--grow">
-            <label htmlFor="condFilter">Condition</label>
-            <select
-              id="condFilter"
-              value={condition}
-              onChange={(e) => setCondition(e.target.value as Condition)}
-              className="select-brown"
-            >
-              <option value="all">Fresh + frozen</option>
-              <option value="Fresh">Fresh only</option>
-              <option value="Frozen">Frozen only</option>
-            </select>
-          </div>
-        )}
-        <button
-          type="button"
-          className="btn-brown btn-export-dash"
-          onClick={() =>
-            tab === "hog" ? exportHog(hogRowsForTable) : exportTurkey(turkeyRowsForTable)
-          }
-          disabled={tab === "hog" ? hogRows.length === 0 : turkeyRows.length === 0}
+      {tab !== "admin" && (
+        <section
+          className={`panel controls ${tab === "hog" ? "controls--dashboard--hog" : "controls--dashboard"}`}
         >
-          Export Excel
-        </button>
-        <details className="advanced-ops">
-          <summary className="advanced-ops__summary">Advanced — update data for everyone</summary>
-          <div className="advanced-ops__body">
-            <p className="advanced-ops__hint">
-              For site administrators only. Starts a long background task that refreshes the saved files on the server so all visitors see new numbers (several minutes; not the same as the Refresh button above).
-            </p>
+          <div className="field">
+            <label htmlFor="startDate">Start date</label>
+            <input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          </div>
+          <div className="field">
+            <label htmlFor="endDate">End date</label>
+            <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          </div>
+          <div className="field field--action">
+            <label htmlFor="fetch-usda-btn">Refresh</label>
             <button
-              id="server-refresh-btn"
+              id="fetch-usda-btn"
               type="button"
-              className="btn-brown btn-brown--outline"
-              onClick={() => void syncRepoViaGithub()}
+              className="btn-brown"
+              onClick={() => void fetchUsdaForRange()}
               disabled={fetchingRange || githubBusy}
-              title="Administrative: refreshes shared data files on the host"
+              title="Load the latest figures from USDA for the dates above (this browser tab only)."
             >
-              {githubBusy ? "Working…" : "Refresh saved data for all visitors"}
+              {fetchingRange ? "Loading…" : "Refresh"}
             </button>
           </div>
-        </details>
-        <p className="status status--full">{status}</p>
-      </section>
+          {tab === "turkey" && (
+            <div className="field field--grow">
+              <label htmlFor="condFilter">Condition</label>
+              <select
+                id="condFilter"
+                value={condition}
+                onChange={(e) => setCondition(e.target.value as Condition)}
+                className="select-brown"
+              >
+                <option value="all">Fresh + frozen</option>
+                <option value="Fresh">Fresh only</option>
+                <option value="Frozen">Frozen only</option>
+              </select>
+            </div>
+          )}
+          <button
+            type="button"
+            className="btn-brown btn-export-dash"
+            onClick={() =>
+              tab === "hog" ? exportHog(hogRowsForTable) : exportTurkey(turkeyRowsForTable)
+            }
+            disabled={tab === "hog" ? hogRows.length === 0 : turkeyRows.length === 0}
+          >
+            Export Excel
+          </button>
+          <p className="status status--full">{status}</p>
+        </section>
+      )}
+
+      {tab === "admin" && (
+        <section className="panel admin-panel">
+          <h2 className="admin-panel__title">Background refresh</h2>
+          <p className="admin-panel__hint">
+            For site maintainers only. This is not the Hog/Turkey Refresh control: it starts a long server-side
+            job, then loads the new files into this open session so you can check Hog or Turkey without another
+            USDA pull.
+          </p>
+          <button
+            id="server-refresh-btn"
+            type="button"
+            className="btn-brown btn-brown--outline"
+            onClick={() => void syncRepoViaGithub()}
+            disabled={fetchingRange || githubBusy}
+            title="Administrative: refreshes shared data files on the host"
+          >
+            {githubBusy ? "Working…" : "Refresh saved data for all visitors"}
+          </button>
+          <p className="status status--full admin-panel__status">{status}</p>
+        </section>
+      )}
 
       {tab === "hog" && (
         <>
@@ -882,6 +868,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           </section>
         </>
       )}
+
     </main>
   );
 }

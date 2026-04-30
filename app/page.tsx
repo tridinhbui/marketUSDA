@@ -2,7 +2,9 @@ import { Suspense } from "react";
 import MarketDashboard from "@/components/MarketDashboard";
 
 export default function Page({ searchParams }: { searchParams: { tab?: string } }) {
-  const initialTab = searchParams.tab === "turkey" ? "turkey" : "hog";
+  const tabQ = searchParams.tab;
+  const initialTab =
+    tabQ === "turkey" ? "turkey" : tabQ === "admin" ? "admin" : "hog";
   return (
     <Suspense
       fallback={
