@@ -30,12 +30,17 @@ interface HogRefreshLogRow {
   message: string;
 }
 
+interface PorkRefreshLogRow {
+  t: string;
+  message: string;
+}
+
 type HogStreamEvent =
   | { type: "log"; t: string; message: string }
   | { type: "done"; generatedAt: string; rows: HogRow[] }
   | { type: "error"; error: string };
 
-function formatHogLogTime(iso: string) {
+function formatLogTime(iso: string) {
   try {
     return new Date(iso).toLocaleTimeString(undefined, {
       hour: "2-digit",
@@ -229,7 +234,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<Tab>(initialTab);
 
-  const [startDate, setStartDate] = useState("2023-01-01");
+  const [startDate, setStartDate] = useState("2019-01-01");
   const [endDate, setEndDate] = useState(todayIso());
 
   const [hogFull, setHogFull] = useState<HogRow[]>([]);
@@ -250,12 +255,16 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [fetchingRange, setFetchingRange] = useState(false);
   const [githubBusy, setGithubBusy] = useState(false);
   const [hogFetchLog, setHogFetchLog] = useState<HogRefreshLogRow[]>([]);
+  const [porkFetchLog, setPorkFetchLog] = useState<PorkRefreshLogRow[]>([]);
   const hogLogScrollRef = useRef<HTMLDivElement>(null);
+  const porkLogScrollRef = useRef<HTMLDivElement>(null);
   /** When true, new log lines auto-scroll to bottom; false if user scrolled up. */
   const hogLogStickBottomRef = useRef(true);
+  const porkLogStickBottomRef = useRef(true);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** Invalidate in-flight hog USDA responses when a newer hog request starts. */
   const hogPullGenRef = useRef(0);
+  const porkPullGenRef = useRef(0);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -272,6 +281,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       el.scrollTop = el.scrollHeight;
     });
   }, [hogFetchLog, fetchingRange]);
+
+  useLayoutEffect(() => {
+    const el = porkLogScrollRef.current;
+    if (!el || !porkLogStickBottomRef.current) return;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [porkFetchLog, fetchingRange]);
 
   const syncTabToUrl = useCallback(
     (t: Tab) => {
@@ -428,7 +445,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         setStatus("Choose a valid date range (start ≤ end).");
         return;
       }
-      const myGen = apiTab === "hog" ? ++hogPullGenRef.current : 0;
+      const myGen =
+        apiTab === "hog" ? ++hogPullGenRef.current : apiTab === "pork" ? ++porkPullGenRef.current : 0;
       setFetchingRange(true);
       try {
         setStatus(introStatus);
@@ -508,6 +526,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           return;
         }
 
+        if (apiTab === "pork") {
+          porkLogStickBottomRef.current = true;
+          setPorkFetchLog([
+            { t: new Date().toISOString(), message: `Start pull for ${start} -> ${end}` },
+            { t: new Date().toISOString(), message: "Requesting /api/fetch-range?tab=pork" },
+          ]);
+        }
+
         const res = await fetch(
           `/api/fetch-range?tab=${apiTab}&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
         );
@@ -516,10 +542,12 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           rows?: unknown[];
           generatedAt?: string;
           tab?: string;
+          source?: "live" | "cache";
         };
         if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
         if (apiTab === "pork") {
+          if (myGen !== porkPullGenRef.current) return;
           const rows = data.rows as PorkRow[];
           setPorkFull((prev) => {
             const map = new Map<string, PorkRow>();
@@ -529,6 +557,17 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           });
           setPorkMeta(data.generatedAt);
           const count = data.rows?.length ?? 0;
+          setPorkFetchLog((prev) => [
+            ...prev,
+            {
+              t: new Date().toISOString(),
+              message:
+                data.source === "cache"
+                  ? "Live USDA failed, used local cache data (public/data/pork_cutout_daily.json)"
+                  : "Live USDA data received",
+            },
+            { t: new Date().toISOString(), message: `Done: ${count} row(s)` },
+          ]);
           setStatus(
             count > 0
               ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
@@ -548,6 +587,15 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       } catch (e) {
         if (apiTab !== "hog" || myGen === hogPullGenRef.current) {
           setStatus(`Could not load fresh data: ${e instanceof Error ? e.message : String(e)}`);
+        }
+        if (apiTab === "pork" && myGen === porkPullGenRef.current) {
+          setPorkFetchLog((prev) => [
+            ...prev,
+            {
+              t: new Date().toISOString(),
+              message: `Error: ${e instanceof Error ? e.message : String(e)}`,
+            },
+          ]);
         }
       } finally {
         if (mountedRef.current) setFetchingRange(false);
@@ -915,7 +963,54 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                       hogFetchLog.map((row, i) => (
                         <tr key={`${row.t}-${i}`}>
                           <td className="hog-fetch-log__num">{i + 1}</td>
-                          <td className="hog-fetch-log__time">{formatHogLogTime(row.t)}</td>
+                          <td className="hog-fetch-log__time">{formatLogTime(row.t)}</td>
+                          <td className="hog-fetch-log__msg">{row.message}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+          {tab === "pork" && (
+            <div className="hog-fetch-log">
+              <p className="hog-fetch-log__title">USDA pork pull log</p>
+              <div
+                className="hog-fetch-log__scroll"
+                ref={porkLogScrollRef}
+                onScroll={(e) => {
+                  const t = e.currentTarget;
+                  porkLogStickBottomRef.current =
+                    t.scrollHeight - t.scrollTop - t.clientHeight < 12;
+                }}
+              >
+                <table className="hog-fetch-log__table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Time</th>
+                      <th>Step</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {porkFetchLog.length === 0 && !fetchingRange ? (
+                      <tr>
+                        <td colSpan={3} className="hog-fetch-log__empty">
+                          No log yet - press Refresh to pull pork data.
+                        </td>
+                      </tr>
+                    ) : porkFetchLog.length === 0 && fetchingRange ? (
+                      <tr>
+                        <td colSpan={3} className="hog-fetch-log__empty">
+                          Connecting...
+                        </td>
+                      </tr>
+                    ) : (
+                      porkFetchLog.map((row, i) => (
+                        <tr key={`${row.t}-${i}`}>
+                          <td className="hog-fetch-log__num">{i + 1}</td>
+                          <td className="hog-fetch-log__time">{formatLogTime(row.t)}</td>
                           <td className="hog-fetch-log__msg">{row.message}</td>
                         </tr>
                       ))
