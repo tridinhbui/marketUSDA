@@ -45,17 +45,9 @@ jobs:
             echo "No data changes."
             exit 0
           fi
+          # Fetch latest remote HEAD and build our commit on top of it.
+          # Using reset --soft avoids rebase conflicts on the same data/ files.
+          git fetch origin main
+          git reset --soft origin/main
           git commit -m "chore: refresh USDA data [skip ci]"
-          # Remote may advance while scripts run; fetch + rebase + push with retries
-          for attempt in 1 2 3 4 5; do
-            git fetch origin main
-            git rebase origin/main
-            if git push origin HEAD:main; then
-              echo "Push ok."
-              exit 0
-            fi
-            echo "Push rejected (attempt $attempt), waiting before retry..."
-            sleep "$((attempt * 15))"
-          done
-          echo "Push failed after retries."
-          exit 1
+          git push origin HEAD:main
