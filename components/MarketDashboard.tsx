@@ -14,8 +14,9 @@ import {
 
 const HOG_URL = "/data/lm_hg217_daily_prices.json";
 const TURKEY_URL = "/data/turkey_hen_weekly.json";
+const PORK_URL = "/data/pork_cutout_daily.json";
 
-type Tab = "hog" | "turkey" | "admin";
+type Tab = "hog" | "turkey" | "pork" | "admin";
 
 interface HogRow {
   date: string;
@@ -66,6 +67,22 @@ interface TurkeyRow {
 interface TurkeyPayload {
   generatedAt?: string;
   rows: Omit<TurkeyRow, "isoDate">[];
+}
+
+interface PorkRow {
+  date: string;
+  pork_carcass: number | null;
+  pork_loin: number | null;
+  pork_butt: number | null;
+  pork_picnic: number | null;
+  pork_rib: number | null;
+  pork_ham: number | null;
+  pork_belly: number | null;
+}
+
+interface PorkPayload {
+  generatedAt?: string;
+  rows: PorkRow[];
 }
 
 type Condition = "all" | "Fresh" | "Frozen";
@@ -133,6 +150,26 @@ function mergeTurkeyRows(prev: TurkeyRow[], incoming: Omit<TurkeyRow, "isoDate">
 
 const TURKEY_LINE = { Fresh: "#92400e", Frozen: "#451a03" };
 
+const PORK_LINE = {
+  pork_carcass: "#b91c1c",
+  pork_loin: "#d97706",
+  pork_butt: "#16a34a",
+  pork_picnic: "#0891b2",
+  pork_rib: "#7c3aed",
+  pork_ham: "#db2777",
+  pork_belly: "#ea580c",
+};
+
+const PORK_FIELD_LABELS: Record<keyof typeof PORK_LINE, string> = {
+  pork_carcass: "Carcass",
+  pork_loin: "Loin",
+  pork_butt: "Butt",
+  pork_picnic: "Picnic",
+  pork_rib: "Rib",
+  pork_ham: "Ham",
+  pork_belly: "Belly",
+};
+
 const EMPTY_DATA_HINT =
   "No data loaded yet. Set a date range and press Refresh to fetch from USDA.";
 
@@ -152,6 +189,22 @@ function exportHog(rows: HogRow[]) {
     const from = rows[0]?.date ?? "start";
     const to = rows[rows.length - 1]?.date ?? "end";
     XLSX.writeFile(wb, `LM_HG217_${from}_${to}.xlsx`);
+  });
+}
+
+function exportPork(rows: PorkRow[]) {
+  import("xlsx").then((XLSX) => {
+    const data = [
+      ["Date", "Carcass", "Loin", "Butt", "Picnic", "Rib", "Ham", "Belly"],
+      ...rows.map((r) => [r.date, r.pork_carcass, r.pork_loin, r.pork_butt, r.pork_picnic, r.pork_rib, r.pork_ham, r.pork_belly]),
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    ws["!cols"] = [{ wch: 12 }, ...Array(7).fill({ wch: 10 })];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "LM_PK602");
+    const from = rows[0]?.date ?? "start";
+    const to = rows[rows.length - 1]?.date ?? "end";
+    XLSX.writeFile(wb, `LM_PK602_${from}_${to}.xlsx`);
   });
 }
 
@@ -189,6 +242,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [condition, setCondition] = useState<Condition>("all");
   const [tableDateOrder, setTableDateOrder] = useState<TableDateOrder>("asc");
 
+  const [porkFull, setPorkFull] = useState<PorkRow[]>([]);
+  const [porkRows, setPorkRows] = useState<PorkRow[]>([]);
+  const [porkMeta, setPorkMeta] = useState<string | undefined>();
+
   const [status, setStatus] = useState(() => (initialTab === "admin" ? ADMIN_TAB_HINT : EMPTY_DATA_HINT));
   const [fetchingRange, setFetchingRange] = useState(false);
   const [githubBusy, setGithubBusy] = useState(false);
@@ -221,6 +278,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       const q = new URLSearchParams(searchParams?.toString() ?? "");
       if (t === "turkey") q.set("tab", "turkey");
       else if (t === "admin") q.set("tab", "admin");
+      else if (t === "pork") q.set("tab", "pork");
       else q.delete("tab");
       const s = q.toString();
       router.replace(s ? `/?${s}` : "/", { scroll: false });
@@ -248,6 +306,16 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     }));
     setTurkeyFull(rows);
     setTurkeyMeta(payload.generatedAt);
+    return rows;
+  }, []);
+
+  const loadPork = useCallback(async (bust: boolean) => {
+    const res = await fetch(PORK_URL, { cache: bust ? "no-store" : "default" });
+    if (!res.ok) throw new Error(`Pork data HTTP ${res.status}`);
+    const payload: PorkPayload = await res.json();
+    const rows = Array.isArray(payload) ? (payload as PorkRow[]) : (payload.rows ?? []);
+    setPorkFull(rows);
+    setPorkMeta((payload as PorkPayload).generatedAt);
     return rows;
   }, []);
 
@@ -280,15 +348,30 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     []
   );
 
+  const filterPork = useCallback(
+    (rows: PorkRow[], start: string, end: string) => {
+      if (!start || !end || start > end) {
+        setPorkRows([]);
+        return;
+      }
+      const filtered = rows
+        .filter((r) => r.date >= start && r.date <= end)
+        .sort((a, b) => a.date.localeCompare(b.date));
+      setPorkRows(filtered);
+    },
+    []
+  );
+
   /* Apply filters when dates / full data / condition change (debounced for date inputs) */
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       const invalidRange = !startDate || !endDate || startDate > endDate;
-      const noLoadedData = !hogFull.length && !turkeyFull.length;
+      const noLoadedData = !hogFull.length && !turkeyFull.length && !porkFull.length;
 
       filterHog(hogFull, startDate, endDate);
       filterTurkey(turkeyFull, startDate, endDate, condition);
+      filterPork(porkFull, startDate, endDate);
 
       if (tab === "admin") return;
 
@@ -305,6 +388,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       const n =
         tab === "hog"
           ? hogFull.filter((r) => r.date >= startDate && r.date <= endDate).length
+          : tab === "pork"
+          ? porkFull.filter((r) => r.date >= startDate && r.date <= endDate).length
           : turkeyFull.filter(
               (r) =>
                 r.isoDate >= startDate &&
@@ -313,19 +398,20 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             ).length;
       setStatus(
         n > 0
-          ? `${n} ${tab === "hog" ? "trading days" : "rows"} in range ${startDate} → ${endDate}`
+          ? `${n} ${tab === "hog" || tab === "pork" ? "trading days" : "rows"} in range ${startDate} → ${endDate}`
           : "No rows in this range for the current tab."
       );
     }, 250);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [startDate, endDate, hogFull, turkeyFull, condition, filterHog, filterTurkey, tab]);
+  }, [startDate, endDate, hogFull, turkeyFull, porkFull, condition, filterHog, filterTurkey, filterPork, tab]);
 
   const reloadDeployedJson = useCallback(async () => {
-    const [h, t] = await Promise.all([loadHog(true), loadTurkey(true)]);
+    const [h, t, p] = await Promise.all([loadHog(true), loadTurkey(true), loadPork(true)]);
     filterHog(h, startDate, endDate);
     filterTurkey(t, startDate, endDate, condition);
+    filterPork(p, startDate, endDate);
     const nHog = h.filter((r) => r.date >= startDate && r.date <= endDate).length;
     const nTurkey = t.filter(
       (r) =>
@@ -334,10 +420,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         (condition === "all" || r.condition === condition)
     ).length;
     return { nHog, nTurkey };
-  }, [loadHog, loadTurkey, filterHog, filterTurkey, startDate, endDate, condition]);
+  }, [loadHog, loadTurkey, loadPork, filterHog, filterTurkey, filterPork, startDate, endDate, condition]);
 
   const pullUsdaRange = useCallback(
-    async (apiTab: "hog" | "turkey", start: string, end: string, introStatus: string) => {
+    async (apiTab: "hog" | "turkey" | "pork", start: string, end: string, introStatus: string) => {
       if (!start || !end || start > end) {
         setStatus("Choose a valid date range (start ≤ end).");
         return;
@@ -433,15 +519,32 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         };
         if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
-        const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
-        setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
-        setTurkeyMeta(data.generatedAt);
-        const count = data.rows?.length ?? 0;
-        setStatus(
-          count > 0
-            ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
-            : `USDA returned no rows for that range — try different dates.`
-        );
+        if (apiTab === "pork") {
+          const rows = data.rows as PorkRow[];
+          setPorkFull((prev) => {
+            const map = new Map<string, PorkRow>();
+            for (const r of prev) map.set(r.date, r);
+            for (const r of rows) map.set(r.date, r);
+            return [...map.values()].sort((a, b) => a.date.localeCompare(b.date));
+          });
+          setPorkMeta(data.generatedAt);
+          const count = data.rows?.length ?? 0;
+          setStatus(
+            count > 0
+              ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
+              : `USDA returned no rows for that range — try different dates.`
+          );
+        } else {
+          const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
+          setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
+          setTurkeyMeta(data.generatedAt);
+          const count = data.rows?.length ?? 0;
+          setStatus(
+            count > 0
+              ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
+              : `USDA returned no rows for that range — try different dates.`
+          );
+        }
       } catch (e) {
         if (apiTab !== "hog" || myGen === hogPullGenRef.current) {
           setStatus(`Could not load fresh data: ${e instanceof Error ? e.message : String(e)}`);
@@ -454,15 +557,13 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   );
 
   async function fetchUsdaForRange() {
-    if (tab !== "hog" && tab !== "turkey") return;
-    await pullUsdaRange(
-      tab === "hog" ? "hog" : "turkey",
-      startDate,
-      endDate,
-      tab === "hog"
-        ? `Fetching daily hog prices from USDA for ${startDate} → ${endDate}…`
-        : `Fetching weekly turkey prices from USDA for ${startDate} → ${endDate}…`
-    );
+    if (tab !== "hog" && tab !== "turkey" && tab !== "pork") return;
+    const introMap: Record<"hog" | "turkey" | "pork", string> = {
+      hog: `Fetching daily hog prices from USDA for ${startDate} → ${endDate}…`,
+      turkey: `Fetching weekly turkey prices from USDA for ${startDate} → ${endDate}…`,
+      pork: `Fetching daily pork cutout prices from USDA for ${startDate} → ${endDate}…`,
+    };
+    await pullUsdaRange(tab, startDate, endDate, introMap[tab]);
   }
 
   async function syncRepoViaGithub() {
@@ -584,6 +685,19 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
 
   const hogLast = hogRowsChrono[hogRowsChrono.length - 1];
 
+  const porkRowsChrono = useMemo(
+    () => [...porkRows].sort((a, b) => a.date.localeCompare(b.date)),
+    [porkRows]
+  );
+
+  const porkRowsForTable = useMemo(() => {
+    const s = [...porkRowsChrono];
+    if (tableDateOrder === "desc") s.reverse();
+    return s;
+  }, [porkRowsChrono, tableDateOrder]);
+
+  const porkLast = porkRowsChrono[porkRowsChrono.length - 1];
+
   const turkeyRowsChrono = useMemo(
     () =>
       [...turkeyRows].sort(
@@ -649,6 +763,15 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           <button
             type="button"
             role="tab"
+            aria-selected={tab === "pork"}
+            className={`tab-btn ${tab === "pork" ? "tab-btn--active" : ""}`}
+            onClick={() => selectTab("pork")}
+          >
+            Daily pork (LM_PK602)
+          </button>
+          <button
+            type="button"
+            role="tab"
             aria-selected={tab === "admin"}
             className={`tab-btn ${tab === "admin" ? "tab-btn--active" : ""}`}
             onClick={() => selectTab("admin")}
@@ -673,6 +796,13 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             <p className="sub">Prices in cents per pound; frozen vs fresh. Reloading this page clears all data until you press Refresh.</p>
             {turkeyMeta && <p className="data-updated">Dataset updated: {formatUpdatedEn(turkeyMeta)}</p>}
           </>
+        ) : tab === "pork" ? (
+          <>
+            <p className="eyebrow">USDA MPR Datamart · LM_PK602 negotiated carcass cutout</p>
+            <h1>Daily pork cutout prices</h1>
+            <p className="sub">Carcass, loin, butt, picnic, rib, ham, belly — $/cwt. Reloading this page clears all data until you press Refresh.</p>
+            {porkMeta && <p className="data-updated">Dataset updated: {formatUpdatedEn(porkMeta)}</p>}
+          </>
         ) : (
           <>
             <p className="eyebrow">Administrators</p>
@@ -690,6 +820,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         <section
           className={`panel controls ${tab === "hog" ? "controls--dashboard--hog" : "controls--dashboard"}`}
         >
+
           <div className="field">
             <label htmlFor="startDate">Start date</label>
             <input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
@@ -730,9 +861,19 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             type="button"
             className="btn-brown btn-export-dash"
             onClick={() =>
-              tab === "hog" ? exportHog(hogRowsForTable) : exportTurkey(turkeyRowsForTable)
+              tab === "hog"
+                ? exportHog(hogRowsForTable)
+                : tab === "pork"
+                ? exportPork(porkRowsForTable)
+                : exportTurkey(turkeyRowsForTable)
             }
-            disabled={tab === "hog" ? hogRows.length === 0 : turkeyRows.length === 0}
+            disabled={
+              tab === "hog"
+                ? hogRows.length === 0
+                : tab === "pork"
+                ? porkRows.length === 0
+                : turkeyRows.length === 0
+            }
           >
             Export Excel
           </button>
@@ -907,6 +1048,113 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   <Line type="monotone" dataKey="national" stroke={HOG_LINE.national} dot={false} strokeWidth={2} connectNulls name="National" />
                   <Line type="monotone" dataKey="iowaMn" stroke={HOG_LINE.iowaMn} dot={false} strokeWidth={2} connectNulls name="Iowa/MN" />
                   <Line type="monotone" dataKey="western" stroke={HOG_LINE.western} dot={false} strokeWidth={2} connectNulls name="Western" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+        </>
+      )}
+
+      {tab === "pork" && (
+        <>
+          <section className="panel metrics">
+            <article>
+              <h2>Latest carcass</h2>
+              <p className="metric metric--brown1">{fmt(porkLast?.pork_carcass)}</p>
+            </article>
+            <article>
+              <h2>Latest belly</h2>
+              <p className="metric metric--brown2">{fmt(porkLast?.pork_belly)}</p>
+            </article>
+            <article>
+              <h2>Latest loin</h2>
+              <p className="metric metric--brown3">{fmt(porkLast?.pork_loin)}</p>
+            </article>
+            <article>
+              <h2>Days in range</h2>
+              <p className="metric metric--brown4">{porkRows.length}</p>
+            </article>
+          </section>
+
+          <section className="panel table-wrap">
+            <div className="table-wrap-head">
+              <h2>Daily data ($/cwt)</h2>
+              <div className="field field--table-sort">
+                <label htmlFor="tableDateOrderPork">Table order by date</label>
+                <select
+                  id="tableDateOrderPork"
+                  className="select-brown select-brown--compact"
+                  value={tableDateOrder}
+                  onChange={(e) => setTableDateOrder(e.target.value as TableDateOrder)}
+                >
+                  <option value="asc">Oldest at top → newest down</option>
+                  <option value="desc">Newest at top → oldest down</option>
+                </select>
+              </div>
+            </div>
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Carcass</th>
+                    <th>Loin</th>
+                    <th>Butt</th>
+                    <th>Picnic</th>
+                    <th>Rib</th>
+                    <th>Ham</th>
+                    <th>Belly</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {porkRowsForTable.map((row) => (
+                    <tr key={row.date}>
+                      <td>{row.date}</td>
+                      <td className={row.pork_carcass != null ? "td-br1" : "val-null"}>{fmt(row.pork_carcass)}</td>
+                      <td className={row.pork_loin != null ? "td-br2" : "val-null"}>{fmt(row.pork_loin)}</td>
+                      <td className={row.pork_butt != null ? "td-br3" : "val-null"}>{fmt(row.pork_butt)}</td>
+                      <td>{fmt(row.pork_picnic)}</td>
+                      <td>{fmt(row.pork_rib)}</td>
+                      <td>{fmt(row.pork_ham)}</td>
+                      <td className={row.pork_belly != null ? "td-br1" : "val-null"}>{fmt(row.pork_belly)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="panel chart-wrap">
+            <h2>Price trend ($/cwt)</h2>
+            <div className="legend">
+              {(Object.keys(PORK_LINE) as (keyof typeof PORK_LINE)[]).map((k) => (
+                <span key={k} className="legend-item">
+                  <span className="legend-dot" style={{ background: PORK_LINE[k] }} />
+                  {PORK_FIELD_LABELS[k]}
+                </span>
+              ))}
+            </div>
+            <div className="chart-box">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={porkRowsChrono} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
+                    tickFormatter={(v: string) => v.slice(0, 7)}
+                    interval="preserveStartEnd"
+                    minTickGap={60}
+                  />
+                  <YAxis
+                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
+                    domain={["auto", "auto"]}
+                    tickFormatter={(v: number) => v.toFixed(0)}
+                    width={44}
+                  />
+                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
+                  {(Object.keys(PORK_LINE) as (keyof typeof PORK_LINE)[]).map((k) => (
+                    <Line key={k} type="monotone" dataKey={k} stroke={PORK_LINE[k]} dot={false} strokeWidth={2} connectNulls name={PORK_FIELD_LABELS[k]} />
+                  ))}
                 </LineChart>
               </ResponsiveContainer>
             </div>

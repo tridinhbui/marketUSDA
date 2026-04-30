@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchHogsDateRange } from "@/lib/fetch-hogs-range";
 import { fetchTurkeyDateRange } from "@/lib/fetch-turkey-range";
+import { fetchPorkDateRange } from "@/lib/fetch-pork-range";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -48,7 +49,17 @@ export async function GET(request: Request) {
         rows,
       });
     }
-    return NextResponse.json({ error: 'Query parameter tab must be "hog" or "turkey".' }, { status: 400 });
+    if (tab === "pork") {
+      const { rows } = await fetchPorkDateRange(start, end);
+      return NextResponse.json({
+        tab: "pork",
+        startDate: start,
+        endDate: end,
+        generatedAt,
+        rows,
+      });
+    }
+    return NextResponse.json({ error: 'Query parameter tab must be "hog", "turkey", or "pork".' }, { status: 400 });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     return NextResponse.json({ error: msg }, { status: 502 });

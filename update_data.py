@@ -9,9 +9,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 
 SCRIPTS = [
-    "build_data.py",       # LM_HG217 hogs — public Datamart API
-    "_build_turkey.py",    # turkey — MARS API (USDA_MARS_API_KEY optional)
-    "_build_pork.py",      # retail pork — MARS API
+    "build_data.py",         # LM_HG217 hogs — public Datamart API
+    "_build_turkey.py",      # turkey — MARS API (USDA_MARS_API_KEY optional)
+    "_build_pork.py",        # retail pork — MARS API
+    "_build_pork_cutout.py", # LM_PK602 pork cutout + primals — MPR Datamart
 ]
 
 
