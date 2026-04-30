@@ -13,6 +13,7 @@ const totalWeeksEl   = document.getElementById("totalWeeks");
 const tableBodyEl    = document.getElementById("tableBody");
 const chartEl        = document.getElementById("priceChart");
 const dataUpdatedEl  = document.getElementById("dataUpdated");
+const refreshBtn     = document.getElementById("refreshBtn");
 
 // ── helpers ────────────────────────────────────────────────────────────────────
 
@@ -67,7 +68,7 @@ let currentRows = [];
 
 async function loadDataset() {
   statusEl.textContent = "Loading dataset…";
-  const res = await fetch(DATA_URL);
+  const res = await fetch(DATA_URL, { cache: "no-store" });
   if (!res.ok) throw new Error(`Cannot load ${DATA_URL} (HTTP ${res.status})`);
   const payload = await res.json();
   // Normalise: add isoDate field for easy comparison
@@ -258,6 +259,20 @@ async function applyFilter() {
 loadBtn.addEventListener("click", applyFilter);
 condFilter.addEventListener("change", applyFilter);
 exportBtn.addEventListener("click", () => exportExcel(currentRows));
+if (refreshBtn) {
+  refreshBtn.addEventListener("click", async () => {
+    refreshBtn.disabled = true;
+    try {
+      const res = await fetch(DATA_URL, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    } catch (e) {
+      statusEl.textContent = `Làm mới thất bại: ${e.message}`;
+      refreshBtn.disabled = false;
+      return;
+    }
+    window.location.reload();
+  });
+}
 window.addEventListener("resize", () => { if (currentRows.length) drawChart(currentRows); });
 
 window.addEventListener("DOMContentLoaded", async () => {

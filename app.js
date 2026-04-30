@@ -12,6 +12,7 @@ const totalDaysEl      = document.getElementById("totalDays");
 const tableBodyEl      = document.getElementById("priceTableBody");
 const chartEl          = document.getElementById("priceChart");
 const dataUpdatedEl    = document.getElementById("dataUpdated");
+const refreshBtn       = document.getElementById("refreshBtn");
 
 function formatDataUpdatedLabel(raw) {
   if (raw == null || raw === "") return "";
@@ -56,7 +57,7 @@ let currentRows = [];
 
 async function loadDataset() {
   statusEl.textContent = "Loading dataset…";
-  const res = await fetch(DATA_URL);
+  const res = await fetch(DATA_URL, { cache: "no-store" });
   if (!res.ok) throw new Error(`Cannot load ${DATA_URL} (HTTP ${res.status})`);
   const payload = await res.json();
   fullRows = Array.isArray(payload.rows) ? payload.rows : [];
@@ -208,6 +209,20 @@ async function applyFilter() {
 
 loadBtn.addEventListener("click", applyFilter);
 exportBtn.addEventListener("click", () => exportExcel(currentRows));
+if (refreshBtn) {
+  refreshBtn.addEventListener("click", async () => {
+    refreshBtn.disabled = true;
+    try {
+      const res = await fetch(DATA_URL, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    } catch (e) {
+      statusEl.textContent = `Làm mới thất bại: ${e.message}`;
+      refreshBtn.disabled = false;
+      return;
+    }
+    window.location.reload();
+  });
+}
 window.addEventListener("resize", () => { if (currentRows.length) drawChart(currentRows); });
 
 window.addEventListener("DOMContentLoaded", async () => {
