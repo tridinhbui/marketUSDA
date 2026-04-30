@@ -48,7 +48,7 @@ export async function POST() {
     ok: true,
     pollSince,
     message:
-      "Workflow dispatched. The dashboard will poll GitHub until the run completes, then reload JSON from this deployment (allow time for Vercel after a repo push).",
+      "Background update started. This page will wait for it to finish, then reload the saved data (allow a few minutes after it completes for the live site to catch up).",
   });
 }
 

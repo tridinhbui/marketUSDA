@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   LineChart,
@@ -46,6 +46,8 @@ interface TurkeyPayload {
 }
 
 type Condition = "all" | "Fresh" | "Frozen";
+/** Table row order: oldest date at top, or newest at top. */
+type TableDateOrder = "asc" | "desc";
 
 function todayIso() {
   const d = new Date();
@@ -156,6 +158,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [turkeyRows, setTurkeyRows] = useState<TurkeyRow[]>([]);
   const [turkeyMeta, setTurkeyMeta] = useState<string | undefined>();
   const [condition, setCondition] = useState<Condition>("all");
+  const [tableDateOrder, setTableDateOrder] = useState<TableDateOrder>("asc");
 
   const [status, setStatus] = useState("Loading…");
   const [fetchingRange, setFetchingRange] = useState(false);
@@ -297,7 +300,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     }
     setFetchingRange(true);
     try {
-      setStatus(`Fetching ${tab === "hog" ? "LM_HG217 (MPR)" : "AMS_3647 (MARS)"} for ${startDate} → ${endDate}…`);
+      setStatus(`Fetching ${tab === "hog" ? "daily hog prices" : "weekly turkey prices"} from USDA for ${startDate} → ${endDate}…`);
       const apiTab = tab === "hog" ? "hog" : "turkey";
       const res = await fetch(
         `/api/fetch-range?tab=${apiTab}&start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`
@@ -322,11 +325,11 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       const count = data.rows?.length ?? 0;
       setStatus(
         count > 0
-          ? `USDA live fetch OK · ${count} row(s) merged for ${startDate} → ${endDate}.`
-          : `USDA live fetch OK · no rows in that window (check dates or API).`
+          ? `Loaded ${count} new row(s) from USDA for this range. Charts use merged data.`
+          : `USDA returned no rows for that range — try different dates.`
       );
     } catch (e) {
-      setStatus(`USDA fetch failed: ${e instanceof Error ? e.message : String(e)}`);
+      setStatus(`Could not load fresh data: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       if (mountedRef.current) setFetchingRange(false);
     }
@@ -334,14 +337,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
 
   async function syncRepoViaGithub() {
     const ok = window.confirm(
-      "This starts the GitHub Actions workflow that runs update_data.py, refreshes JSON in the repo, and may push commits to main. It can take several minutes. Only continue if you intend to refresh data on the server. Continue?"
+      "This starts a background job that updates the saved data files for this website (the numbers everyone sees when they open the page). It usually takes several minutes. Only continue if you help run this site. Continue?"
     );
     if (!ok) return;
 
     setGithubBusy(true);
     let workflowFinished = false;
     try {
-      setStatus("Dispatching GitHub workflow…");
+      setStatus("Starting background update…");
       const res = await fetch("/api/trigger-refresh", { method: "POST" });
       const data = (await res.json()) as {
         ok?: boolean;
@@ -359,11 +362,11 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
 
       const pollSince = data.pollSince;
       if (!pollSince) {
-        setStatus("Workflow dispatched but no poll timestamp was returned.");
+        setStatus("The update was started, but status tracking was not available. Try reloading the page in a few minutes.");
         return;
       }
 
-      setStatus(data.message ?? "Workflow dispatched. Waiting for GitHub…");
+      setStatus(data.message ?? "Update started. Waiting for it to finish…");
 
       const intervalMs = 4000;
       const maxAttempts = 150;
@@ -393,24 +396,24 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           workflowFinished = true;
           if (st.conclusion === "success") {
             if (!mountedRef.current) return;
-            setStatus("Workflow succeeded. Loading JSON from this deployment…");
+            setStatus("Update finished. Loading the latest saved data…");
             try {
               const n = await reloadDeployedJson();
               if (!mountedRef.current) return;
               setStatus(
                 n > 0
-                  ? `Repo sync complete · ${n} ${tab === "hog" ? "trading days" : "rows"} in range (if numbers look old, wait for deploy and reload).`
-                  : "Repo sync complete · no rows in the current date range."
+                  ? `Saved data refreshed · ${n} ${tab === "hog" ? "trading days" : "rows"} in your date range. If numbers look old, wait a minute and reload the page.`
+                  : "Saved data refreshed · no rows in your current date range."
               );
             } catch (e) {
               if (!mountedRef.current) return;
               setStatus(
-                `Workflow OK but loading JSON failed: ${e instanceof Error ? e.message : String(e)}`
+                `The update finished, but loading data failed: ${e instanceof Error ? e.message : String(e)}`
               );
             }
           } else {
-            const link = st.html_url ? ` ${st.html_url}` : "";
-            setStatus(`Workflow finished: ${st.conclusion ?? "unknown"}.${link}`);
+            const link = st.html_url ? ` Details: ${st.html_url}` : "";
+            setStatus(`The background update did not succeed.${link}`);
           }
           break;
         }
@@ -418,12 +421,12 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
 
       if (!workflowFinished && mountedRef.current) {
         setStatus(
-          "Timed out waiting for the workflow to finish. Open GitHub Actions for status, then reload this page."
+          "The background job is taking longer than expected. Wait a few minutes, reload this page, or ask the site maintainer to check the job status."
         );
       }
     } catch (e) {
       if (mountedRef.current) {
-        setStatus(`GitHub sync failed: ${e instanceof Error ? e.message : String(e)}`);
+        setStatus(`Background update failed: ${e instanceof Error ? e.message : String(e)}`);
       }
     } finally {
       if (mountedRef.current) setGithubBusy(false);
@@ -435,24 +438,58 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     syncTabToUrl(t);
   }
 
-  const hogLast = hogRows[hogRows.length - 1];
+  const hogRowsChrono = useMemo(
+    () => [...hogRows].sort((a, b) => a.date.localeCompare(b.date)),
+    [hogRows]
+  );
+
+  const hogRowsForTable = useMemo(() => {
+    const s = [...hogRowsChrono];
+    if (tableDateOrder === "desc") s.reverse();
+    return s;
+  }, [hogRowsChrono, tableDateOrder]);
+
+  const hogLast = hogRowsChrono[hogRowsChrono.length - 1];
+
+  const turkeyRowsChrono = useMemo(
+    () =>
+      [...turkeyRows].sort(
+        (a, b) => a.isoDate.localeCompare(b.isoDate) || a.condition.localeCompare(b.condition)
+      ),
+    [turkeyRows]
+  );
+
+  const turkeyRowsForTable = useMemo(() => {
+    const s = [...turkeyRowsChrono];
+    if (tableDateOrder === "desc") s.reverse();
+    return s;
+  }, [turkeyRowsChrono, tableDateOrder]);
+
   const freshRows = turkeyRows.filter((r) => r.condition === "Fresh");
   const frozenRows = turkeyRows.filter((r) => r.condition === "Frozen");
-  const lastFresh = freshRows[freshRows.length - 1];
-  const lastFrozen = frozenRows[frozenRows.length - 1];
+  const lastFresh = (() => {
+    const s = [...freshRows].sort((a, b) => a.isoDate.localeCompare(b.isoDate));
+    return s.length ? s[s.length - 1] : undefined;
+  })();
+  const lastFrozen = (() => {
+    const s = [...frozenRows].sort((a, b) => a.isoDate.localeCompare(b.isoDate));
+    return s.length ? s[s.length - 1] : undefined;
+  })();
   const thisYear = new Date().getFullYear().toString();
   const ytdFresh = freshRows.filter((r) => r.isoDate.startsWith(thisYear));
   const avgFresh =
     ytdFresh.length > 0 ? ytdFresh.reduce((s, r) => s + Number(r.wtd_avg), 0) / ytdFresh.length : null;
 
-  const chartDataMap = new Map<string, { isoDate: string; Fresh?: number; Frozen?: number }>();
-  turkeyRows.forEach((r) => {
-    const entry = chartDataMap.get(r.isoDate) ?? { isoDate: r.isoDate };
-    if (r.condition === "Fresh") entry.Fresh = Number(r.wtd_avg);
-    if (r.condition === "Frozen") entry.Frozen = Number(r.wtd_avg);
-    chartDataMap.set(r.isoDate, entry);
-  });
-  const chartData = Array.from(chartDataMap.values()).sort((a, b) => a.isoDate.localeCompare(b.isoDate));
+  const chartData = useMemo(() => {
+    const chartDataMap = new Map<string, { isoDate: string; Fresh?: number; Frozen?: number }>();
+    turkeyRows.forEach((r) => {
+      const entry = chartDataMap.get(r.isoDate) ?? { isoDate: r.isoDate };
+      if (r.condition === "Fresh") entry.Fresh = Number(r.wtd_avg);
+      if (r.condition === "Frozen") entry.Frozen = Number(r.wtd_avg);
+      chartDataMap.set(r.isoDate, entry);
+    });
+    return Array.from(chartDataMap.values()).sort((a, b) => a.isoDate.localeCompare(b.isoDate));
+  }, [turkeyRows]);
 
   return (
     <main className="shell">
@@ -509,29 +546,16 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </div>
         <div className="field field--action">
-          <label htmlFor="fetch-usda-btn">Fetch USDA</label>
+          <label htmlFor="fetch-usda-btn">Fresh download</label>
           <button
             id="fetch-usda-btn"
             type="button"
             className="btn-brown"
             onClick={() => void fetchUsdaForRange()}
             disabled={fetchingRange || githubBusy}
-            title="Load live data from USDA for the start/end range (merges into the chart for this session)"
+            title="Get the latest figures from USDA for the dates above. This updates what you see in this browser tab."
           >
-            {fetchingRange ? "Fetching…" : "Fetch range"}
-          </button>
-        </div>
-        <div className="field field--action">
-          <label htmlFor="github-sync-btn">Repo sync</label>
-          <button
-            id="github-sync-btn"
-            type="button"
-            className="btn-brown"
-            onClick={() => void syncRepoViaGithub()}
-            disabled={fetchingRange || githubBusy}
-            title="Confirm, then run GitHub Actions update-data workflow (requires GITHUB_TOKEN on the server)"
-          >
-            {githubBusy ? "GitHub…" : "Run GitHub update"}
+            {fetchingRange ? "Loading…" : "Get latest for dates"}
           </button>
         </div>
         {tab === "turkey" && (
@@ -552,11 +576,31 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         <button
           type="button"
           className="btn-brown btn-export-dash"
-          onClick={() => (tab === "hog" ? exportHog(hogRows) : exportTurkey(turkeyRows))}
+          onClick={() =>
+            tab === "hog" ? exportHog(hogRowsForTable) : exportTurkey(turkeyRowsForTable)
+          }
           disabled={tab === "hog" ? hogRows.length === 0 : turkeyRows.length === 0}
         >
           Export Excel
         </button>
+        <details className="advanced-ops">
+          <summary className="advanced-ops__summary">Advanced — update data for everyone</summary>
+          <div className="advanced-ops__body">
+            <p className="advanced-ops__hint">
+              For site administrators only. Starts a long background task that refreshes the saved files on the server so all visitors see new numbers (several minutes; not the same as &quot;Get latest for dates&quot; above).
+            </p>
+            <button
+              id="server-refresh-btn"
+              type="button"
+              className="btn-brown btn-brown--outline"
+              onClick={() => void syncRepoViaGithub()}
+              disabled={fetchingRange || githubBusy}
+              title="Administrative: refreshes shared data files on the host"
+            >
+              {githubBusy ? "Working…" : "Refresh saved data for all visitors"}
+            </button>
+          </div>
+        </details>
         <p className="status status--full">{status}</p>
       </section>
 
@@ -582,7 +626,21 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           </section>
 
           <section className="panel table-wrap">
-            <h2>Daily data</h2>
+            <div className="table-wrap-head">
+              <h2>Daily data</h2>
+              <div className="field field--table-sort">
+                <label htmlFor="tableDateOrder">Table order by date</label>
+                <select
+                  id="tableDateOrder"
+                  className="select-brown select-brown--compact"
+                  value={tableDateOrder}
+                  onChange={(e) => setTableDateOrder(e.target.value as TableDateOrder)}
+                >
+                  <option value="asc">Oldest at top → newest down</option>
+                  <option value="desc">Newest at top → oldest down</option>
+                </select>
+              </div>
+            </div>
             <div className="table-scroll">
               <table>
                 <thead>
@@ -594,7 +652,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {hogRows.map((row) => (
+                  {hogRowsForTable.map((row) => (
                     <tr key={row.date}>
                       <td>{row.date}</td>
                       <td className={row.national != null ? "td-br1" : "val-null"}>{fmt(row.national)}</td>
@@ -625,7 +683,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </div>
             <div className="chart-box">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={hogRows} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
+                <LineChart data={hogRowsChrono} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
                   <XAxis
                     dataKey="date"
@@ -673,7 +731,21 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           </section>
 
           <section className="panel table-wrap">
-            <h2>Weekly data</h2>
+            <div className="table-wrap-head">
+              <h2>Weekly data</h2>
+              <div className="field field--table-sort">
+                <label htmlFor="tableDateOrderTurkey">Table order by week</label>
+                <select
+                  id="tableDateOrderTurkey"
+                  className="select-brown select-brown--compact"
+                  value={tableDateOrder}
+                  onChange={(e) => setTableDateOrder(e.target.value as TableDateOrder)}
+                >
+                  <option value="asc">Oldest at top → newest down</option>
+                  <option value="desc">Newest at top → oldest down</option>
+                </select>
+              </div>
+            </div>
             <div className="table-scroll">
               <table>
                 <thead>
@@ -688,10 +760,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {turkeyRows.map((row, i) => {
+                  {turkeyRowsForTable.map((row) => {
                     const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
                     return (
-                      <tr key={i}>
+                      <tr key={`${row.isoDate}-${row.condition}`}>
                         <td>{row.week_start}</td>
                         <td>{row.week_end}</td>
                         <td className={cls}>{row.condition}</td>
