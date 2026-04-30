@@ -35,9 +35,19 @@ interface PorkRefreshLogRow {
   message: string;
 }
 
+interface TurkeyRefreshLogRow {
+  t: string;
+  message: string;
+}
+
 type HogStreamEvent =
   | { type: "log"; t: string; message: string }
   | { type: "done"; generatedAt: string; rows: HogRow[] }
+  | { type: "error"; error: string };
+
+type PorkStreamEvent =
+  | { type: "log"; t: string; message: string }
+  | { type: "done"; generatedAt: string; rows: PorkRow[] }
   | { type: "error"; error: string };
 
 function formatLogTime(iso: string) {
@@ -256,10 +266,16 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [githubBusy, setGithubBusy] = useState(false);
   const [hogFetchLog, setHogFetchLog] = useState<HogRefreshLogRow[]>([]);
   const [porkFetchLog, setPorkFetchLog] = useState<PorkRefreshLogRow[]>([]);
+  const [turkeyFetchLog, setTurkeyFetchLog] = useState<TurkeyRefreshLogRow[]>([]);
+  const [showHogLog, setShowHogLog] = useState(true);
+  const [showTurkeyLog, setShowTurkeyLog] = useState(true);
+  const [showPorkLog, setShowPorkLog] = useState(true);
   const hogLogScrollRef = useRef<HTMLDivElement>(null);
+  const turkeyLogScrollRef = useRef<HTMLDivElement>(null);
   const porkLogScrollRef = useRef<HTMLDivElement>(null);
   /** When true, new log lines auto-scroll to bottom; false if user scrolled up. */
   const hogLogStickBottomRef = useRef(true);
+  const turkeyLogStickBottomRef = useRef(true);
   const porkLogStickBottomRef = useRef(true);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** Invalidate in-flight hog USDA responses when a newer hog request starts. */
@@ -281,6 +297,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       el.scrollTop = el.scrollHeight;
     });
   }, [hogFetchLog, fetchingRange]);
+
+  useLayoutEffect(() => {
+    const el = turkeyLogScrollRef.current;
+    if (!el || !turkeyLogStickBottomRef.current) return;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [turkeyFetchLog, fetchingRange]);
 
   useLayoutEffect(() => {
     const el = porkLogScrollRef.current;
@@ -436,8 +460,43 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         r.isoDate <= endDate &&
         (condition === "all" || r.condition === condition)
     ).length;
-    return { nHog, nTurkey };
+    const nPork = p.filter((r) => r.date >= startDate && r.date <= endDate).length;
+    return { nHog, nTurkey, nPork };
   }, [loadHog, loadTurkey, loadPork, filterHog, filterTurkey, filterPork, startDate, endDate, condition]);
+
+  const ensureSessionDataLoaded = useCallback(async () => {
+    const [h, t, p] = await Promise.all([
+      hogFull.length ? Promise.resolve(hogFull) : loadHog(false),
+      turkeyFull.length ? Promise.resolve(turkeyFull) : loadTurkey(false),
+      porkFull.length ? Promise.resolve(porkFull) : loadPork(false),
+    ]);
+    filterHog(h, startDate, endDate);
+    filterTurkey(t, startDate, endDate, condition);
+    filterPork(p, startDate, endDate);
+    return {
+      nHog: h.filter((r) => r.date >= startDate && r.date <= endDate).length,
+      nTurkey: t.filter(
+        (r) =>
+          r.isoDate >= startDate &&
+          r.isoDate <= endDate &&
+          (condition === "all" || r.condition === condition)
+      ).length,
+      nPork: p.filter((r) => r.date >= startDate && r.date <= endDate).length,
+    };
+  }, [
+    hogFull,
+    turkeyFull,
+    porkFull,
+    loadHog,
+    loadTurkey,
+    loadPork,
+    filterHog,
+    filterTurkey,
+    filterPork,
+    startDate,
+    endDate,
+    condition,
+  ]);
 
   const pullUsdaRange = useCallback(
     async (apiTab: "hog" | "turkey" | "pork", start: string, end: string, introStatus: string) => {
@@ -530,9 +589,83 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           porkLogStickBottomRef.current = true;
           setPorkFull([]);
           setPorkRows([]);
-          setPorkFetchLog([
+          setPorkFetchLog([]);
+
+          const res = await fetch(
+            `/api/fetch-pork-stream?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`,
+            { cache: "no-store" }
+          );
+          if (!res.ok) {
+            const text = await res.text();
+            let msg = text;
+            try {
+              const j = JSON.parse(text) as { error?: string };
+              if (j.error) msg = j.error;
+            } catch {
+              /* use raw */
+            }
+            throw new Error(msg || `HTTP ${res.status}`);
+          }
+          if (!res.body) throw new Error("Empty response body");
+
+          const reader = res.body.getReader();
+          const dec = new TextDecoder();
+          let buffer = "";
+          let finalRows: PorkRow[] | undefined;
+          let finalGeneratedAt: string | undefined;
+
+          const handleLine = (line: string) => {
+            if (!line.trim()) return;
+            let evt: PorkStreamEvent;
+            try {
+              evt = JSON.parse(line) as PorkStreamEvent;
+            } catch {
+              return;
+            }
+            if (evt.type === "log") {
+              if (myGen !== porkPullGenRef.current) return;
+              setPorkFetchLog((prev) => [...prev, { t: evt.t, message: evt.message }]);
+            } else if (evt.type === "done") {
+              finalRows = evt.rows;
+              finalGeneratedAt = evt.generatedAt;
+            } else if (evt.type === "error") {
+              throw new Error(evt.error || "Stream error");
+            }
+          };
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += dec.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() ?? "";
+            for (const line of lines) {
+              handleLine(line);
+            }
+          }
+          if (buffer.trim()) {
+            handleLine(buffer.trim());
+          }
+
+          if (myGen !== porkPullGenRef.current) return;
+          if (!finalRows) throw new Error("Stream ended without data");
+          setPorkFull([...finalRows].sort((a, b) => a.date.localeCompare(b.date)));
+          if (finalGeneratedAt) setPorkMeta(finalGeneratedAt);
+
+          const count = finalRows.length;
+          setStatus(
+            count > 0
+              ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
+              : `USDA returned no rows for that range — try different dates.`
+          );
+          return;
+        }
+
+        if (apiTab === "turkey") {
+          turkeyLogStickBottomRef.current = true;
+          setTurkeyFetchLog([
             { t: new Date().toISOString(), message: `Start pull for ${start} -> ${end}` },
-            { t: new Date().toISOString(), message: "Requesting /api/fetch-range?tab=pork" },
+            { t: new Date().toISOString(), message: "Requesting /api/fetch-range?tab=turkey" },
           ]);
         }
 
@@ -548,42 +681,35 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         };
         if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
-        if (apiTab === "pork") {
-          if (myGen !== porkPullGenRef.current) return;
-          const rows = data.rows as PorkRow[];
-          setPorkFull([...rows].sort((a, b) => a.date.localeCompare(b.date)));
-          setPorkMeta(data.generatedAt);
-          const count = data.rows?.length ?? 0;
-          setPorkFetchLog((prev) => [
-            ...prev,
-            {
-              t: new Date().toISOString(),
-              message: "Live USDA data received",
-            },
-            { t: new Date().toISOString(), message: `Done: ${count} row(s)` },
-          ]);
-          setStatus(
-            count > 0
-              ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
-              : `USDA returned no rows for that range — try different dates.`
-          );
-        } else {
-          const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
-          setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
-          setTurkeyMeta(data.generatedAt);
-          const count = data.rows?.length ?? 0;
-          setStatus(
-            count > 0
-              ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
-              : `USDA returned no rows for that range — try different dates.`
-          );
-        }
+        const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
+        setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
+        setTurkeyMeta(data.generatedAt);
+        const count = data.rows?.length ?? 0;
+        setTurkeyFetchLog((prev) => [
+          ...prev,
+          { t: new Date().toISOString(), message: "USDA response received" },
+          { t: new Date().toISOString(), message: `Done: ${count} row(s)` },
+        ]);
+        setStatus(
+          count > 0
+            ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
+            : `USDA returned no rows for that range — try different dates.`
+        );
       } catch (e) {
         if (apiTab !== "hog" || myGen === hogPullGenRef.current) {
           setStatus(`Could not load fresh data: ${e instanceof Error ? e.message : String(e)}`);
         }
         if (apiTab === "pork" && myGen === porkPullGenRef.current) {
           setPorkFetchLog((prev) => [
+            ...prev,
+            {
+              t: new Date().toISOString(),
+              message: `Error: ${e instanceof Error ? e.message : String(e)}`,
+            },
+          ]);
+        }
+        if (apiTab === "turkey") {
+          setTurkeyFetchLog((prev) => [
             ...prev,
             {
               t: new Date().toISOString(),
@@ -671,12 +797,12 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             if (!mountedRef.current) return;
             setStatus("Update finished. Loading the latest saved data…");
             try {
-              const { nHog, nTurkey } = await reloadDeployedJson();
+              const { nHog, nTurkey, nPork } = await reloadDeployedJson();
               if (!mountedRef.current) return;
               setStatus(
-                nHog + nTurkey > 0
-                  ? `Saved data refreshed (${startDate} → ${endDate}): ${nHog} hog trading days, ${nTurkey} turkey rows in range. Open the Hog or Turkey tab to view. Reloading this page clears data until you Refresh or run this again.`
-                  : "Saved data refreshed — no rows in your current date range on either dataset. Try widening dates."
+                nHog + nTurkey + nPork > 0
+                  ? `Saved data refreshed (${startDate} → ${endDate}): ${nHog} hog day(s), ${nTurkey} turkey row(s), ${nPork} pork day(s) in range.`
+                  : "Saved data refreshed — no rows in your current date range. Try widening dates."
               );
             } catch (e) {
               if (!mountedRef.current) return;
@@ -710,7 +836,18 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     setTab(t);
     syncTabToUrl(t);
     if (t === "admin" && !githubBusy && !fetchingRange) {
-      setStatus(ADMIN_TAB_HINT);
+      setStatus("Loading session datasets for admin view…");
+      void ensureSessionDataLoaded()
+        .then(({ nHog, nTurkey, nPork }) => {
+          if (!mountedRef.current) return;
+          setStatus(
+            `Admin view ready (${startDate} → ${endDate}): ${nHog} hog day(s), ${nTurkey} turkey row(s), ${nPork} pork day(s).`
+          );
+        })
+        .catch((e) => {
+          if (!mountedRef.current) return;
+          setStatus(`Could not load session data for admin view: ${e instanceof Error ? e.message : String(e)}`);
+        });
     }
   }
 
@@ -922,96 +1059,164 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           <p className="status status--full">{status}</p>
           {tab === "hog" && (
             <div className="hog-fetch-log">
-              <p className="hog-fetch-log__title">USDA hog pull log</p>
-              <div
-                className="hog-fetch-log__scroll"
-                ref={hogLogScrollRef}
-                onScroll={(e) => {
-                  const t = e.currentTarget;
-                  hogLogStickBottomRef.current =
-                    t.scrollHeight - t.scrollTop - t.clientHeight < 12;
-                }}
-              >
-                <table className="hog-fetch-log__table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Time</th>
-                      <th>Step</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {hogFetchLog.length === 0 && !fetchingRange ? (
-                      <tr>
-                        <td colSpan={3} className="hog-fetch-log__empty">
-                          No log yet — press Refresh to pull hog data.
-                        </td>
-                      </tr>
-                    ) : hogFetchLog.length === 0 && fetchingRange ? (
-                      <tr>
-                        <td colSpan={3} className="hog-fetch-log__empty">
-                          Connecting…
-                        </td>
-                      </tr>
-                    ) : (
-                      hogFetchLog.map((row, i) => (
-                        <tr key={`${row.t}-${i}`}>
-                          <td className="hog-fetch-log__num">{i + 1}</td>
-                          <td className="hog-fetch-log__time">{formatLogTime(row.t)}</td>
-                          <td className="hog-fetch-log__msg">{row.message}</td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+              <div className="table-wrap-head">
+                <p className="hog-fetch-log__title">USDA hog pull log</p>
+                <button type="button" className="btn-brown btn-brown--outline" onClick={() => setShowHogLog((s) => !s)}>
+                  {showHogLog ? "Hide log" : "Show log"}
+                </button>
               </div>
+              {showHogLog && (
+                <div
+                  className="hog-fetch-log__scroll"
+                  ref={hogLogScrollRef}
+                  onScroll={(e) => {
+                    const t = e.currentTarget;
+                    hogLogStickBottomRef.current =
+                      t.scrollHeight - t.scrollTop - t.clientHeight < 12;
+                  }}
+                >
+                  <table className="hog-fetch-log__table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>Step</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {hogFetchLog.length === 0 && !fetchingRange ? (
+                        <tr>
+                          <td colSpan={3} className="hog-fetch-log__empty">
+                            No log yet — press Refresh to pull hog data.
+                          </td>
+                        </tr>
+                      ) : hogFetchLog.length === 0 && fetchingRange ? (
+                        <tr>
+                          <td colSpan={3} className="hog-fetch-log__empty">
+                            Connecting…
+                          </td>
+                        </tr>
+                      ) : (
+                        hogFetchLog.map((row, i) => (
+                          <tr key={`${row.t}-${i}`}>
+                            <td className="hog-fetch-log__num">{i + 1}</td>
+                            <td className="hog-fetch-log__time">{formatLogTime(row.t)}</td>
+                            <td className="hog-fetch-log__msg">{row.message}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+          {tab === "turkey" && (
+            <div className="hog-fetch-log">
+              <div className="table-wrap-head">
+                <p className="hog-fetch-log__title">USDA turkey pull log</p>
+                <button type="button" className="btn-brown btn-brown--outline" onClick={() => setShowTurkeyLog((s) => !s)}>
+                  {showTurkeyLog ? "Hide log" : "Show log"}
+                </button>
+              </div>
+              {showTurkeyLog && (
+                <div
+                  className="hog-fetch-log__scroll"
+                  ref={turkeyLogScrollRef}
+                  onScroll={(e) => {
+                    const t = e.currentTarget;
+                    turkeyLogStickBottomRef.current =
+                      t.scrollHeight - t.scrollTop - t.clientHeight < 12;
+                  }}
+                >
+                  <table className="hog-fetch-log__table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>Step</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {turkeyFetchLog.length === 0 && !fetchingRange ? (
+                        <tr>
+                          <td colSpan={3} className="hog-fetch-log__empty">
+                            No log yet - press Refresh to pull turkey data.
+                          </td>
+                        </tr>
+                      ) : turkeyFetchLog.length === 0 && fetchingRange ? (
+                        <tr>
+                          <td colSpan={3} className="hog-fetch-log__empty">
+                            Connecting...
+                          </td>
+                        </tr>
+                      ) : (
+                        turkeyFetchLog.map((row, i) => (
+                          <tr key={`${row.t}-${i}`}>
+                            <td className="hog-fetch-log__num">{i + 1}</td>
+                            <td className="hog-fetch-log__time">{formatLogTime(row.t)}</td>
+                            <td className="hog-fetch-log__msg">{row.message}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
           {tab === "pork" && (
             <div className="hog-fetch-log">
-              <p className="hog-fetch-log__title">USDA pork pull log</p>
-              <div
-                className="hog-fetch-log__scroll"
-                ref={porkLogScrollRef}
-                onScroll={(e) => {
-                  const t = e.currentTarget;
-                  porkLogStickBottomRef.current =
-                    t.scrollHeight - t.scrollTop - t.clientHeight < 12;
-                }}
-              >
-                <table className="hog-fetch-log__table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Time</th>
-                      <th>Step</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {porkFetchLog.length === 0 && !fetchingRange ? (
-                      <tr>
-                        <td colSpan={3} className="hog-fetch-log__empty">
-                          No log yet - press Refresh to pull pork data.
-                        </td>
-                      </tr>
-                    ) : porkFetchLog.length === 0 && fetchingRange ? (
-                      <tr>
-                        <td colSpan={3} className="hog-fetch-log__empty">
-                          Connecting...
-                        </td>
-                      </tr>
-                    ) : (
-                      porkFetchLog.map((row, i) => (
-                        <tr key={`${row.t}-${i}`}>
-                          <td className="hog-fetch-log__num">{i + 1}</td>
-                          <td className="hog-fetch-log__time">{formatLogTime(row.t)}</td>
-                          <td className="hog-fetch-log__msg">{row.message}</td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+              <div className="table-wrap-head">
+                <p className="hog-fetch-log__title">USDA pork pull log</p>
+                <button type="button" className="btn-brown btn-brown--outline" onClick={() => setShowPorkLog((s) => !s)}>
+                  {showPorkLog ? "Hide log" : "Show log"}
+                </button>
               </div>
+              {showPorkLog && (
+                <div
+                  className="hog-fetch-log__scroll"
+                  ref={porkLogScrollRef}
+                  onScroll={(e) => {
+                    const t = e.currentTarget;
+                    porkLogStickBottomRef.current =
+                      t.scrollHeight - t.scrollTop - t.clientHeight < 12;
+                  }}
+                >
+                  <table className="hog-fetch-log__table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>Step</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {porkFetchLog.length === 0 && !fetchingRange ? (
+                        <tr>
+                          <td colSpan={3} className="hog-fetch-log__empty">
+                            No log yet - press Refresh to pull pork data.
+                          </td>
+                        </tr>
+                      ) : porkFetchLog.length === 0 && fetchingRange ? (
+                        <tr>
+                          <td colSpan={3} className="hog-fetch-log__empty">
+                            Connecting...
+                          </td>
+                        </tr>
+                      ) : (
+                        porkFetchLog.map((row, i) => (
+                          <tr key={`${row.t}-${i}`}>
+                            <td className="hog-fetch-log__num">{i + 1}</td>
+                            <td className="hog-fetch-log__time">{formatLogTime(row.t)}</td>
+                            <td className="hog-fetch-log__msg">{row.message}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
         </section>
@@ -1021,8 +1226,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         <section className="panel admin-panel">
           <h2 className="admin-panel__title">Background refresh</h2>
           <p className="admin-panel__hint">
-            For site maintainers only. This is not the Hog/Turkey Refresh control: it starts a long server-side
-            job, then loads the new files into this open session so you can check Hog or Turkey without another
+            For site maintainers only. This is not the Hog/Turkey/Pork Refresh control: it starts a long server-side
+            job, then loads the new files into this open session so you can check Hog, Turkey, and Pork without another
             USDA pull.
           </p>
           <button
@@ -1363,8 +1568,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       <section className="panel admin-data-preview" aria-label="Session data tables">
         <h2 className="admin-panel__title">Data in this session</h2>
         <p className="admin-panel__hint">
-          Always shown: daily negotiated hog carcass ($/cwt) and weekly hen 8–16 lb (¢/lb) for the same date range
-          as the controls above (Hog/Turkey tabs) or the filters below.
+          Always shown: daily hog ($/cwt), weekly turkey (¢/lb), and daily pork cutout ($/cwt) for the same
+          date range as the controls above or the filters below.
         </p>
 
         <div className="admin-preview-controls">
@@ -1501,6 +1706,56 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                         </tr>
                       );
                     })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="admin-preview-table">
+            <div className="admin-preview-table__head">
+              <h3>Daily pork · LM_PK602</h3>
+              <span className="admin-preview-count">
+                {porkRows.length} day{porkRows.length === 1 ? "" : "s"}
+              </span>
+            </div>
+            {porkMeta && (
+              <p className="admin-preview-meta">Last pork pull / file timestamp: {formatUpdatedEn(porkMeta)}</p>
+            )}
+            <div className="table-scroll admin-table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Carcass</th>
+                    <th>Loin</th>
+                    <th>Butt</th>
+                    <th>Picnic</th>
+                    <th>Rib</th>
+                    <th>Ham</th>
+                    <th>Belly</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {porkRowsForTable.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="admin-preview-empty">
+                        No pork rows in this range (session may be empty until Refresh or deploy reload).
+                      </td>
+                    </tr>
+                  ) : (
+                    porkRowsForTable.map((row) => (
+                      <tr key={row.date}>
+                        <td>{row.date}</td>
+                        <td>{fmt(row.pork_carcass)}</td>
+                        <td>{fmt(row.pork_loin)}</td>
+                        <td>{fmt(row.pork_butt)}</td>
+                        <td>{fmt(row.pork_picnic)}</td>
+                        <td>{fmt(row.pork_rib)}</td>
+                        <td>{fmt(row.pork_ham)}</td>
+                        <td>{fmt(row.pork_belly)}</td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>

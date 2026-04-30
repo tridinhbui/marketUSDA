@@ -9,10 +9,8 @@ concurrency:
 
 on:
   schedule:
-    # 05:00 and 17:00 UTC every day (GitHub cron is UTC-only).
-    # This gives one overnight and one daytime refresh window.
+    # 05:00 UTC every day (GitHub cron is UTC-only).
     - cron: "0 5 * * *"
-    - cron: "0 17 * * *"
   workflow_dispatch:
 
 permissions:

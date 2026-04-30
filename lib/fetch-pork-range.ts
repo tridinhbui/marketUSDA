@@ -1,7 +1,8 @@
 import https from "node:https";
 
 const BASE = "https://mpr.datamart.ams.usda.gov/ws/report/v1/pork/LM_PK602";
-const CHUNK_DAYS = 180;
+const CHUNK_DAYS = 365;
+const MAX_PARALLEL_CHUNKS = 2;
 
 const FIELDS = [
   "pork_carcass",
@@ -24,6 +25,11 @@ export interface PorkRowRaw {
   pork_rib: number | null;
   pork_ham: number | null;
   pork_belly: number | null;
+}
+
+export interface PorkFetchLogEntry {
+  t: string;
+  message: string;
 }
 
 function parseIsoParts(iso: string): { y: number; m: number; d: number } | null {
@@ -228,17 +234,30 @@ async function fetchChunk(from: Date, to: Date): Promise<Map<string, PorkRowRaw>
 
 export async function fetchPorkDateRange(
   isoStart: string,
-  isoEnd: string
+  isoEnd: string,
+  onLog?: (entry: PorkFetchLogEntry) => void
 ): Promise<{ rows: PorkRowRaw[] }> {
   const merged = new Map<string, PorkRowRaw>();
 
-  for (const { from, to } of chunkRange(isoStart, isoEnd)) {
-    const chunk = await fetchChunk(from, to);
-    for (const [k, v] of chunk) {
-      if (!merged.has(k)) merged.set(k, v);
+  const chunks = [...chunkRange(isoStart, isoEnd)];
+  onLog?.({ t: new Date().toISOString(), message: `Prepared ${chunks.length} chunk(s) for ${isoStart} -> ${isoEnd}` });
+  for (let i = 0; i < chunks.length; i += MAX_PARALLEL_CHUNKS) {
+    const group = chunks.slice(i, i + MAX_PARALLEL_CHUNKS);
+    const label = group.map(({ from, to }) => `${fmtMdY(from)}-${fmtMdY(to)}`).join(" | ");
+    onLog?.({
+      t: new Date().toISOString(),
+      message: `Pulling chunk group ${Math.floor(i / MAX_PARALLEL_CHUNKS) + 1}/${Math.ceil(chunks.length / MAX_PARALLEL_CHUNKS)}: ${label}`,
+    });
+    const results = await Promise.all(group.map(({ from, to }) => fetchChunk(from, to)));
+    for (const chunk of results) {
+      for (const [k, v] of chunk) {
+        if (!merged.has(k)) merged.set(k, v);
+      }
     }
+    onLog?.({ t: new Date().toISOString(), message: `Merged rows so far: ${merged.size}` });
   }
 
   const rows = [...merged.values()].sort((a, b) => a.date.localeCompare(b.date));
+  onLog?.({ t: new Date().toISOString(), message: `Finished pull with ${rows.length} row(s)` });
   return { rows };
 }
