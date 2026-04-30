@@ -10,6 +10,11 @@ export interface HogRow {
   western: number | null;
 }
 
+export interface HogFetchLogEntry {
+  t: string;
+  message: string;
+}
+
 function asArray<T>(x: T | T[] | undefined): T[] {
   if (x == null) return [];
   return Array.isArray(x) ? x : [x];
@@ -138,28 +143,44 @@ async function fetchXml(url: string): Promise<string> {
   return res.text();
 }
 
-export async function fetchHogsDateRange(isoStart: string, isoEnd: string): Promise<{ rows: HogRow[] }> {
+export async function fetchHogsDateRange(
+  isoStart: string,
+  isoEnd: string,
+  onLog?: (entry: HogFetchLogEntry) => void
+): Promise<{ rows: HogRow[] }> {
   const s = parseIsoParts(isoStart);
   const e = parseIsoParts(isoEnd);
   if (!s || !e || compareIso(isoStart, isoEnd) > 0) {
     throw new Error("Invalid start or end date");
   }
 
+  const log = (message: string) => {
+    onLog?.({ t: new Date().toISOString(), message });
+  };
+
+  log(`LM_HG217 · window ${isoStart} → ${isoEnd}`);
   const byDate = new Map<string, HogRow>();
+  let chunkIndex = 0;
 
   for (const { start, end } of chunkRange(isoStart, isoEnd)) {
+    chunkIndex += 1;
     const ss = parseIsoParts(start)!;
     const ee = parseIsoParts(end)!;
     const url = buildUrl(ss, ee);
+    log(`Chunk ${chunkIndex}: GET Datamart ${start} … ${end}`);
     const xml = await fetchXml(url);
     const chunkRows = parseLmHg217Xml(xml);
+    let inRange = 0;
     for (const row of chunkRows) {
       if (row.date >= isoStart && row.date <= isoEnd) {
         byDate.set(row.date, row);
+        inRange += 1;
       }
     }
+    log(`Chunk ${chunkIndex}: ${chunkRows.length} day(s) in XML → ${inRange} kept in range`);
   }
 
   const rows = [...byDate.keys()].sort(compareIso).map((d) => byDate.get(d)!);
+  log(`Finished · ${rows.length} merged trading day(s)`);
   return { rows };
 }

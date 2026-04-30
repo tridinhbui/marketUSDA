@@ -24,6 +24,29 @@ interface HogRow {
   western: number | null;
 }
 
+interface HogRefreshLogRow {
+  t: string;
+  message: string;
+}
+
+type HogStreamEvent =
+  | { type: "log"; t: string; message: string }
+  | { type: "done"; generatedAt: string; rows: HogRow[] }
+  | { type: "error"; error: string };
+
+function formatHogLogTime(iso: string) {
+  try {
+    return new Date(iso).toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+  } catch {
+    return iso;
+  }
+}
+
 interface HogPayload {
   generatedAt?: string;
   rows: HogRow[];
@@ -169,6 +192,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [status, setStatus] = useState(() => (initialTab === "admin" ? ADMIN_TAB_HINT : EMPTY_DATA_HINT));
   const [fetchingRange, setFetchingRange] = useState(false);
   const [githubBusy, setGithubBusy] = useState(false);
+  const [hogFetchLog, setHogFetchLog] = useState<HogRefreshLogRow[]>([]);
+  const hogLogScrollRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** Invalidate in-flight hog USDA responses when a newer hog request starts. */
   const hogPullGenRef = useRef(0);
@@ -180,6 +205,11 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       mountedRef.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    const el = hogLogScrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [hogFetchLog]);
 
   const syncTabToUrl = useCallback(
     (t: Tab) => {
@@ -311,6 +341,81 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       setFetchingRange(true);
       try {
         setStatus(introStatus);
+
+        if (apiTab === "hog") {
+          setHogFetchLog([]);
+          const res = await fetch(
+            `/api/fetch-hog-stream?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
+          );
+          if (!res.ok) {
+            const text = await res.text();
+            let msg = text;
+            try {
+              const j = JSON.parse(text) as { error?: string };
+              if (j.error) msg = j.error;
+            } catch {
+              /* use raw */
+            }
+            throw new Error(msg || `HTTP ${res.status}`);
+          }
+          if (!res.body) throw new Error("Empty response body");
+
+          const reader = res.body.getReader();
+          const dec = new TextDecoder();
+          let buffer = "";
+          let finalRows: HogRow[] | undefined;
+          let finalGeneratedAt: string | undefined;
+
+          const handleLine = (line: string) => {
+            if (!line.trim()) return;
+            let evt: HogStreamEvent;
+            try {
+              evt = JSON.parse(line) as HogStreamEvent;
+            } catch {
+              return;
+            }
+            if (evt.type === "log") {
+              if (myGen !== hogPullGenRef.current) return;
+              setHogFetchLog((prev) => [...prev, { t: evt.t, message: evt.message }]);
+            } else if (evt.type === "done") {
+              finalRows = evt.rows;
+              finalGeneratedAt = evt.generatedAt;
+            } else if (evt.type === "error") {
+              throw new Error(evt.error || "Stream error");
+            }
+          };
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += dec.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() ?? "";
+            for (const line of lines) {
+              handleLine(line);
+            }
+          }
+          if (buffer.trim()) {
+            handleLine(buffer.trim());
+          }
+
+          if (myGen !== hogPullGenRef.current) return;
+          if (!finalRows) throw new Error("Stream ended without data");
+          const mergedRows = finalRows;
+
+          setHogFull((prev) => mergeHogByDate(prev, mergedRows));
+          if (finalGeneratedAt) setHogMeta(finalGeneratedAt);
+
+          const count = mergedRows.length;
+          if (myGen !== hogPullGenRef.current) return;
+          setStatus(
+            count > 0
+              ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
+              : `USDA returned no rows for that range — try different dates.`
+          );
+          return;
+        }
+
         const res = await fetch(
           `/api/fetch-range?tab=${apiTab}&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
         );
@@ -321,19 +426,11 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           tab?: string;
         };
         if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-        if (apiTab === "hog" && myGen !== hogPullGenRef.current) return;
 
-        if (data.tab === "hog") {
-          const rows = data.rows as HogRow[];
-          setHogFull((prev) => mergeHogByDate(prev, rows));
-          setHogMeta(data.generatedAt);
-        } else {
-          const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
-          setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
-          setTurkeyMeta(data.generatedAt);
-        }
+        const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
+        setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
+        setTurkeyMeta(data.generatedAt);
         const count = data.rows?.length ?? 0;
-        if (apiTab === "hog" && myGen !== hogPullGenRef.current) return;
         setStatus(
           count > 0
             ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
@@ -634,6 +731,39 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             Export Excel
           </button>
           <p className="status status--full">{status}</p>
+          {tab === "hog" && (hogFetchLog.length > 0 || fetchingRange) && (
+            <div className="hog-fetch-log">
+              <p className="hog-fetch-log__title">USDA hog pull log</p>
+              <div className="hog-fetch-log__scroll" ref={hogLogScrollRef}>
+                <table className="hog-fetch-log__table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Time</th>
+                      <th>Step</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {hogFetchLog.length === 0 && fetchingRange ? (
+                      <tr>
+                        <td colSpan={3} className="hog-fetch-log__empty">
+                          Connecting…
+                        </td>
+                      </tr>
+                    ) : (
+                      hogFetchLog.map((row, i) => (
+                        <tr key={`${row.t}-${i}`}>
+                          <td className="hog-fetch-log__num">{i + 1}</td>
+                          <td className="hog-fetch-log__time">{formatHogLogTime(row.t)}</td>
+                          <td className="hog-fetch-log__msg">{row.message}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </section>
       )}
 

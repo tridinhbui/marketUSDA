@@ -268,6 +268,79 @@ select:focus {
   align-self: end;
 }
 
+.hog-fetch-log {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.hog-fetch-log__title {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hog-fetch-log__scroll {
+  max-height: 200px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fafaf9;
+}
+
+.hog-fetch-log__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.74rem;
+}
+
+.hog-fetch-log__table th {
+  text-align: left;
+  padding: 6px 10px;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.hog-fetch-log__table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+
+.hog-fetch-log__num {
+  color: var(--muted);
+  width: 2.25rem;
+  white-space: nowrap;
+}
+
+.hog-fetch-log__time {
+  color: var(--muted);
+  width: 5.75rem;
+  white-space: nowrap;
+}
+
+.hog-fetch-log__msg {
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.hog-fetch-log__empty {
+  color: var(--muted);
+  font-style: italic;
+  padding: 12px !important;
+}
+
 .status {
   grid-column: 1 / -1;
   margin: 4px 0 0;
