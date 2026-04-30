@@ -313,15 +313,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             Weekly turkey (AMS_3647)
           </button>
         </div>
-        <button
-          type="button"
-          className="btn-neon-refresh"
-          onClick={() => void refreshFixed()}
-          disabled={refreshing}
-          title="Reload JSON from the server (latest deployed files)"
-        >
-          {refreshing ? "Refreshing…" : "Refresh"}
-        </button>
       </header>
 
       <header className="hero">
@@ -342,7 +333,9 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         )}
       </header>
 
-      <section className="panel controls controls--dashboard">
+      <section
+        className={`panel controls ${tab === "hog" ? "controls--dashboard--hog" : "controls--dashboard"}`}
+      >
         <div className="field">
           <label htmlFor="startDate">Start date</label>
           <input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
@@ -350,6 +343,19 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         <div className="field">
           <label htmlFor="endDate">End date</label>
           <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+        </div>
+        <div className="field field--action">
+          <label htmlFor="refresh-data-btn">Reload data</label>
+          <button
+            id="refresh-data-btn"
+            type="button"
+            className="btn-brown"
+            onClick={() => void refreshFixed()}
+            disabled={refreshing}
+            title="Fetch the latest JSON from the server (after you change dates, use this to pull new files)"
+          >
+            {refreshing ? "Refreshing…" : "Refresh"}
+          </button>
         </div>
         {tab === "turkey" && (
           <div className="field field--grow">
@@ -398,6 +404,32 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </article>
           </section>
 
+          <section className="panel table-wrap">
+            <h2>Daily data</h2>
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>National</th>
+                    <th>Iowa/MN</th>
+                    <th>W. Cornbelt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {hogRows.map((row) => (
+                    <tr key={row.date}>
+                      <td>{row.date}</td>
+                      <td className={row.national != null ? "td-br1" : "val-null"}>{fmt(row.national)}</td>
+                      <td className={row.iowaMn != null ? "td-br2" : "val-null"}>{fmt(row.iowaMn)}</td>
+                      <td className={row.western != null ? "td-br3" : "val-null"}>{fmt(row.western)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
           <section className="panel chart-wrap">
             <h2>Price trend</h2>
             <div className="legend">
@@ -439,32 +471,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
               </ResponsiveContainer>
             </div>
           </section>
-
-          <section className="panel table-wrap">
-            <h2>Daily data</h2>
-            <div className="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>National</th>
-                    <th>Iowa/MN</th>
-                    <th>W. Cornbelt</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {hogRows.map((row) => (
-                    <tr key={row.date}>
-                      <td>{row.date}</td>
-                      <td className={row.national != null ? "td-br1" : "val-null"}>{fmt(row.national)}</td>
-                      <td className={row.iowaMn != null ? "td-br2" : "val-null"}>{fmt(row.iowaMn)}</td>
-                      <td className={row.western != null ? "td-br3" : "val-null"}>{fmt(row.western)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
         </>
       )}
 
@@ -487,6 +493,41 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
               <h2>Rows in range</h2>
               <p className="metric metric--brown4">{turkeyRows.length}</p>
             </article>
+          </section>
+
+          <section className="panel table-wrap">
+            <h2>Weekly data</h2>
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Week start</th>
+                    <th>Week end</th>
+                    <th>Condition</th>
+                    <th>Low (¢)</th>
+                    <th>High (¢)</th>
+                    <th>Wtd avg (¢)</th>
+                    <th>Volume (lbs)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {turkeyRows.map((row, i) => {
+                    const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
+                    return (
+                      <tr key={i}>
+                        <td>{row.week_start}</td>
+                        <td>{row.week_end}</td>
+                        <td className={cls}>{row.condition}</td>
+                        <td className={cls}>{fmt(row.low_price)}</td>
+                        <td className={cls}>{fmt(row.high_price)}</td>
+                        <td className={cls}>{fmt(row.wtd_avg)}</td>
+                        <td>{row.volume_lbs ?? "-"}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </section>
 
           <section className="panel chart-wrap">
@@ -523,41 +564,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   <Line type="monotone" dataKey="Frozen" stroke={TURKEY_LINE.Frozen} dot={false} strokeWidth={2} connectNulls />
                 </LineChart>
               </ResponsiveContainer>
-            </div>
-          </section>
-
-          <section className="panel table-wrap">
-            <h2>Weekly data</h2>
-            <div className="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Week start</th>
-                    <th>Week end</th>
-                    <th>Condition</th>
-                    <th>Low (¢)</th>
-                    <th>High (¢)</th>
-                    <th>Wtd avg (¢)</th>
-                    <th>Volume (lbs)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {turkeyRows.map((row, i) => {
-                    const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
-                    return (
-                      <tr key={i}>
-                        <td>{row.week_start}</td>
-                        <td>{row.week_end}</td>
-                        <td className={cls}>{row.condition}</td>
-                        <td className={cls}>{fmt(row.low_price)}</td>
-                        <td className={cls}>{fmt(row.high_price)}</td>
-                        <td className={cls}>{fmt(row.wtd_avg)}</td>
-                        <td>{row.volume_lbs ?? "-"}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
             </div>
           </section>
         </>
