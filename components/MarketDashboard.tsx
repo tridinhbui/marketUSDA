@@ -638,176 +638,25 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       )}
 
       {tab === "admin" && (
-        <>
-          <section className="panel admin-panel">
-            <h2 className="admin-panel__title">Background refresh</h2>
-            <p className="admin-panel__hint">
-              For site maintainers only. This is not the Hog/Turkey Refresh control: it starts a long server-side
-              job, then loads the new files into this open session so you can check Hog or Turkey without another
-              USDA pull.
-            </p>
-            <button
-              id="server-refresh-btn"
-              type="button"
-              className="btn-brown btn-brown--outline"
-              onClick={() => void syncRepoViaGithub()}
-              disabled={fetchingRange || githubBusy}
-              title="Administrative: refreshes shared data files on the host"
-            >
-              {githubBusy ? "Working…" : "Refresh saved data for all visitors"}
-            </button>
-            <p className="status status--full admin-panel__status">{status}</p>
-          </section>
-
-          <section className="panel admin-data-preview">
-            <h2 className="admin-panel__title">Data in this session</h2>
-            <p className="admin-panel__hint">
-              Same datasets as Hog and Turkey tabs: daily negotiated hog carcass ($/cwt) and weekly hen 8–16 lb
-              (¢/lb). Use the range below to filter both tables.
-            </p>
-
-            <div className="admin-preview-controls">
-              <div className="field">
-                <label htmlFor="adminStartDate">Start date</label>
-                <input
-                  id="adminStartDate"
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-              </div>
-              <div className="field">
-                <label htmlFor="adminEndDate">End date</label>
-                <input
-                  id="adminEndDate"
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </div>
-              <div className="field field--grow">
-                <label htmlFor="adminCondFilter">Turkey condition</label>
-                <select
-                  id="adminCondFilter"
-                  value={condition}
-                  onChange={(e) => setCondition(e.target.value as Condition)}
-                  className="select-brown"
-                >
-                  <option value="all">Fresh + frozen</option>
-                  <option value="Fresh">Fresh only</option>
-                  <option value="Frozen">Frozen only</option>
-                </select>
-              </div>
-              <div className="field">
-                <label htmlFor="adminTableOrder">Table order</label>
-                <select
-                  id="adminTableOrder"
-                  className="select-brown select-brown--compact"
-                  value={tableDateOrder}
-                  onChange={(e) => setTableDateOrder(e.target.value as TableDateOrder)}
-                >
-                  <option value="asc">Oldest first</option>
-                  <option value="desc">Newest first</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="admin-preview-tables">
-              <div className="admin-preview-table">
-                <div className="admin-preview-table__head">
-                  <h3>Daily hogs · LM_HG217</h3>
-                  <span className="admin-preview-count">
-                    {hogRows.length} day{hogRows.length === 1 ? "" : "s"}
-                  </span>
-                </div>
-                {hogMeta && (
-                  <p className="admin-preview-meta">Last hog pull / file timestamp: {formatUpdatedEn(hogMeta)}</p>
-                )}
-                <div className="table-scroll admin-table-scroll">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Date</th>
-                        <th>National</th>
-                        <th>Iowa/MN</th>
-                        <th>W. Cornbelt</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {hogRowsForTable.length === 0 ? (
-                        <tr>
-                          <td colSpan={4} className="admin-preview-empty">
-                            No hog rows in this range (session may be empty until Refresh or deploy reload).
-                          </td>
-                        </tr>
-                      ) : (
-                        hogRowsForTable.map((row) => (
-                          <tr key={row.date}>
-                            <td>{row.date}</td>
-                            <td className={row.national != null ? "td-br1" : "val-null"}>{fmt(row.national)}</td>
-                            <td className={row.iowaMn != null ? "td-br2" : "val-null"}>{fmt(row.iowaMn)}</td>
-                            <td className={row.western != null ? "td-br3" : "val-null"}>{fmt(row.western)}</td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div className="admin-preview-table">
-                <div className="admin-preview-table__head">
-                  <h3>Weekly turkey · AMS_3647</h3>
-                  <span className="admin-preview-count">
-                    {turkeyRows.length} row{turkeyRows.length === 1 ? "" : "s"}
-                  </span>
-                </div>
-                {turkeyMeta && (
-                  <p className="admin-preview-meta">Last turkey pull / file timestamp: {formatUpdatedEn(turkeyMeta)}</p>
-                )}
-                <div className="table-scroll admin-table-scroll">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Week start</th>
-                        <th>Week end</th>
-                        <th>Condition</th>
-                        <th>Low (¢)</th>
-                        <th>High (¢)</th>
-                        <th>Wtd avg (¢)</th>
-                        <th>Volume</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {turkeyRowsForTable.length === 0 ? (
-                        <tr>
-                          <td colSpan={7} className="admin-preview-empty">
-                            No turkey rows in this range (session may be empty until Refresh or deploy reload).
-                          </td>
-                        </tr>
-                      ) : (
-                        turkeyRowsForTable.map((row) => {
-                          const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
-                          return (
-                            <tr key={`${row.isoDate}-${row.condition}`}>
-                              <td>{row.week_start}</td>
-                              <td>{row.week_end}</td>
-                              <td className={cls}>{row.condition}</td>
-                              <td className={cls}>{fmt(row.low_price)}</td>
-                              <td className={cls}>{fmt(row.high_price)}</td>
-                              <td className={cls}>{fmt(row.wtd_avg)}</td>
-                              <td>{row.volume_lbs ?? "-"}</td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </section>
-        </>
+        <section className="panel admin-panel">
+          <h2 className="admin-panel__title">Background refresh</h2>
+          <p className="admin-panel__hint">
+            For site maintainers only. This is not the Hog/Turkey Refresh control: it starts a long server-side
+            job, then loads the new files into this open session so you can check Hog or Turkey without another
+            USDA pull.
+          </p>
+          <button
+            id="server-refresh-btn"
+            type="button"
+            className="btn-brown btn-brown--outline"
+            onClick={() => void syncRepoViaGithub()}
+            disabled={fetchingRange || githubBusy}
+            title="Administrative: refreshes shared data files on the host"
+          >
+            {githubBusy ? "Working…" : "Refresh saved data for all visitors"}
+          </button>
+          <p className="status status--full admin-panel__status">{status}</p>
+        </section>
       )}
 
       {tab === "hog" && (
@@ -1023,6 +872,155 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           </section>
         </>
       )}
+
+      <section className="panel admin-data-preview" aria-label="Session data tables">
+        <h2 className="admin-panel__title">Data in this session</h2>
+        <p className="admin-panel__hint">
+          Always shown: daily negotiated hog carcass ($/cwt) and weekly hen 8–16 lb (¢/lb) for the same date range
+          as the controls above (Hog/Turkey tabs) or the filters below.
+        </p>
+
+        <div className="admin-preview-controls">
+          <div className="field">
+            <label htmlFor="adminStartDate">Start date</label>
+            <input
+              id="adminStartDate"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="adminEndDate">End date</label>
+            <input
+              id="adminEndDate"
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+          <div className="field field--grow">
+            <label htmlFor="adminCondFilter">Turkey condition</label>
+            <select
+              id="adminCondFilter"
+              value={condition}
+              onChange={(e) => setCondition(e.target.value as Condition)}
+              className="select-brown"
+            >
+              <option value="all">Fresh + frozen</option>
+              <option value="Fresh">Fresh only</option>
+              <option value="Frozen">Frozen only</option>
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="adminTableOrder">Table order</label>
+            <select
+              id="adminTableOrder"
+              className="select-brown select-brown--compact"
+              value={tableDateOrder}
+              onChange={(e) => setTableDateOrder(e.target.value as TableDateOrder)}
+            >
+              <option value="asc">Oldest first</option>
+              <option value="desc">Newest first</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="admin-preview-tables">
+          <div className="admin-preview-table">
+            <div className="admin-preview-table__head">
+              <h3>Daily hogs · LM_HG217</h3>
+              <span className="admin-preview-count">
+                {hogRows.length} day{hogRows.length === 1 ? "" : "s"}
+              </span>
+            </div>
+            {hogMeta && (
+              <p className="admin-preview-meta">Last hog pull / file timestamp: {formatUpdatedEn(hogMeta)}</p>
+            )}
+            <div className="table-scroll admin-table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>National</th>
+                    <th>Iowa/MN</th>
+                    <th>W. Cornbelt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {hogRowsForTable.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="admin-preview-empty">
+                        No hog rows in this range (session may be empty until Refresh or deploy reload).
+                      </td>
+                    </tr>
+                  ) : (
+                    hogRowsForTable.map((row) => (
+                      <tr key={row.date}>
+                        <td>{row.date}</td>
+                        <td className={row.national != null ? "td-br1" : "val-null"}>{fmt(row.national)}</td>
+                        <td className={row.iowaMn != null ? "td-br2" : "val-null"}>{fmt(row.iowaMn)}</td>
+                        <td className={row.western != null ? "td-br3" : "val-null"}>{fmt(row.western)}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="admin-preview-table">
+            <div className="admin-preview-table__head">
+              <h3>Weekly turkey · AMS_3647</h3>
+              <span className="admin-preview-count">
+                {turkeyRows.length} row{turkeyRows.length === 1 ? "" : "s"}
+              </span>
+            </div>
+            {turkeyMeta && (
+              <p className="admin-preview-meta">Last turkey pull / file timestamp: {formatUpdatedEn(turkeyMeta)}</p>
+            )}
+            <div className="table-scroll admin-table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Week start</th>
+                    <th>Week end</th>
+                    <th>Condition</th>
+                    <th>Low (¢)</th>
+                    <th>High (¢)</th>
+                    <th>Wtd avg (¢)</th>
+                    <th>Volume</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {turkeyRowsForTable.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="admin-preview-empty">
+                        No turkey rows in this range (session may be empty until Refresh or deploy reload).
+                      </td>
+                    </tr>
+                  ) : (
+                    turkeyRowsForTable.map((row) => {
+                      const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
+                      return (
+                        <tr key={`${row.isoDate}-${row.condition}`}>
+                          <td>{row.week_start}</td>
+                          <td>{row.week_end}</td>
+                          <td className={cls}>{row.condition}</td>
+                          <td className={cls}>{fmt(row.low_price)}</td>
+                          <td className={cls}>{fmt(row.high_price)}</td>
+                          <td className={cls}>{fmt(row.wtd_avg)}</td>
+                          <td>{row.volume_lbs ?? "-"}</td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </main>
   );
