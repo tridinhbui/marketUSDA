@@ -9,8 +9,12 @@ import os
 import urllib.request, urllib.parse, json, base64
 from datetime import date, timedelta
 
-_MARS_DEFAULT = "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs="
-KEY = (os.environ.get("USDA_MARS_API_KEY") or "").strip() or _MARS_DEFAULT
+_raw = (os.environ.get("USDA_MARS_API_KEY") or "").strip()
+KEY = (
+    _MARS_DEFAULT
+    if (not _raw or _raw.lower() in ("null", "undefined", "none", ""))
+    else _raw
+)
 CREDS      = base64.b64encode(f'{KEY}:'.encode()).decode()
 BASE       = 'https://marsapi.ams.usda.gov/services/v1.1/reports/2868'
 CHUNK_DAYS = 90  # keep requests small enough
@@ -37,7 +41,14 @@ def fetch_chunk(start: date, end: date) -> list:
     e = end.strftime('%m/%d/%Y')
     params = urllib.parse.urlencode({'q': f'report_begin_date={s}:{e}', 'allSections': 'true'})
     url = f'{BASE}?{params}'
-    req = urllib.request.Request(url, headers={'Authorization': f'Basic {CREDS}'})
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Authorization": f"Basic {CREDS}",
+            "User-Agent": "marketUSDA/1.0 (USDA public data; +https://github.com/tridinhbui/marketUSDA)",
+            "Accept": "application/json",
+        },
+    )
     with urllib.request.urlopen(req, timeout=30) as r:
         data = json.load(r)
     sections = data if isinstance(data, list) else [data]

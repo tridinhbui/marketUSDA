@@ -2,9 +2,14 @@ import os
 import urllib.request, urllib.parse, json, base64
 from datetime import date, datetime, timedelta, timezone
 
-# GitHub passes secrets as empty string when unset; get(..., default) does not fall back then.
+# GitHub may pass a literal "null" for unset secrets; treat as missing.
 _MARS_DEFAULT = "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs="
-KEY = (os.environ.get("USDA_MARS_API_KEY") or "").strip() or _MARS_DEFAULT
+_raw = (os.environ.get("USDA_MARS_API_KEY") or "").strip()
+KEY = (
+    _MARS_DEFAULT
+    if (not _raw or _raw.lower() in ("null", "undefined", "none", ""))
+    else _raw
+)
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 START = date(2023, 1, 1)
 END   = date.today()
@@ -18,7 +23,14 @@ def fetch_chunk(d_from, d_to):
         'allSections': 'true'
     })
     url = f'https://marsapi.ams.usda.gov/services/v1.1/reports/3647?{params}'
-    req = urllib.request.Request(url, headers={'Authorization': f'Basic {CREDS}'})
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Authorization": f"Basic {CREDS}",
+            "User-Agent": "marketUSDA/1.0 (USDA public data; +https://github.com/tridinhbui/marketUSDA)",
+            "Accept": "application/json",
+        },
+    )
     with urllib.request.urlopen(req, timeout=30) as r:
         data = json.load(r)
     if isinstance(data, list):
