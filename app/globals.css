@@ -285,11 +285,17 @@ select:focus {
 }
 
 .hog-fetch-log__scroll {
-  max-height: 200px;
-  overflow: auto;
+  height: 220px;
+  min-height: 220px;
+  max-height: 220px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: #fafaf9;
+  -webkit-overflow-scrolling: touch;
 }
 
 .hog-fetch-log__table {

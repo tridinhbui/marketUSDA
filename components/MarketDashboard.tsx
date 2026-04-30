@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useLayoutEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   LineChart,
@@ -194,6 +194,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [githubBusy, setGithubBusy] = useState(false);
   const [hogFetchLog, setHogFetchLog] = useState<HogRefreshLogRow[]>([]);
   const hogLogScrollRef = useRef<HTMLDivElement>(null);
+  /** When true, new log lines auto-scroll to bottom; false if user scrolled up. */
+  const hogLogStickBottomRef = useRef(true);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** Invalidate in-flight hog USDA responses when a newer hog request starts. */
   const hogPullGenRef = useRef(0);
@@ -206,10 +208,13 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = hogLogScrollRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [hogFetchLog]);
+    if (!el || !hogLogStickBottomRef.current) return;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [hogFetchLog, fetchingRange]);
 
   const syncTabToUrl = useCallback(
     (t: Tab) => {
@@ -343,6 +348,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         setStatus(introStatus);
 
         if (apiTab === "hog") {
+          hogLogStickBottomRef.current = true;
           setHogFetchLog([]);
           const res = await fetch(
             `/api/fetch-hog-stream?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
@@ -731,10 +737,18 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             Export Excel
           </button>
           <p className="status status--full">{status}</p>
-          {tab === "hog" && (hogFetchLog.length > 0 || fetchingRange) && (
+          {tab === "hog" && (
             <div className="hog-fetch-log">
               <p className="hog-fetch-log__title">USDA hog pull log</p>
-              <div className="hog-fetch-log__scroll" ref={hogLogScrollRef}>
+              <div
+                className="hog-fetch-log__scroll"
+                ref={hogLogScrollRef}
+                onScroll={(e) => {
+                  const t = e.currentTarget;
+                  hogLogStickBottomRef.current =
+                    t.scrollHeight - t.scrollTop - t.clientHeight < 12;
+                }}
+              >
                 <table className="hog-fetch-log__table">
                   <thead>
                     <tr>
@@ -744,7 +758,13 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {hogFetchLog.length === 0 && fetchingRange ? (
+                    {hogFetchLog.length === 0 && !fetchingRange ? (
+                      <tr>
+                        <td colSpan={3} className="hog-fetch-log__empty">
+                          No log yet — press Refresh to pull hog data.
+                        </td>
+                      </tr>
+                    ) : hogFetchLog.length === 0 && fetchingRange ? (
                       <tr>
                         <td colSpan={3} className="hog-fetch-log__empty">
                           Connecting…
