@@ -6,16 +6,16 @@
   --border: #d6d0c8;
   --ink: #292524;
   --muted: #78716c;
-  --brown-950: #3f3429;
-  --brown-900: #5c4a3a;
-  --brown-800: #7a6249;
-  --brown-700: #9a7a5c;
+  --brown-950: #4a3d34;
+  --brown-900: #665445;
+  --brown-800: #806b55;
+  --brown-700: #a68968;
   --brown-600: #d97706;
   --brown-100: #fde8d4;
-  /* Flat UI browns (no gradients) */
-  --btn-brown: #5c4033;
-  --btn-brown-hover: #4a3328;
-  --btn-brown-border: #3d2a20;
+  /* Flat UI browns (no gradients) — slightly lighter for readability */
+  --btn-brown: #6e5345;
+  --btn-brown-hover: #5d4539;
+  --btn-brown-border: #4d3a30;
   --tab-inactive-bg: #ffffff;
   --tab-inactive-border: #e7e5e4;
   --accent: var(--btn-brown);
@@ -200,7 +200,7 @@ input[type="date"] {
 input[type="date"]:focus {
   outline: none;
   border-color: var(--btn-brown);
-  box-shadow: 0 0 0 2px rgba(92, 64, 51, 0.2);
+  box-shadow: 0 0 0 2px rgba(110, 83, 69, 0.22);
 }
 
 .select-brown,
@@ -243,7 +243,7 @@ select:focus {
 
 .btn-brown:hover:not(:disabled) {
   background: var(--btn-brown-hover);
-  border-color: #2e1f18;
+  border-color: #3d2e26;
   filter: none;
 }
 

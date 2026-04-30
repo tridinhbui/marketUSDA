@@ -164,6 +164,12 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [fetchingRange, setFetchingRange] = useState(false);
   const [githubBusy, setGithubBusy] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hogUsdaAutoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Skip first hog date-range evaluation (no duplicate USDA hit on load). */
+  const hogUsdaAutoInitRef = useRef(false);
+  const lastHogUsdaKeyRef = useRef<string>("");
+  /** Invalidate in-flight hog USDA responses when a newer hog request starts. */
+  const hogPullGenRef = useRef(0);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -293,46 +299,101 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     return n;
   }, [loadHog, loadTurkey, filterHog, filterTurkey, startDate, endDate, condition, tab]);
 
-  async function fetchUsdaForRange() {
-    if (!startDate || !endDate || startDate > endDate) {
-      setStatus("Choose a valid date range (start ≤ end).");
+  const pullUsdaRange = useCallback(
+    async (apiTab: "hog" | "turkey", start: string, end: string, introStatus: string) => {
+      if (!start || !end || start > end) {
+        setStatus("Choose a valid date range (start ≤ end).");
+        return;
+      }
+      const myGen = apiTab === "hog" ? ++hogPullGenRef.current : 0;
+      setFetchingRange(true);
+      try {
+        setStatus(introStatus);
+        const res = await fetch(
+          `/api/fetch-range?tab=${apiTab}&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
+        );
+        const data = (await res.json()) as {
+          error?: string;
+          rows?: unknown[];
+          generatedAt?: string;
+          tab?: string;
+        };
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        if (apiTab === "hog" && myGen !== hogPullGenRef.current) return;
+
+        if (data.tab === "hog") {
+          const rows = data.rows as HogRow[];
+          setHogFull((prev) => mergeHogByDate(prev, rows));
+          setHogMeta(data.generatedAt);
+        } else {
+          const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
+          setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
+          setTurkeyMeta(data.generatedAt);
+        }
+        const count = data.rows?.length ?? 0;
+        if (apiTab === "hog" && myGen !== hogPullGenRef.current) return;
+        setStatus(
+          count > 0
+            ? `Loaded ${count} new row(s) from USDA for this range. Charts use merged data.`
+            : `USDA returned no rows for that range — try different dates.`
+        );
+      } catch (e) {
+        if (apiTab !== "hog" || myGen === hogPullGenRef.current) {
+          setStatus(`Could not load fresh data: ${e instanceof Error ? e.message : String(e)}`);
+        }
+      } finally {
+        if (mountedRef.current) setFetchingRange(false);
+      }
+    },
+    []
+  );
+
+  /* Daily hogs: after you change start/end, pull that window from USDA (debounced). */
+  useEffect(() => {
+    if (tab !== "hog") return;
+    if (!startDate || !endDate || startDate > endDate) return;
+
+    const key = `${startDate}|${endDate}`;
+    if (!hogUsdaAutoInitRef.current) {
+      hogUsdaAutoInitRef.current = true;
+      lastHogUsdaKeyRef.current = key;
       return;
     }
-    setFetchingRange(true);
-    try {
-      setStatus(`Fetching ${tab === "hog" ? "daily hog prices" : "weekly turkey prices"} from USDA for ${startDate} → ${endDate}…`);
-      const apiTab = tab === "hog" ? "hog" : "turkey";
-      const res = await fetch(
-        `/api/fetch-range?tab=${apiTab}&start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`
-      );
-      const data = (await res.json()) as {
-        error?: string;
-        rows?: unknown[];
-        generatedAt?: string;
-        tab?: string;
-      };
-      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    if (lastHogUsdaKeyRef.current === key) return;
 
-      if (data.tab === "hog") {
-        const rows = data.rows as HogRow[];
-        setHogFull((prev) => mergeHogByDate(prev, rows));
-        setHogMeta(data.generatedAt);
-      } else {
-        const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
-        setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
-        setTurkeyMeta(data.generatedAt);
-      }
-      const count = data.rows?.length ?? 0;
-      setStatus(
-        count > 0
-          ? `Loaded ${count} new row(s) from USDA for this range. Charts use merged data.`
-          : `USDA returned no rows for that range — try different dates.`
+    if (hogUsdaAutoTimerRef.current) clearTimeout(hogUsdaAutoTimerRef.current);
+    hogUsdaAutoTimerRef.current = setTimeout(() => {
+      lastHogUsdaKeyRef.current = key;
+      void pullUsdaRange(
+        "hog",
+        startDate,
+        endDate,
+        `Loading daily hog prices from USDA for ${startDate} → ${endDate}…`
       );
-    } catch (e) {
-      setStatus(`Could not load fresh data: ${e instanceof Error ? e.message : String(e)}`);
-    } finally {
-      if (mountedRef.current) setFetchingRange(false);
+    }, 650);
+
+    return () => {
+      if (hogUsdaAutoTimerRef.current) clearTimeout(hogUsdaAutoTimerRef.current);
+    };
+  }, [tab, startDate, endDate, pullUsdaRange]);
+
+  async function fetchUsdaForRange() {
+    if (tab === "hog") {
+      const key = `${startDate}|${endDate}`;
+      lastHogUsdaKeyRef.current = key;
+      if (hogUsdaAutoTimerRef.current) {
+        clearTimeout(hogUsdaAutoTimerRef.current);
+        hogUsdaAutoTimerRef.current = null;
+      }
     }
+    await pullUsdaRange(
+      tab === "hog" ? "hog" : "turkey",
+      startDate,
+      endDate,
+      tab === "hog"
+        ? `Fetching daily hog prices from USDA for ${startDate} → ${endDate}…`
+        : `Fetching weekly turkey prices from USDA for ${startDate} → ${endDate}…`
+    );
   }
 
   async function syncRepoViaGithub() {
@@ -546,16 +607,20 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </div>
         <div className="field field--action">
-          <label htmlFor="fetch-usda-btn">Fresh download</label>
+          <label htmlFor="fetch-usda-btn">Refresh</label>
           <button
             id="fetch-usda-btn"
             type="button"
             className="btn-brown"
             onClick={() => void fetchUsdaForRange()}
             disabled={fetchingRange || githubBusy}
-            title="Get the latest figures from USDA for the dates above. This updates what you see in this browser tab."
+            title={
+              tab === "hog"
+                ? "Daily hogs: changing the dates above also loads USDA automatically after a short pause. Use Refresh for an immediate pull."
+                : "Pull the latest figures from USDA for the dates above (this browser tab only)."
+            }
           >
-            {fetchingRange ? "Loading…" : "Get latest for dates"}
+            {fetchingRange ? "Loading…" : "Refresh"}
           </button>
         </div>
         {tab === "turkey" && (
@@ -587,7 +652,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           <summary className="advanced-ops__summary">Advanced — update data for everyone</summary>
           <div className="advanced-ops__body">
             <p className="advanced-ops__hint">
-              For site administrators only. Starts a long background task that refreshes the saved files on the server so all visitors see new numbers (several minutes; not the same as &quot;Get latest for dates&quot; above).
+              For site administrators only. Starts a long background task that refreshes the saved files on the server so all visitors see new numbers (several minutes; not the same as the Refresh button above).
             </p>
             <button
               id="server-refresh-btn"

@@ -53,7 +53,11 @@ const parser = new XMLParser({
 
 function parseLmHg217Xml(xmlText: string): HogRow[] {
   const doc = parser.parse(xmlText) as Record<string, unknown>;
-  const topReport = doc.report as Record<string, unknown> | undefined;
+  // API wraps the report in `<results>…</results>`; `doc.report` is never set.
+  const results = doc.results as Record<string, unknown> | undefined;
+  const reportNode = (results?.report ?? doc.report) as Record<string, unknown> | Record<string, unknown>[] | undefined;
+  const reports = asArray<Record<string, unknown>>(reportNode);
+  const topReport = reports[0];
   if (!topReport) return [];
 
   const rows: HogRow[] = [];
