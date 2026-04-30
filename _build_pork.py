@@ -20,7 +20,7 @@ BASE       = 'https://marsapi.ams.usda.gov/services/v1.1/reports/2868'
 CHUNK_DAYS = 90  # keep requests small enough
 START      = date(2023, 1, 1)
 END        = date.today()
-OUT        = 'data/pork_retail_weekly.json'
+OUT        = 'public/data/pork_retail_weekly.json'
 
 # Cuts we care about (type name → label used in JSON)
 KEY_CUTS = {
@@ -115,7 +115,7 @@ def main():
     }
 
     import os
-    os.makedirs('data', exist_ok=True)
+    os.makedirs('public/data', exist_ok=True)
     with open(OUT, 'w') as f:
         json.dump(payload, f, indent=2)
 

@@ -12,7 +12,7 @@ START_DATE = date(2023, 1, 1)
 END_DATE = date.today()
 CHUNK_DAYS = 170
 
-OUT_PATH = Path("data/lm_hg217_daily_prices.json")
+OUT_PATH = Path("public/data/lm_hg217_daily_prices.json")
 
 
 def daterange_chunks(start: date, end: date, chunk_days: int):

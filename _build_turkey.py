@@ -60,7 +60,7 @@ print(f'Total: {len(all_rows)} records')
 
 # Write to JSON
 import os
-os.makedirs('data', exist_ok=True)
+os.makedirs('public/data', exist_ok=True)
 output = {
     'source': 'USDA MARS API v1.1',
     'report': 'AMS_3647 - Weekly National Turkey Report',
@@ -80,6 +80,6 @@ output = {
         for r in all_rows
     ]
 }
-with open('data/turkey_hen_weekly.json', 'w') as f:
+with open('public/data/turkey_hen_weekly.json', 'w') as f:
     json.dump(output, f, indent=2)
-print('Wrote data/turkey_hen_weekly.json')
+print('Wrote public/data/turkey_hen_weekly.json')

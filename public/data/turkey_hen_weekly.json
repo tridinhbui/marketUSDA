@@ -1,0 +1,2799 @@
+{
+  "source": "USDA MARS API v1.1",
+  "report": "AMS_3647 - Weekly National Turkey Report",
+  "item": "Whole Young Hen, 8-16 lb, U.S. Grade A",
+  "priceUnit": "Cents Per Lb",
+  "generatedAt": "2026-04-29",
+  "rows": [
+    {
+      "week_start": "01/02/2023",
+      "week_end": "01/06/2023",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 179.0,
+      "wtd_avg": 171.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "01/09/2023",
+      "week_end": "01/13/2023",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 179.0,
+      "wtd_avg": 171.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "01/16/2023",
+      "week_end": "01/20/2023",
+      "condition": "Frozen",
+      "low_price": 172.0,
+      "high_price": 172.0,
+      "wtd_avg": 172,
+      "volume_lbs": "120"
+    },
+    {
+      "week_start": "01/16/2023",
+      "week_end": "01/20/2023",
+      "condition": "Fresh",
+      "low_price": 183.0,
+      "high_price": 183.0,
+      "wtd_avg": 183,
+      "volume_lbs": "13"
+    },
+    {
+      "week_start": "01/23/2023",
+      "week_end": "01/27/2023",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 180.0,
+      "wtd_avg": 172,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "01/23/2023",
+      "week_end": "01/27/2023",
+      "condition": "Fresh",
+      "low_price": 183.0,
+      "high_price": 183.0,
+      "wtd_avg": 183,
+      "volume_lbs": "12"
+    },
+    {
+      "week_start": "01/30/2023",
+      "week_end": "02/03/2023",
+      "condition": "Frozen",
+      "low_price": 167.0,
+      "high_price": 167.0,
+      "wtd_avg": 167,
+      "volume_lbs": "720"
+    },
+    {
+      "week_start": "01/30/2023",
+      "week_end": "02/03/2023",
+      "condition": "Fresh",
+      "low_price": 183.0,
+      "high_price": 183.0,
+      "wtd_avg": 183,
+      "volume_lbs": "13"
+    },
+    {
+      "week_start": "02/06/2023",
+      "week_end": "02/10/2023",
+      "condition": "Frozen",
+      "low_price": 166.0,
+      "high_price": 166.0,
+      "wtd_avg": 166,
+      "volume_lbs": "400"
+    },
+    {
+      "week_start": "02/06/2023",
+      "week_end": "02/10/2023",
+      "condition": "Fresh",
+      "low_price": 178.0,
+      "high_price": 224.0,
+      "wtd_avg": 180.71,
+      "volume_lbs": "17"
+    },
+    {
+      "week_start": "02/13/2023",
+      "week_end": "02/17/2023",
+      "condition": "Frozen",
+      "low_price": 173.0,
+      "high_price": 173.0,
+      "wtd_avg": 173,
+      "volume_lbs": "624"
+    },
+    {
+      "week_start": "02/13/2023",
+      "week_end": "02/17/2023",
+      "condition": "Fresh",
+      "low_price": 178.0,
+      "high_price": 224.0,
+      "wtd_avg": 181.83,
+      "volume_lbs": "12"
+    },
+    {
+      "week_start": "02/20/2023",
+      "week_end": "02/24/2023",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 180.0,
+      "wtd_avg": 171.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "02/27/2023",
+      "week_end": "03/03/2023",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 180.0,
+      "wtd_avg": 171.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "02/27/2023",
+      "week_end": "03/03/2023",
+      "condition": "Fresh",
+      "low_price": 185.0,
+      "high_price": 185.0,
+      "wtd_avg": 185,
+      "volume_lbs": "12"
+    },
+    {
+      "week_start": "03/06/2023",
+      "week_end": "03/10/2023",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 180.0,
+      "wtd_avg": 171.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "03/06/2023",
+      "week_end": "03/10/2023",
+      "condition": "Fresh",
+      "low_price": 178.0,
+      "high_price": 201.0,
+      "wtd_avg": 182.6,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "03/13/2023",
+      "week_end": "03/17/2023",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 180.0,
+      "wtd_avg": 171.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "03/13/2023",
+      "week_end": "03/17/2023",
+      "condition": "Fresh",
+      "low_price": 178.0,
+      "high_price": 201.0,
+      "wtd_avg": 180.73,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "03/20/2023",
+      "week_end": "03/24/2023",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 180.0,
+      "wtd_avg": 171.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "03/20/2023",
+      "week_end": "03/24/2023",
+      "condition": "Fresh",
+      "low_price": 178.0,
+      "high_price": 201.0,
+      "wtd_avg": 187.18,
+      "volume_lbs": "33"
+    },
+    {
+      "week_start": "03/27/2023",
+      "week_end": "03/31/2023",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 180.0,
+      "wtd_avg": 171.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "03/27/2023",
+      "week_end": "03/31/2023",
+      "condition": "Fresh",
+      "low_price": 182.0,
+      "high_price": 201.0,
+      "wtd_avg": 182.33,
+      "volume_lbs": "58"
+    },
+    {
+      "week_start": "04/03/2023",
+      "week_end": "04/07/2023",
+      "condition": "Frozen",
+      "low_price": 170.0,
+      "high_price": 170.0,
+      "wtd_avg": 170,
+      "volume_lbs": "120"
+    },
+    {
+      "week_start": "04/03/2023",
+      "week_end": "04/07/2023",
+      "condition": "Fresh",
+      "low_price": 183.0,
+      "high_price": 201.0,
+      "wtd_avg": 183.82,
+      "volume_lbs": "22"
+    },
+    {
+      "week_start": "04/10/2023",
+      "week_end": "04/14/2023",
+      "condition": "Frozen",
+      "low_price": 153.0,
+      "high_price": 161.0,
+      "wtd_avg": 157.57,
+      "volume_lbs": "280"
+    },
+    {
+      "week_start": "04/10/2023",
+      "week_end": "04/14/2023",
+      "condition": "Fresh",
+      "low_price": 183.0,
+      "high_price": 261.0,
+      "wtd_avg": 186.55,
+      "volume_lbs": "22"
+    },
+    {
+      "week_start": "04/17/2023",
+      "week_end": "04/21/2023",
+      "condition": "Frozen",
+      "low_price": 170.0,
+      "high_price": 171.0,
+      "wtd_avg": 170.25,
+      "volume_lbs": "160"
+    },
+    {
+      "week_start": "04/17/2023",
+      "week_end": "04/21/2023",
+      "condition": "Fresh",
+      "low_price": 178.0,
+      "high_price": 201.0,
+      "wtd_avg": 179.64,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "04/24/2023",
+      "week_end": "04/28/2023",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 164.0,
+      "wtd_avg": 164,
+      "volume_lbs": "10"
+    },
+    {
+      "week_start": "04/24/2023",
+      "week_end": "04/28/2023",
+      "condition": "Fresh",
+      "low_price": 178.0,
+      "high_price": 201.0,
+      "wtd_avg": 179.64,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "04/24/2023",
+      "week_end": "04/28/2023",
+      "condition": "Frozen",
+      "low_price": 152.0,
+      "high_price": 154.0,
+      "wtd_avg": 153,
+      "volume_lbs": "3240"
+    },
+    {
+      "week_start": "05/01/2023",
+      "week_end": "05/05/2023",
+      "condition": "Frozen",
+      "low_price": 153.0,
+      "high_price": 177.0,
+      "wtd_avg": 165,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "05/08/2023",
+      "week_end": "05/12/2023",
+      "condition": "Frozen",
+      "low_price": 150.0,
+      "high_price": 162.0,
+      "wtd_avg": 161.96,
+      "volume_lbs": "1084"
+    },
+    {
+      "week_start": "05/08/2023",
+      "week_end": "05/12/2023",
+      "condition": "Fresh",
+      "low_price": 184.0,
+      "high_price": 201.0,
+      "wtd_avg": 185.55,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "05/08/2023",
+      "week_end": "05/12/2023",
+      "condition": "Frozen",
+      "low_price": 147.0,
+      "high_price": 154.0,
+      "wtd_avg": 149.5,
+      "volume_lbs": "756"
+    },
+    {
+      "week_start": "05/15/2023",
+      "week_end": "05/19/2023",
+      "condition": "Frozen",
+      "low_price": 139.0,
+      "high_price": 167.0,
+      "wtd_avg": 143.38,
+      "volume_lbs": "1224"
+    },
+    {
+      "week_start": "05/15/2023",
+      "week_end": "05/19/2023",
+      "condition": "Fresh",
+      "low_price": 180.0,
+      "high_price": 201.0,
+      "wtd_avg": 181.91,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "05/22/2023",
+      "week_end": "05/26/2023",
+      "condition": "Frozen",
+      "low_price": 139.0,
+      "high_price": 162.0,
+      "wtd_avg": 150.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "05/22/2023",
+      "week_end": "05/26/2023",
+      "condition": "Fresh",
+      "low_price": 175.0,
+      "high_price": 201.0,
+      "wtd_avg": 177.36,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "05/22/2023",
+      "week_end": "05/26/2023",
+      "condition": "Frozen",
+      "low_price": 155.0,
+      "high_price": 175.0,
+      "wtd_avg": 167.5,
+      "volume_lbs": "320"
+    },
+    {
+      "week_start": "05/29/2023",
+      "week_end": "06/02/2023",
+      "condition": "Frozen",
+      "low_price": 142.0,
+      "high_price": 158.0,
+      "wtd_avg": 156.15,
+      "volume_lbs": "364"
+    },
+    {
+      "week_start": "05/29/2023",
+      "week_end": "06/02/2023",
+      "condition": "Fresh",
+      "low_price": 170.0,
+      "high_price": 193.0,
+      "wtd_avg": 172.09,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "06/05/2023",
+      "week_end": "06/09/2023",
+      "condition": "Frozen",
+      "low_price": 156.0,
+      "high_price": 156.0,
+      "wtd_avg": 156,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "06/05/2023",
+      "week_end": "06/09/2023",
+      "condition": "Fresh",
+      "low_price": 157.0,
+      "high_price": 200.0,
+      "wtd_avg": 161.78,
+      "volume_lbs": "9"
+    },
+    {
+      "week_start": "06/12/2023",
+      "week_end": "06/16/2023",
+      "condition": "Frozen",
+      "low_price": 139.0,
+      "high_price": 156.0,
+      "wtd_avg": 153.78,
+      "volume_lbs": "46"
+    },
+    {
+      "week_start": "06/12/2023",
+      "week_end": "06/16/2023",
+      "condition": "Fresh",
+      "low_price": 157.0,
+      "high_price": 200.0,
+      "wtd_avg": 160.91,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "06/12/2023",
+      "week_end": "06/16/2023",
+      "condition": "Frozen",
+      "low_price": 143.0,
+      "high_price": 143.0,
+      "wtd_avg": 143,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "06/19/2023",
+      "week_end": "06/23/2023",
+      "condition": "Frozen",
+      "low_price": 156.0,
+      "high_price": 156.0,
+      "wtd_avg": 156,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "06/19/2023",
+      "week_end": "06/23/2023",
+      "condition": "Fresh",
+      "low_price": 157.0,
+      "high_price": 200.0,
+      "wtd_avg": 160.91,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "06/26/2023",
+      "week_end": "06/30/2023",
+      "condition": "Frozen",
+      "low_price": 139.0,
+      "high_price": 153.0,
+      "wtd_avg": 147.89,
+      "volume_lbs": "90"
+    },
+    {
+      "week_start": "06/26/2023",
+      "week_end": "06/30/2023",
+      "condition": "Fresh",
+      "low_price": 154.0,
+      "high_price": 199.0,
+      "wtd_avg": 157.21,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "06/26/2023",
+      "week_end": "06/30/2023",
+      "condition": "Frozen",
+      "low_price": 133.0,
+      "high_price": 135.0,
+      "wtd_avg": 133.6,
+      "volume_lbs": "200"
+    },
+    {
+      "week_start": "07/03/2023",
+      "week_end": "07/07/2023",
+      "condition": "Frozen",
+      "low_price": 141.0,
+      "high_price": 150.0,
+      "wtd_avg": 147,
+      "volume_lbs": "60"
+    },
+    {
+      "week_start": "07/03/2023",
+      "week_end": "07/07/2023",
+      "condition": "Fresh",
+      "low_price": 154.0,
+      "high_price": 200.0,
+      "wtd_avg": 157.29,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "07/10/2023",
+      "week_end": "07/14/2023",
+      "condition": "Frozen",
+      "low_price": 136.0,
+      "high_price": 149.0,
+      "wtd_avg": 143.43,
+      "volume_lbs": "70"
+    },
+    {
+      "week_start": "07/10/2023",
+      "week_end": "07/14/2023",
+      "condition": "Fresh",
+      "low_price": 154.0,
+      "high_price": 200.0,
+      "wtd_avg": 157.29,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "07/17/2023",
+      "week_end": "07/21/2023",
+      "condition": "Frozen",
+      "low_price": 143.0,
+      "high_price": 149.0,
+      "wtd_avg": 144.5,
+      "volume_lbs": "160"
+    },
+    {
+      "week_start": "07/17/2023",
+      "week_end": "07/21/2023",
+      "condition": "Frozen",
+      "low_price": 146.0,
+      "high_price": 146.0,
+      "wtd_avg": 146,
+      "volume_lbs": "486"
+    },
+    {
+      "week_start": "07/24/2023",
+      "week_end": "07/28/2023",
+      "condition": "Frozen",
+      "low_price": 121.0,
+      "high_price": 149.0,
+      "wtd_avg": 135,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "07/24/2023",
+      "week_end": "07/28/2023",
+      "condition": "Fresh",
+      "low_price": 154.0,
+      "high_price": 154.0,
+      "wtd_avg": 154,
+      "volume_lbs": "10"
+    },
+    {
+      "week_start": "07/31/2023",
+      "week_end": "08/04/2023",
+      "condition": "Frozen",
+      "low_price": 118.0,
+      "high_price": 149.0,
+      "wtd_avg": 123.92,
+      "volume_lbs": "480"
+    },
+    {
+      "week_start": "07/31/2023",
+      "week_end": "08/04/2023",
+      "condition": "Fresh",
+      "low_price": 154.0,
+      "high_price": 154.0,
+      "wtd_avg": 154,
+      "volume_lbs": "10"
+    },
+    {
+      "week_start": "08/07/2023",
+      "week_end": "08/11/2023",
+      "condition": "Frozen",
+      "low_price": 120.0,
+      "high_price": 147.0,
+      "wtd_avg": 123.33,
+      "volume_lbs": "600"
+    },
+    {
+      "week_start": "08/07/2023",
+      "week_end": "08/11/2023",
+      "condition": "Fresh",
+      "low_price": 154.0,
+      "high_price": 202.0,
+      "wtd_avg": 158.36,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "08/14/2023",
+      "week_end": "08/18/2023",
+      "condition": "Frozen",
+      "low_price": 128.0,
+      "high_price": 143.0,
+      "wtd_avg": 130.73,
+      "volume_lbs": "600"
+    },
+    {
+      "week_start": "08/14/2023",
+      "week_end": "08/18/2023",
+      "condition": "Fresh",
+      "low_price": 148.0,
+      "high_price": 202.0,
+      "wtd_avg": 152.91,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "08/14/2023",
+      "week_end": "08/18/2023",
+      "condition": "Frozen",
+      "low_price": 114.0,
+      "high_price": 114.0,
+      "wtd_avg": 114,
+      "volume_lbs": "320"
+    },
+    {
+      "week_start": "08/21/2023",
+      "week_end": "08/25/2023",
+      "condition": "Frozen",
+      "low_price": 132.0,
+      "high_price": 140.0,
+      "wtd_avg": 133.86,
+      "volume_lbs": "215"
+    },
+    {
+      "week_start": "08/21/2023",
+      "week_end": "08/25/2023",
+      "condition": "Fresh",
+      "low_price": 138.0,
+      "high_price": 202.0,
+      "wtd_avg": 142.57,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "08/21/2023",
+      "week_end": "08/25/2023",
+      "condition": "Frozen",
+      "low_price": 122.0,
+      "high_price": 122.0,
+      "wtd_avg": 122,
+      "volume_lbs": "324"
+    },
+    {
+      "week_start": "08/28/2023",
+      "week_end": "09/01/2023",
+      "condition": "Frozen",
+      "low_price": 119.0,
+      "high_price": 136.0,
+      "wtd_avg": 129.07,
+      "volume_lbs": "560"
+    },
+    {
+      "week_start": "08/28/2023",
+      "week_end": "09/01/2023",
+      "condition": "Fresh",
+      "low_price": 138.0,
+      "high_price": 202.0,
+      "wtd_avg": 142.57,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "08/28/2023",
+      "week_end": "09/01/2023",
+      "condition": "Frozen",
+      "low_price": 130.0,
+      "high_price": 136.0,
+      "wtd_avg": 131.2,
+      "volume_lbs": "400"
+    },
+    {
+      "week_start": "09/04/2023",
+      "week_end": "09/08/2023",
+      "condition": "Frozen",
+      "low_price": 121.0,
+      "high_price": 136.0,
+      "wtd_avg": 130.05,
+      "volume_lbs": "818"
+    },
+    {
+      "week_start": "09/04/2023",
+      "week_end": "09/08/2023",
+      "condition": "Fresh",
+      "low_price": 138.0,
+      "high_price": 202.0,
+      "wtd_avg": 142.57,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "09/04/2023",
+      "week_end": "09/08/2023",
+      "condition": "Frozen",
+      "low_price": 127.0,
+      "high_price": 127.0,
+      "wtd_avg": 127,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "09/11/2023",
+      "week_end": "09/15/2023",
+      "condition": "Frozen",
+      "low_price": 123.0,
+      "high_price": 136.0,
+      "wtd_avg": 129.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "09/18/2023",
+      "week_end": "09/22/2023",
+      "condition": "Frozen",
+      "low_price": 125.0,
+      "high_price": 125.0,
+      "wtd_avg": 125,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "09/25/2023",
+      "week_end": "09/29/2023",
+      "condition": "Frozen",
+      "low_price": 117.0,
+      "high_price": 126.0,
+      "wtd_avg": 118.15,
+      "volume_lbs": "530"
+    },
+    {
+      "week_start": "09/25/2023",
+      "week_end": "09/29/2023",
+      "condition": "Fresh",
+      "low_price": 127.0,
+      "high_price": 202.0,
+      "wtd_avg": 131.41,
+      "volume_lbs": "17"
+    },
+    {
+      "week_start": "10/02/2023",
+      "week_end": "10/06/2023",
+      "condition": "Frozen",
+      "low_price": 116.0,
+      "high_price": 124.0,
+      "wtd_avg": 118.34,
+      "volume_lbs": "656"
+    },
+    {
+      "week_start": "10/02/2023",
+      "week_end": "10/06/2023",
+      "condition": "Fresh",
+      "low_price": 127.0,
+      "high_price": 127.0,
+      "wtd_avg": 127,
+      "volume_lbs": "13"
+    },
+    {
+      "week_start": "10/09/2023",
+      "week_end": "10/13/2023",
+      "condition": "Frozen",
+      "low_price": 108.0,
+      "high_price": 124.0,
+      "wtd_avg": 116,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "10/09/2023",
+      "week_end": "10/13/2023",
+      "condition": "Fresh",
+      "low_price": 139.5,
+      "high_price": 139.5,
+      "wtd_avg": 139.5,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "10/16/2023",
+      "week_end": "10/20/2023",
+      "condition": "Frozen",
+      "low_price": 101.0,
+      "high_price": 122.0,
+      "wtd_avg": 115.5,
+      "volume_lbs": "1701"
+    },
+    {
+      "week_start": "10/16/2023",
+      "week_end": "10/20/2023",
+      "condition": "Fresh",
+      "low_price": 127.0,
+      "high_price": 174.0,
+      "wtd_avg": 132.22,
+      "volume_lbs": "18"
+    },
+    {
+      "week_start": "10/16/2023",
+      "week_end": "10/20/2023",
+      "condition": "Frozen",
+      "low_price": 126.0,
+      "high_price": 126.0,
+      "wtd_avg": 126,
+      "volume_lbs": "200"
+    },
+    {
+      "week_start": "10/23/2023",
+      "week_end": "10/27/2023",
+      "condition": "Frozen",
+      "low_price": 99.0,
+      "high_price": 124.0,
+      "wtd_avg": 111.69,
+      "volume_lbs": "482"
+    },
+    {
+      "week_start": "10/23/2023",
+      "week_end": "10/27/2023",
+      "condition": "Fresh",
+      "low_price": 127.0,
+      "high_price": 174.0,
+      "wtd_avg": 146.74,
+      "volume_lbs": "1634"
+    },
+    {
+      "week_start": "10/30/2023",
+      "week_end": "11/03/2023",
+      "condition": "Frozen",
+      "low_price": 91.0,
+      "high_price": 122.0,
+      "wtd_avg": 105.51,
+      "volume_lbs": "346"
+    },
+    {
+      "week_start": "10/30/2023",
+      "week_end": "11/03/2023",
+      "condition": "Fresh",
+      "low_price": 116.0,
+      "high_price": 174.0,
+      "wtd_avg": 146.97,
+      "volume_lbs": "2976"
+    },
+    {
+      "week_start": "10/30/2023",
+      "week_end": "11/03/2023",
+      "condition": "Frozen",
+      "low_price": 96.0,
+      "high_price": 96.0,
+      "wtd_avg": 96,
+      "volume_lbs": "54"
+    },
+    {
+      "week_start": "11/06/2023",
+      "week_end": "11/10/2023",
+      "condition": "Frozen",
+      "low_price": 96.0,
+      "high_price": 96.0,
+      "wtd_avg": 96,
+      "volume_lbs": "160"
+    },
+    {
+      "week_start": "11/06/2023",
+      "week_end": "11/10/2023",
+      "condition": "Fresh",
+      "low_price": 126.0,
+      "high_price": 174.0,
+      "wtd_avg": 147.41,
+      "volume_lbs": "3524"
+    },
+    {
+      "week_start": "11/06/2023",
+      "week_end": "11/10/2023",
+      "condition": "Frozen",
+      "low_price": 100.0,
+      "high_price": 115.0,
+      "wtd_avg": 106.82,
+      "volume_lbs": "440"
+    },
+    {
+      "week_start": "11/13/2023",
+      "week_end": "11/17/2023",
+      "condition": "Frozen",
+      "low_price": 88.0,
+      "high_price": 120.0,
+      "wtd_avg": 105.94,
+      "volume_lbs": "1883"
+    },
+    {
+      "week_start": "11/13/2023",
+      "week_end": "11/17/2023",
+      "condition": "Fresh",
+      "low_price": 127.0,
+      "high_price": 160.0,
+      "wtd_avg": 142.71,
+      "volume_lbs": "695"
+    },
+    {
+      "week_start": "11/20/2023",
+      "week_end": "11/24/2023",
+      "condition": "Frozen",
+      "low_price": 92.0,
+      "high_price": 92.0,
+      "wtd_avg": 92,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "11/20/2023",
+      "week_end": "11/24/2023",
+      "condition": "Frozen",
+      "low_price": 120.0,
+      "high_price": 120.0,
+      "wtd_avg": 120,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "11/27/2023",
+      "week_end": "12/01/2023",
+      "condition": "Frozen",
+      "low_price": 88.0,
+      "high_price": 97.0,
+      "wtd_avg": 92.5,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "12/04/2023",
+      "week_end": "12/08/2023",
+      "condition": "Frozen",
+      "low_price": 96.0,
+      "high_price": 104.0,
+      "wtd_avg": 96.67,
+      "volume_lbs": "152"
+    },
+    {
+      "week_start": "12/04/2023",
+      "week_end": "12/08/2023",
+      "condition": "Fresh",
+      "low_price": 143.0,
+      "high_price": 163.0,
+      "wtd_avg": 146.61,
+      "volume_lbs": "654"
+    },
+    {
+      "week_start": "12/11/2023",
+      "week_end": "12/15/2023",
+      "condition": "Frozen",
+      "low_price": 79.0,
+      "high_price": 97.0,
+      "wtd_avg": 80.24,
+      "volume_lbs": "1160"
+    },
+    {
+      "week_start": "12/11/2023",
+      "week_end": "12/15/2023",
+      "condition": "Fresh",
+      "low_price": 143.0,
+      "high_price": 163.0,
+      "wtd_avg": 147.5,
+      "volume_lbs": "1050"
+    },
+    {
+      "week_start": "12/18/2023",
+      "week_end": "12/22/2023",
+      "condition": "Frozen",
+      "low_price": 73.0,
+      "high_price": 100.0,
+      "wtd_avg": 86.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "12/18/2023",
+      "week_end": "12/22/2023",
+      "condition": "Fresh",
+      "low_price": 143.0,
+      "high_price": 143.0,
+      "wtd_avg": 143,
+      "volume_lbs": "140"
+    },
+    {
+      "week_start": "12/25/2023",
+      "week_end": "12/29/2023",
+      "condition": "Frozen",
+      "low_price": 73.0,
+      "high_price": 100.0,
+      "wtd_avg": 86.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "01/01/2024",
+      "week_end": "01/05/2024",
+      "condition": "Frozen",
+      "low_price": 73.0,
+      "high_price": 100.0,
+      "wtd_avg": 86.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "01/08/2024",
+      "week_end": "01/12/2024",
+      "condition": "Frozen",
+      "low_price": 82.0,
+      "high_price": 82.0,
+      "wtd_avg": 82,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "01/15/2024",
+      "week_end": "01/19/2024",
+      "condition": "Frozen",
+      "low_price": 90.0,
+      "high_price": 103.0,
+      "wtd_avg": 90.17,
+      "volume_lbs": "1520"
+    },
+    {
+      "week_start": "01/22/2024",
+      "week_end": "01/26/2024",
+      "condition": "Frozen",
+      "low_price": 85.0,
+      "high_price": 103.0,
+      "wtd_avg": 88.78,
+      "volume_lbs": "4850"
+    },
+    {
+      "week_start": "01/29/2024",
+      "week_end": "02/02/2024",
+      "condition": "Frozen",
+      "low_price": 105.0,
+      "high_price": 105.0,
+      "wtd_avg": 105,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "02/05/2024",
+      "week_end": "02/09/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "02/12/2024",
+      "week_end": "02/16/2024",
+      "condition": "Frozen",
+      "low_price": 91.0,
+      "high_price": 112.0,
+      "wtd_avg": 95.92,
+      "volume_lbs": "3332"
+    },
+    {
+      "week_start": "02/12/2024",
+      "week_end": "02/16/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 176.0,
+      "wtd_avg": 111.45,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "02/19/2024",
+      "week_end": "02/23/2024",
+      "condition": "Frozen",
+      "low_price": 91.0,
+      "high_price": 105.0,
+      "wtd_avg": 99,
+      "volume_lbs": "35"
+    },
+    {
+      "week_start": "02/26/2024",
+      "week_end": "03/01/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "02/26/2024",
+      "week_end": "03/01/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 177.0,
+      "wtd_avg": 110.64,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "03/04/2024",
+      "week_end": "03/08/2024",
+      "condition": "Frozen",
+      "low_price": 88.0,
+      "high_price": 103.0,
+      "wtd_avg": 95.43,
+      "volume_lbs": "42"
+    },
+    {
+      "week_start": "03/04/2024",
+      "week_end": "03/08/2024",
+      "condition": "Fresh",
+      "low_price": 128.0,
+      "high_price": 144.0,
+      "wtd_avg": 137.31,
+      "volume_lbs": "148"
+    },
+    {
+      "week_start": "03/04/2024",
+      "week_end": "03/08/2024",
+      "condition": "Frozen",
+      "low_price": 97.0,
+      "high_price": 97.0,
+      "wtd_avg": 97,
+      "volume_lbs": "400"
+    },
+    {
+      "week_start": "03/11/2024",
+      "week_end": "03/15/2024",
+      "condition": "Frozen",
+      "low_price": 94.0,
+      "high_price": 103.0,
+      "wtd_avg": 94.26,
+      "volume_lbs": "700"
+    },
+    {
+      "week_start": "03/11/2024",
+      "week_end": "03/15/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 131.62,
+      "volume_lbs": "271"
+    },
+    {
+      "week_start": "03/18/2024",
+      "week_end": "03/22/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "03/18/2024",
+      "week_end": "03/22/2024",
+      "condition": "Fresh",
+      "low_price": 111.0,
+      "high_price": 155.0,
+      "wtd_avg": 118.1,
+      "volume_lbs": "62"
+    },
+    {
+      "week_start": "03/25/2024",
+      "week_end": "03/29/2024",
+      "condition": "Frozen",
+      "low_price": 84.0,
+      "high_price": 103.0,
+      "wtd_avg": 84.9,
+      "volume_lbs": "420"
+    },
+    {
+      "week_start": "03/25/2024",
+      "week_end": "03/29/2024",
+      "condition": "Fresh",
+      "low_price": 110.0,
+      "high_price": 262.0,
+      "wtd_avg": 123.82,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "04/01/2024",
+      "week_end": "04/05/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "04/08/2024",
+      "week_end": "04/12/2024",
+      "condition": "Frozen",
+      "low_price": 92.0,
+      "high_price": 103.0,
+      "wtd_avg": 92.25,
+      "volume_lbs": "884"
+    },
+    {
+      "week_start": "04/08/2024",
+      "week_end": "04/12/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 116,
+      "volume_lbs": "17"
+    },
+    {
+      "week_start": "04/15/2024",
+      "week_end": "04/19/2024",
+      "condition": "Frozen",
+      "low_price": 85.0,
+      "high_price": 103.0,
+      "wtd_avg": 91,
+      "volume_lbs": "60"
+    },
+    {
+      "week_start": "04/15/2024",
+      "week_end": "04/19/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 104.0,
+      "wtd_avg": 104,
+      "volume_lbs": "11"
+    },
+    {
+      "week_start": "04/22/2024",
+      "week_end": "04/26/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "04/22/2024",
+      "week_end": "04/26/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 104.0,
+      "wtd_avg": 104,
+      "volume_lbs": "26"
+    },
+    {
+      "week_start": "04/29/2024",
+      "week_end": "05/03/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "05/06/2024",
+      "week_end": "05/10/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "05/06/2024",
+      "week_end": "05/10/2024",
+      "condition": "Fresh",
+      "low_price": 113.0,
+      "high_price": 113.0,
+      "wtd_avg": 113,
+      "volume_lbs": "16"
+    },
+    {
+      "week_start": "05/13/2024",
+      "week_end": "05/17/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "05/13/2024",
+      "week_end": "05/17/2024",
+      "condition": "Fresh",
+      "low_price": 106.0,
+      "high_price": 143.0,
+      "wtd_avg": 108.18,
+      "volume_lbs": "17"
+    },
+    {
+      "week_start": "05/20/2024",
+      "week_end": "05/24/2024",
+      "condition": "Frozen",
+      "low_price": 88.0,
+      "high_price": 110.0,
+      "wtd_avg": 99,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "05/20/2024",
+      "week_end": "05/24/2024",
+      "condition": "Fresh",
+      "low_price": 106.0,
+      "high_price": 143.0,
+      "wtd_avg": 108.18,
+      "volume_lbs": "17"
+    },
+    {
+      "week_start": "05/27/2024",
+      "week_end": "05/31/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "05/27/2024",
+      "week_end": "05/31/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 143.0,
+      "wtd_avg": 106.79,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "06/03/2024",
+      "week_end": "06/07/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "06/03/2024",
+      "week_end": "06/07/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 110,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "06/10/2024",
+      "week_end": "06/14/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "06/10/2024",
+      "week_end": "06/14/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 109,
+      "volume_lbs": "18"
+    },
+    {
+      "week_start": "06/10/2024",
+      "week_end": "06/14/2024",
+      "condition": "Frozen",
+      "low_price": 110.0,
+      "high_price": 110.0,
+      "wtd_avg": 110,
+      "volume_lbs": "27"
+    },
+    {
+      "week_start": "06/17/2024",
+      "week_end": "06/21/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "06/17/2024",
+      "week_end": "06/21/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 110,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "06/24/2024",
+      "week_end": "06/28/2024",
+      "condition": "Frozen",
+      "low_price": 87.0,
+      "high_price": 103.0,
+      "wtd_avg": 89.35,
+      "volume_lbs": "340"
+    },
+    {
+      "week_start": "06/24/2024",
+      "week_end": "06/28/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 110,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "06/24/2024",
+      "week_end": "06/28/2024",
+      "condition": "Frozen",
+      "low_price": 106.0,
+      "high_price": 108.0,
+      "wtd_avg": 106.2,
+      "volume_lbs": "267"
+    },
+    {
+      "week_start": "07/01/2024",
+      "week_end": "07/05/2024",
+      "condition": "Frozen",
+      "low_price": 81.0,
+      "high_price": 103.0,
+      "wtd_avg": 87.5,
+      "volume_lbs": "320"
+    },
+    {
+      "week_start": "07/01/2024",
+      "week_end": "07/05/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 110,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "07/08/2024",
+      "week_end": "07/12/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "07/08/2024",
+      "week_end": "07/12/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 110,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "07/15/2024",
+      "week_end": "07/19/2024",
+      "condition": "Frozen",
+      "low_price": 92.0,
+      "high_price": 103.0,
+      "wtd_avg": 92.52,
+      "volume_lbs": "420"
+    },
+    {
+      "week_start": "07/15/2024",
+      "week_end": "07/19/2024",
+      "condition": "Fresh",
+      "low_price": 103.0,
+      "high_price": 155.0,
+      "wtd_avg": 109.13,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "07/22/2024",
+      "week_end": "07/26/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "07/22/2024",
+      "week_end": "07/26/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 110.43,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "07/29/2024",
+      "week_end": "08/02/2024",
+      "condition": "Frozen",
+      "low_price": 79.0,
+      "high_price": 103.0,
+      "wtd_avg": 83,
+      "volume_lbs": "180"
+    },
+    {
+      "week_start": "07/29/2024",
+      "week_end": "08/02/2024",
+      "condition": "Fresh",
+      "low_price": 103.0,
+      "high_price": 155.0,
+      "wtd_avg": 109.57,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "08/05/2024",
+      "week_end": "08/09/2024",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 103.0,
+      "wtd_avg": 103,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "08/12/2024",
+      "week_end": "08/16/2024",
+      "condition": "Frozen",
+      "low_price": 75.0,
+      "high_price": 106.0,
+      "wtd_avg": 90,
+      "volume_lbs": "1070"
+    },
+    {
+      "week_start": "08/12/2024",
+      "week_end": "08/16/2024",
+      "condition": "Fresh",
+      "low_price": 111.0,
+      "high_price": 155.0,
+      "wtd_avg": 116.43,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "08/19/2024",
+      "week_end": "08/23/2024",
+      "condition": "Frozen",
+      "low_price": 97.0,
+      "high_price": 104.0,
+      "wtd_avg": 98.25,
+      "volume_lbs": "800"
+    },
+    {
+      "week_start": "08/19/2024",
+      "week_end": "08/23/2024",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 155.0,
+      "wtd_avg": 132.29,
+      "volume_lbs": "35"
+    },
+    {
+      "week_start": "08/19/2024",
+      "week_end": "08/23/2024",
+      "condition": "Frozen",
+      "low_price": 91.0,
+      "high_price": 97.0,
+      "wtd_avg": 95,
+      "volume_lbs": "360"
+    },
+    {
+      "week_start": "08/26/2024",
+      "week_end": "08/30/2024",
+      "condition": "Frozen",
+      "low_price": 71.0,
+      "high_price": 104.0,
+      "wtd_avg": 90.05,
+      "volume_lbs": "148"
+    },
+    {
+      "week_start": "08/26/2024",
+      "week_end": "08/30/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 155.0,
+      "wtd_avg": 110.87,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "09/02/2024",
+      "week_end": "09/06/2024",
+      "condition": "Frozen",
+      "low_price": 78.0,
+      "high_price": 104.0,
+      "wtd_avg": 86.67,
+      "volume_lbs": "60"
+    },
+    {
+      "week_start": "09/02/2024",
+      "week_end": "09/06/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 160.0,
+      "wtd_avg": 111.2,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "09/09/2024",
+      "week_end": "09/13/2024",
+      "condition": "Frozen",
+      "low_price": 87.0,
+      "high_price": 105.0,
+      "wtd_avg": 99.43,
+      "volume_lbs": "1136"
+    },
+    {
+      "week_start": "09/09/2024",
+      "week_end": "09/13/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 160.0,
+      "wtd_avg": 111.2,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "09/16/2024",
+      "week_end": "09/20/2024",
+      "condition": "Frozen",
+      "low_price": 78.0,
+      "high_price": 105.0,
+      "wtd_avg": 87.67,
+      "volume_lbs": "180"
+    },
+    {
+      "week_start": "09/23/2024",
+      "week_end": "09/27/2024",
+      "condition": "Frozen",
+      "low_price": 81.0,
+      "high_price": 104.0,
+      "wtd_avg": 93,
+      "volume_lbs": "160"
+    },
+    {
+      "week_start": "09/23/2024",
+      "week_end": "09/27/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 160.0,
+      "wtd_avg": 111.2,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "09/30/2024",
+      "week_end": "10/04/2024",
+      "condition": "Frozen",
+      "low_price": 83.0,
+      "high_price": 104.0,
+      "wtd_avg": 91.49,
+      "volume_lbs": "214"
+    },
+    {
+      "week_start": "09/30/2024",
+      "week_end": "10/04/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 160.0,
+      "wtd_avg": 108.93,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "10/07/2024",
+      "week_end": "10/11/2024",
+      "condition": "Frozen",
+      "low_price": 104.0,
+      "high_price": 104.0,
+      "wtd_avg": 104,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "10/14/2024",
+      "week_end": "10/18/2024",
+      "condition": "Frozen",
+      "low_price": 219.0,
+      "high_price": 219.0,
+      "wtd_avg": 219,
+      "volume_lbs": "12"
+    },
+    {
+      "week_start": "10/14/2024",
+      "week_end": "10/18/2024",
+      "condition": "Frozen",
+      "low_price": 95.0,
+      "high_price": 103.0,
+      "wtd_avg": 96.16,
+      "volume_lbs": "860"
+    },
+    {
+      "week_start": "10/14/2024",
+      "week_end": "10/18/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 160.0,
+      "wtd_avg": 111.2,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "10/21/2024",
+      "week_end": "10/25/2024",
+      "condition": "Frozen",
+      "low_price": 97.0,
+      "high_price": 105.0,
+      "wtd_avg": 98.85,
+      "volume_lbs": "260"
+    },
+    {
+      "week_start": "10/21/2024",
+      "week_end": "10/25/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 160.0,
+      "wtd_avg": 111.2,
+      "volume_lbs": "15"
+    },
+    {
+      "week_start": "10/28/2024",
+      "week_end": "11/01/2024",
+      "condition": "Frozen",
+      "low_price": 91.0,
+      "high_price": 104.0,
+      "wtd_avg": 95.75,
+      "volume_lbs": "141"
+    },
+    {
+      "week_start": "10/28/2024",
+      "week_end": "11/01/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 160.0,
+      "wtd_avg": 117.61,
+      "volume_lbs": "390"
+    },
+    {
+      "week_start": "11/04/2024",
+      "week_end": "11/08/2024",
+      "condition": "Frozen",
+      "low_price": 91.0,
+      "high_price": 105.0,
+      "wtd_avg": 94.71,
+      "volume_lbs": "140"
+    },
+    {
+      "week_start": "11/04/2024",
+      "week_end": "11/08/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 164.0,
+      "wtd_avg": 119.42,
+      "volume_lbs": "1848"
+    },
+    {
+      "week_start": "11/11/2024",
+      "week_end": "11/15/2024",
+      "condition": "Frozen",
+      "low_price": 97.0,
+      "high_price": 104.0,
+      "wtd_avg": 97.78,
+      "volume_lbs": "180"
+    },
+    {
+      "week_start": "11/11/2024",
+      "week_end": "11/15/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 160.0,
+      "wtd_avg": 118.17,
+      "volume_lbs": "2743"
+    },
+    {
+      "week_start": "11/18/2024",
+      "week_end": "11/22/2024",
+      "condition": "Frozen",
+      "low_price": 91.0,
+      "high_price": 104.0,
+      "wtd_avg": 96.33,
+      "volume_lbs": "240"
+    },
+    {
+      "week_start": "11/18/2024",
+      "week_end": "11/22/2024",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 135.0,
+      "wtd_avg": 118.21,
+      "volume_lbs": "3648"
+    },
+    {
+      "week_start": "11/18/2024",
+      "week_end": "11/22/2024",
+      "condition": "Frozen",
+      "low_price": 98.0,
+      "high_price": 98.0,
+      "wtd_avg": 98,
+      "volume_lbs": "31"
+    },
+    {
+      "week_start": "11/25/2024",
+      "week_end": "11/29/2024",
+      "condition": "Frozen",
+      "low_price": 80.0,
+      "high_price": 104.0,
+      "wtd_avg": 94.55,
+      "volume_lbs": "220"
+    },
+    {
+      "week_start": "11/25/2024",
+      "week_end": "11/29/2024",
+      "condition": "Fresh",
+      "low_price": 116.0,
+      "high_price": 128.0,
+      "wtd_avg": 117.9,
+      "volume_lbs": "354"
+    },
+    {
+      "week_start": "12/02/2024",
+      "week_end": "12/06/2024",
+      "condition": "Frozen",
+      "low_price": 100.0,
+      "high_price": 104.0,
+      "wtd_avg": 100.25,
+      "volume_lbs": "324"
+    },
+    {
+      "week_start": "12/09/2024",
+      "week_end": "12/13/2024",
+      "condition": "Frozen",
+      "low_price": 73.0,
+      "high_price": 104.0,
+      "wtd_avg": 75.07,
+      "volume_lbs": "300"
+    },
+    {
+      "week_start": "12/09/2024",
+      "week_end": "12/13/2024",
+      "condition": "Fresh",
+      "low_price": 124.0,
+      "high_price": 128.0,
+      "wtd_avg": 125.87,
+      "volume_lbs": "172"
+    },
+    {
+      "week_start": "12/16/2024",
+      "week_end": "12/20/2024",
+      "condition": "Frozen",
+      "low_price": 104.0,
+      "high_price": 104.0,
+      "wtd_avg": 104,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "12/16/2024",
+      "week_end": "12/20/2024",
+      "condition": "Frozen",
+      "low_price": 108.0,
+      "high_price": 108.0,
+      "wtd_avg": 108,
+      "volume_lbs": "120"
+    },
+    {
+      "week_start": "12/23/2024",
+      "week_end": "12/27/2024",
+      "condition": "Frozen",
+      "low_price": 100.0,
+      "high_price": 100.0,
+      "wtd_avg": 100,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "12/23/2024",
+      "week_end": "12/27/2024",
+      "condition": "Fresh",
+      "low_price": 124.0,
+      "high_price": 124.0,
+      "wtd_avg": 124,
+      "volume_lbs": "240"
+    },
+    {
+      "week_start": "12/30/2024",
+      "week_end": "01/03/2025",
+      "condition": "Frozen",
+      "low_price": 100.0,
+      "high_price": 100.0,
+      "wtd_avg": 100,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "01/13/2025",
+      "week_end": "01/17/2025",
+      "condition": "Frozen",
+      "low_price": 75.0,
+      "high_price": 91.0,
+      "wtd_avg": 83,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "01/20/2025",
+      "week_end": "01/24/2025",
+      "condition": "Frozen",
+      "low_price": 75.0,
+      "high_price": 102.0,
+      "wtd_avg": 88.5,
+      "volume_lbs": "0"
+    },
+    {
+      "week_start": "01/20/2025",
+      "week_end": "01/24/2025",
+      "condition": "Fresh",
+      "low_price": 105.0,
+      "high_price": 164.0,
+      "wtd_avg": 109.21,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "01/27/2025",
+      "week_end": "01/31/2025",
+      "condition": "Frozen",
+      "low_price": 87.0,
+      "high_price": 88.5,
+      "wtd_avg": 87.11,
+      "volume_lbs": "1080"
+    },
+    {
+      "week_start": "01/27/2025",
+      "week_end": "01/31/2025",
+      "condition": "Fresh",
+      "low_price": 95.0,
+      "high_price": 164.0,
+      "wtd_avg": 96.13,
+      "volume_lbs": "61"
+    },
+    {
+      "week_start": "02/03/2025",
+      "week_end": "02/07/2025",
+      "condition": "Frozen",
+      "low_price": 86.0,
+      "high_price": 86.0,
+      "wtd_avg": 86,
+      "volume_lbs": "240"
+    },
+    {
+      "week_start": "02/03/2025",
+      "week_end": "02/07/2025",
+      "condition": "Fresh",
+      "low_price": 95.0,
+      "high_price": 164.0,
+      "wtd_avg": 100.31,
+      "volume_lbs": "13"
+    },
+    {
+      "week_start": "02/10/2025",
+      "week_end": "02/14/2025",
+      "condition": "Frozen",
+      "low_price": 86.0,
+      "high_price": 111.0,
+      "wtd_avg": 88.74,
+      "volume_lbs": "2140"
+    },
+    {
+      "week_start": "02/17/2025",
+      "week_end": "02/21/2025",
+      "condition": "Frozen",
+      "low_price": 97.0,
+      "high_price": 97.0,
+      "wtd_avg": 97,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "02/17/2025",
+      "week_end": "02/21/2025",
+      "condition": "Fresh",
+      "low_price": 104.0,
+      "high_price": 164.0,
+      "wtd_avg": 105.4,
+      "volume_lbs": "43"
+    },
+    {
+      "week_start": "02/24/2025",
+      "week_end": "02/28/2025",
+      "condition": "Frozen",
+      "low_price": 108.0,
+      "high_price": 108.0,
+      "wtd_avg": 108,
+      "volume_lbs": "20"
+    },
+    {
+      "week_start": "02/24/2025",
+      "week_end": "02/28/2025",
+      "condition": "Fresh",
+      "low_price": 112.0,
+      "high_price": 140.0,
+      "wtd_avg": 117.6,
+      "volume_lbs": "5"
+    },
+    {
+      "week_start": "03/03/2025",
+      "week_end": "03/07/2025",
+      "condition": "Frozen",
+      "low_price": 112.0,
+      "high_price": 112.0,
+      "wtd_avg": 112,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "03/10/2025",
+      "week_end": "03/14/2025",
+      "condition": "Frozen",
+      "low_price": 103.0,
+      "high_price": 116.0,
+      "wtd_avg": 104.86,
+      "volume_lbs": "280"
+    },
+    {
+      "week_start": "03/10/2025",
+      "week_end": "03/14/2025",
+      "condition": "Fresh",
+      "low_price": 122.0,
+      "high_price": 140.0,
+      "wtd_avg": 128,
+      "volume_lbs": "3"
+    },
+    {
+      "week_start": "03/17/2025",
+      "week_end": "03/21/2025",
+      "condition": "Frozen",
+      "low_price": 118.0,
+      "high_price": 118.0,
+      "wtd_avg": 118,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "03/17/2025",
+      "week_end": "03/21/2025",
+      "condition": "Fresh",
+      "low_price": 119.0,
+      "high_price": 140.0,
+      "wtd_avg": 120.5,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "03/24/2025",
+      "week_end": "03/28/2025",
+      "condition": "Frozen",
+      "low_price": 118.0,
+      "high_price": 118.0,
+      "wtd_avg": 118,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "03/24/2025",
+      "week_end": "03/28/2025",
+      "condition": "Fresh",
+      "low_price": 121.0,
+      "high_price": 150.0,
+      "wtd_avg": 123.07,
+      "volume_lbs": "14"
+    },
+    {
+      "week_start": "03/31/2025",
+      "week_end": "04/04/2025",
+      "condition": "Frozen",
+      "low_price": 118.0,
+      "high_price": 118.0,
+      "wtd_avg": 118,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "03/31/2025",
+      "week_end": "04/04/2025",
+      "condition": "Fresh",
+      "low_price": 141.0,
+      "high_price": 141.0,
+      "wtd_avg": 141,
+      "volume_lbs": "12"
+    },
+    {
+      "week_start": "04/07/2025",
+      "week_end": "04/11/2025",
+      "condition": "Frozen",
+      "low_price": 118.0,
+      "high_price": 118.0,
+      "wtd_avg": 118,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "04/07/2025",
+      "week_end": "04/11/2025",
+      "condition": "Fresh",
+      "low_price": 129.0,
+      "high_price": 143.0,
+      "wtd_avg": 132.55,
+      "volume_lbs": "220"
+    },
+    {
+      "week_start": "04/14/2025",
+      "week_end": "04/18/2025",
+      "condition": "Frozen",
+      "low_price": 118.0,
+      "high_price": 118.0,
+      "wtd_avg": 118,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "04/14/2025",
+      "week_end": "04/18/2025",
+      "condition": "Fresh",
+      "low_price": 129.0,
+      "high_price": 129.0,
+      "wtd_avg": 129,
+      "volume_lbs": "60"
+    },
+    {
+      "week_start": "04/21/2025",
+      "week_end": "04/25/2025",
+      "condition": "Frozen",
+      "low_price": 118.0,
+      "high_price": 118.0,
+      "wtd_avg": 118,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "04/28/2025",
+      "week_end": "05/02/2025",
+      "condition": "Frozen",
+      "low_price": 106.0,
+      "high_price": 118.0,
+      "wtd_avg": 108.86,
+      "volume_lbs": "172"
+    },
+    {
+      "week_start": "05/05/2025",
+      "week_end": "05/09/2025",
+      "condition": "Frozen",
+      "low_price": 106.0,
+      "high_price": 118.0,
+      "wtd_avg": 109,
+      "volume_lbs": "160"
+    },
+    {
+      "week_start": "05/05/2025",
+      "week_end": "05/09/2025",
+      "condition": "Fresh",
+      "low_price": 119.0,
+      "high_price": 163.0,
+      "wtd_avg": 145.4,
+      "volume_lbs": "5"
+    },
+    {
+      "week_start": "05/12/2025",
+      "week_end": "05/16/2025",
+      "condition": "Frozen",
+      "low_price": 107.0,
+      "high_price": 121.0,
+      "wtd_avg": 111.67,
+      "volume_lbs": "120"
+    },
+    {
+      "week_start": "05/12/2025",
+      "week_end": "05/16/2025",
+      "condition": "Fresh",
+      "low_price": 122.0,
+      "high_price": 163.0,
+      "wtd_avg": 152.75,
+      "volume_lbs": "4"
+    },
+    {
+      "week_start": "05/19/2025",
+      "week_end": "05/23/2025",
+      "condition": "Frozen",
+      "low_price": 122.0,
+      "high_price": 122.0,
+      "wtd_avg": 122,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "05/19/2025",
+      "week_end": "05/23/2025",
+      "condition": "Fresh",
+      "low_price": 124.0,
+      "high_price": 163.0,
+      "wtd_avg": 140.71,
+      "volume_lbs": "7"
+    },
+    {
+      "week_start": "05/26/2025",
+      "week_end": "05/30/2025",
+      "condition": "Frozen",
+      "low_price": 123.0,
+      "high_price": 133.0,
+      "wtd_avg": 128.42,
+      "volume_lbs": "480"
+    },
+    {
+      "week_start": "05/26/2025",
+      "week_end": "05/30/2025",
+      "condition": "Fresh",
+      "low_price": 125.0,
+      "high_price": 163.0,
+      "wtd_avg": 141.29,
+      "volume_lbs": "7"
+    },
+    {
+      "week_start": "06/02/2025",
+      "week_end": "06/06/2025",
+      "condition": "Frozen",
+      "low_price": 112.0,
+      "high_price": 125.0,
+      "wtd_avg": 117.8,
+      "volume_lbs": "400"
+    },
+    {
+      "week_start": "06/09/2025",
+      "week_end": "06/13/2025",
+      "condition": "Frozen",
+      "low_price": 116.0,
+      "high_price": 126.0,
+      "wtd_avg": 119.87,
+      "volume_lbs": "385"
+    },
+    {
+      "week_start": "06/09/2025",
+      "week_end": "06/13/2025",
+      "condition": "Fresh",
+      "low_price": 127.0,
+      "high_price": 163.0,
+      "wtd_avg": 139,
+      "volume_lbs": "6"
+    },
+    {
+      "week_start": "06/16/2025",
+      "week_end": "06/20/2025",
+      "condition": "Frozen",
+      "low_price": 120.0,
+      "high_price": 131.0,
+      "wtd_avg": 124.4,
+      "volume_lbs": "200"
+    },
+    {
+      "week_start": "06/23/2025",
+      "week_end": "06/27/2025",
+      "condition": "Frozen",
+      "low_price": 134.0,
+      "high_price": 139.0,
+      "wtd_avg": 136.6,
+      "volume_lbs": "200"
+    },
+    {
+      "week_start": "06/30/2025",
+      "week_end": "07/04/2025",
+      "condition": "Frozen",
+      "low_price": 147.0,
+      "high_price": 147.0,
+      "wtd_avg": 147,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "07/07/2025",
+      "week_end": "07/11/2025",
+      "condition": "Frozen",
+      "low_price": 150.0,
+      "high_price": 150.0,
+      "wtd_avg": 150,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "07/14/2025",
+      "week_end": "07/18/2025",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 169.0,
+      "wtd_avg": 164.79,
+      "volume_lbs": "380"
+    },
+    {
+      "week_start": "07/14/2025",
+      "week_end": "07/18/2025",
+      "condition": "Frozen",
+      "low_price": 146.5,
+      "high_price": 151.0,
+      "wtd_avg": 148.75,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "07/21/2025",
+      "week_end": "07/25/2025",
+      "condition": "Frozen",
+      "low_price": 149.0,
+      "high_price": 153.0,
+      "wtd_avg": 151,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "07/28/2025",
+      "week_end": "08/01/2025",
+      "condition": "Frozen",
+      "low_price": 153.0,
+      "high_price": 154.0,
+      "wtd_avg": 153.25,
+      "volume_lbs": "320"
+    },
+    {
+      "week_start": "08/04/2025",
+      "week_end": "08/08/2025",
+      "condition": "Frozen",
+      "low_price": 154.0,
+      "high_price": 154.0,
+      "wtd_avg": 154,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "08/11/2025",
+      "week_end": "08/15/2025",
+      "condition": "Frozen",
+      "low_price": 159.0,
+      "high_price": 164.0,
+      "wtd_avg": 159.36,
+      "volume_lbs": "560"
+    },
+    {
+      "week_start": "08/18/2025",
+      "week_end": "08/22/2025",
+      "condition": "Frozen",
+      "low_price": 155.0,
+      "high_price": 155.0,
+      "wtd_avg": 155,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "08/25/2025",
+      "week_end": "08/29/2025",
+      "condition": "Frozen",
+      "low_price": 156.0,
+      "high_price": 169.0,
+      "wtd_avg": 160.57,
+      "volume_lbs": "140"
+    },
+    {
+      "week_start": "08/25/2025",
+      "week_end": "08/29/2025",
+      "condition": "Frozen",
+      "low_price": 145.0,
+      "high_price": 145.0,
+      "wtd_avg": 145,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "08/25/2025",
+      "week_end": "08/29/2025",
+      "condition": "Frozen",
+      "low_price": 166.0,
+      "high_price": 166.0,
+      "wtd_avg": 166,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "09/01/2025",
+      "week_end": "09/05/2025",
+      "condition": "Frozen",
+      "low_price": 145.0,
+      "high_price": 157.0,
+      "wtd_avg": 154.66,
+      "volume_lbs": "387"
+    },
+    {
+      "week_start": "09/01/2025",
+      "week_end": "09/05/2025",
+      "condition": "Fresh",
+      "low_price": 161.0,
+      "high_price": 161.0,
+      "wtd_avg": 161,
+      "volume_lbs": "6"
+    },
+    {
+      "week_start": "09/01/2025",
+      "week_end": "09/05/2025",
+      "condition": "Frozen",
+      "low_price": 152.0,
+      "high_price": 160.0,
+      "wtd_avg": 155.67,
+      "volume_lbs": "120"
+    },
+    {
+      "week_start": "09/08/2025",
+      "week_end": "09/12/2025",
+      "condition": "Frozen",
+      "low_price": 152.0,
+      "high_price": 160.0,
+      "wtd_avg": 155.5,
+      "volume_lbs": "160"
+    },
+    {
+      "week_start": "09/08/2025",
+      "week_end": "09/12/2025",
+      "condition": "Frozen",
+      "low_price": 153.0,
+      "high_price": 153.0,
+      "wtd_avg": 153,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "09/15/2025",
+      "week_end": "09/19/2025",
+      "condition": "Frozen",
+      "low_price": 170.0,
+      "high_price": 170.0,
+      "wtd_avg": 170,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "09/15/2025",
+      "week_end": "09/19/2025",
+      "condition": "Frozen",
+      "low_price": 148.0,
+      "high_price": 169.0,
+      "wtd_avg": 164.68,
+      "volume_lbs": "520"
+    },
+    {
+      "week_start": "09/15/2025",
+      "week_end": "09/19/2025",
+      "condition": "Frozen",
+      "low_price": 177.0,
+      "high_price": 177.0,
+      "wtd_avg": 177,
+      "volume_lbs": "400"
+    },
+    {
+      "week_start": "09/22/2025",
+      "week_end": "09/26/2025",
+      "condition": "Frozen",
+      "low_price": 156.0,
+      "high_price": 164.0,
+      "wtd_avg": 163.8,
+      "volume_lbs": "41"
+    },
+    {
+      "week_start": "09/22/2025",
+      "week_end": "09/26/2025",
+      "condition": "Fresh",
+      "low_price": 165.0,
+      "high_price": 165.0,
+      "wtd_avg": 165,
+      "volume_lbs": "13"
+    },
+    {
+      "week_start": "09/29/2025",
+      "week_end": "10/03/2025",
+      "condition": "Frozen",
+      "low_price": 156.0,
+      "high_price": 175.0,
+      "wtd_avg": 168.2,
+      "volume_lbs": "91"
+    },
+    {
+      "week_start": "09/29/2025",
+      "week_end": "10/03/2025",
+      "condition": "Fresh",
+      "low_price": 168.0,
+      "high_price": 168.0,
+      "wtd_avg": 168,
+      "volume_lbs": "2"
+    },
+    {
+      "week_start": "10/06/2025",
+      "week_end": "10/10/2025",
+      "condition": "Frozen",
+      "low_price": 174.0,
+      "high_price": 174.0,
+      "wtd_avg": 174,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "10/06/2025",
+      "week_end": "10/10/2025",
+      "condition": "Fresh",
+      "low_price": 175.0,
+      "high_price": 175.0,
+      "wtd_avg": 175,
+      "volume_lbs": "3"
+    },
+    {
+      "week_start": "10/13/2025",
+      "week_end": "10/17/2025",
+      "condition": "Frozen",
+      "low_price": 172.0,
+      "high_price": 178.0,
+      "wtd_avg": 176.53,
+      "volume_lbs": "600"
+    },
+    {
+      "week_start": "10/13/2025",
+      "week_end": "10/17/2025",
+      "condition": "Fresh",
+      "low_price": 175.0,
+      "high_price": 175.0,
+      "wtd_avg": 175,
+      "volume_lbs": "4"
+    },
+    {
+      "week_start": "10/20/2025",
+      "week_end": "10/24/2025",
+      "condition": "Frozen",
+      "low_price": 168.0,
+      "high_price": 174.0,
+      "wtd_avg": 168.45,
+      "volume_lbs": "530"
+    },
+    {
+      "week_start": "10/20/2025",
+      "week_end": "10/24/2025",
+      "condition": "Fresh",
+      "low_price": 175.0,
+      "high_price": 175.0,
+      "wtd_avg": 175,
+      "volume_lbs": "3"
+    },
+    {
+      "week_start": "10/27/2025",
+      "week_end": "10/31/2025",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 175.0,
+      "wtd_avg": 168.66,
+      "volume_lbs": "1107"
+    },
+    {
+      "week_start": "10/27/2025",
+      "week_end": "10/31/2025",
+      "condition": "Fresh",
+      "low_price": 141.0,
+      "high_price": 179.0,
+      "wtd_avg": 163.47,
+      "volume_lbs": "371"
+    },
+    {
+      "week_start": "11/03/2025",
+      "week_end": "11/07/2025",
+      "condition": "Frozen",
+      "low_price": 168.0,
+      "high_price": 176.0,
+      "wtd_avg": 172.8,
+      "volume_lbs": "100"
+    },
+    {
+      "week_start": "11/03/2025",
+      "week_end": "11/07/2025",
+      "condition": "Fresh",
+      "low_price": 141.0,
+      "high_price": 199.0,
+      "wtd_avg": 165.22,
+      "volume_lbs": "2347"
+    },
+    {
+      "week_start": "11/10/2025",
+      "week_end": "11/14/2025",
+      "condition": "Frozen",
+      "low_price": 177.0,
+      "high_price": 177.0,
+      "wtd_avg": 177,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "11/10/2025",
+      "week_end": "11/14/2025",
+      "condition": "Fresh",
+      "low_price": 141.0,
+      "high_price": 200.0,
+      "wtd_avg": 165.45,
+      "volume_lbs": "2361"
+    },
+    {
+      "week_start": "11/17/2025",
+      "week_end": "11/21/2025",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 177.0,
+      "wtd_avg": 167.57,
+      "volume_lbs": "280"
+    },
+    {
+      "week_start": "11/17/2025",
+      "week_end": "11/21/2025",
+      "condition": "Fresh",
+      "low_price": 141.0,
+      "high_price": 200.0,
+      "wtd_avg": 166.16,
+      "volume_lbs": "764"
+    },
+    {
+      "week_start": "11/24/2025",
+      "week_end": "11/28/2025",
+      "condition": "Frozen",
+      "low_price": 170.0,
+      "high_price": 177.0,
+      "wtd_avg": 171.75,
+      "volume_lbs": "160"
+    },
+    {
+      "week_start": "12/01/2025",
+      "week_end": "12/05/2025",
+      "condition": "Frozen",
+      "low_price": 170.0,
+      "high_price": 177.0,
+      "wtd_avg": 174.67,
+      "volume_lbs": "60"
+    },
+    {
+      "week_start": "12/01/2025",
+      "week_end": "12/05/2025",
+      "condition": "Fresh",
+      "low_price": 151.0,
+      "high_price": 173.0,
+      "wtd_avg": 155,
+      "volume_lbs": "340"
+    },
+    {
+      "week_start": "12/01/2025",
+      "week_end": "12/05/2025",
+      "condition": "Frozen",
+      "low_price": 153.0,
+      "high_price": 153.0,
+      "wtd_avg": 153,
+      "volume_lbs": "280"
+    },
+    {
+      "week_start": "12/08/2025",
+      "week_end": "12/12/2025",
+      "condition": "Frozen",
+      "low_price": 169.0,
+      "high_price": 178.0,
+      "wtd_avg": 175.5,
+      "volume_lbs": "100"
+    },
+    {
+      "week_start": "12/08/2025",
+      "week_end": "12/12/2025",
+      "condition": "Fresh",
+      "low_price": 151.0,
+      "high_price": 192.0,
+      "wtd_avg": 162.22,
+      "volume_lbs": "1252"
+    },
+    {
+      "week_start": "12/08/2025",
+      "week_end": "12/12/2025",
+      "condition": "Frozen",
+      "low_price": 113.0,
+      "high_price": 183.0,
+      "wtd_avg": 169.67,
+      "volume_lbs": "240"
+    },
+    {
+      "week_start": "12/15/2025",
+      "week_end": "12/19/2025",
+      "condition": "Frozen",
+      "low_price": 171.0,
+      "high_price": 177.0,
+      "wtd_avg": 176.33,
+      "volume_lbs": "45"
+    },
+    {
+      "week_start": "12/22/2025",
+      "week_end": "12/26/2025",
+      "condition": "Frozen",
+      "low_price": 177.0,
+      "high_price": 177.0,
+      "wtd_avg": 177,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "12/29/2025",
+      "week_end": "01/02/2026",
+      "condition": "Frozen",
+      "low_price": 177.0,
+      "high_price": 177.0,
+      "wtd_avg": 177,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "01/05/2026",
+      "week_end": "01/09/2026",
+      "condition": "Frozen",
+      "low_price": 177.0,
+      "high_price": 177.0,
+      "wtd_avg": 177,
+      "volume_lbs": "40"
+    },
+    {
+      "week_start": "01/12/2026",
+      "week_end": "01/16/2026",
+      "condition": "Frozen",
+      "low_price": 174.0,
+      "high_price": 177.0,
+      "wtd_avg": 175,
+      "volume_lbs": "60"
+    },
+    {
+      "week_start": "01/19/2026",
+      "week_end": "01/23/2026",
+      "condition": "Frozen",
+      "low_price": 173.0,
+      "high_price": 177.0,
+      "wtd_avg": 175.29,
+      "volume_lbs": "35"
+    },
+    {
+      "week_start": "01/26/2026",
+      "week_end": "01/30/2026",
+      "condition": "Frozen",
+      "low_price": 162.0,
+      "high_price": 175.0,
+      "wtd_avg": 170.67,
+      "volume_lbs": "60"
+    },
+    {
+      "week_start": "02/09/2026",
+      "week_end": "02/13/2026",
+      "condition": "Frozen",
+      "low_price": 162.0,
+      "high_price": 173.0,
+      "wtd_avg": 167.5,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "02/16/2026",
+      "week_end": "02/20/2026",
+      "condition": "Frozen",
+      "low_price": 162.0,
+      "high_price": 173.0,
+      "wtd_avg": 167.5,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "02/23/2026",
+      "week_end": "02/27/2026",
+      "condition": "Frozen",
+      "low_price": 162.0,
+      "high_price": 173.0,
+      "wtd_avg": 167.5,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "03/02/2026",
+      "week_end": "03/06/2026",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 173.0,
+      "wtd_avg": 168.5,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "03/09/2026",
+      "week_end": "03/13/2026",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 173.0,
+      "wtd_avg": 168,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "03/16/2026",
+      "week_end": "03/20/2026",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 173.0,
+      "wtd_avg": 168,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "03/23/2026",
+      "week_end": "03/27/2026",
+      "condition": "Frozen",
+      "low_price": 163.0,
+      "high_price": 174.0,
+      "wtd_avg": 168,
+      "volume_lbs": "100"
+    },
+    {
+      "week_start": "03/30/2026",
+      "week_end": "04/03/2026",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 178.0,
+      "wtd_avg": 171,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "04/06/2026",
+      "week_end": "04/10/2026",
+      "condition": "Frozen",
+      "low_price": 164.0,
+      "high_price": 180.0,
+      "wtd_avg": 172,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "04/13/2026",
+      "week_end": "04/17/2026",
+      "condition": "Frozen",
+      "low_price": 167.0,
+      "high_price": 180.0,
+      "wtd_avg": 173.5,
+      "volume_lbs": "80"
+    },
+    {
+      "week_start": "04/20/2026",
+      "week_end": "04/24/2026",
+      "condition": "Fresh",
+      "low_price": 174.0,
+      "high_price": 178.0,
+      "wtd_avg": 175.14,
+      "volume_lbs": "7"
+    },
+    {
+      "week_start": "04/20/2026",
+      "week_end": "04/24/2026",
+      "condition": "Frozen",
+      "low_price": 171.0,
+      "high_price": 180.0,
+      "wtd_avg": 174,
+      "volume_lbs": "30"
+    }
+  ]
+}
