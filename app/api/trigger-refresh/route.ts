@@ -4,27 +4,12 @@ import { NextResponse } from "next/server";
  * POST — triggers GitHub Actions workflow_dispatch for update-data.yml
  *
  * Env (Vercel):
- *   GITHUB_TOKEN   — fine-grained PAT with Actions: Write, or classic PAT with `workflow`
- *   GITHUB_OWNER   — optional, default tridinhbui
- *   GITHUB_REPO    — optional default marketUSDA
- *   TRIGGER_SECRET — optional; if set, body must include { "secret": "<same>" }
+ *   GITHUB_TOKEN — fine-grained PAT with Actions: Write, or classic PAT with `workflow`
+ *   GITHUB_OWNER / GITHUB_REPO — optional (defaults tridinhbui / marketUSDA)
+ *
+ * Confirmation is done in the UI (user must type CONFIRM); not a server secret.
  */
-export async function POST(request: Request) {
-  const configuredSecret = process.env.TRIGGER_SECRET;
-  let body: { secret?: string } = {};
-  try {
-    body = await request.json();
-  } catch {
-    body = {};
-  }
-
-  if (configuredSecret && body.secret !== configuredSecret) {
-    return NextResponse.json(
-      { error: "Unauthorized", hint: "TRIGGER_SECRET mismatch or missing in request body." },
-      { status: 401 }
-    );
-  }
-
+export async function POST() {
   const token = process.env.GITHUB_TOKEN?.trim();
   if (!token) {
     return NextResponse.json(

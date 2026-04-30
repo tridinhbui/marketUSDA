@@ -408,6 +408,22 @@ select:focus {
   border-radius: 4px;
 }
 
+.sync-footer-confirm-label {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.sync-footer-kbd {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  background: #e8ecf4;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
 .sync-footer-row {
   display: flex;
   flex-wrap: wrap;
