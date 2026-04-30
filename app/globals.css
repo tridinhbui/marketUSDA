@@ -359,6 +359,91 @@ select:focus {
   border-color: var(--accent);
 }
 
+/* ── GitHub workflow trigger (footer) ── */
+.sync-footer {
+  width: min(1180px, 94vw);
+  margin: 0 auto 32px;
+  padding: 0 4px;
+}
+
+.sync-footer-toggle {
+  height: auto;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.sync-footer-toggle:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.sync-footer-panel {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.sync-footer-hint {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.sync-footer-hint code {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  background: #f1f4f9;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.sync-footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.sync-footer-input {
+  flex: 1;
+  min-width: 200px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.85rem;
+}
+
+.sync-footer-btn {
+  flex-shrink: 0;
+}
+
+.sync-footer-msg {
+  margin: 12px 0 0;
+  font-size: 0.82rem;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.sync-footer-ok {
+  color: var(--green);
+}
+
+.sync-footer-err {
+  color: var(--red);
+}
+
 /* ── Animations ── */
 @keyframes enter {
   from { transform: translateY(6px); opacity: 0; }
