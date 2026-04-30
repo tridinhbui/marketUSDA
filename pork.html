@@ -3,27 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>USDA Turkey Weekly Prices</title>
+  <title>USDA Pork Cutout Daily Prices</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* turkey-page overrides */
-    #loadBtn   { background: #7c3aed; color: #fff; }
+    #loadBtn   { background: #b91c1c; color: #fff; }
     #exportBtn { background: #1a9e6b; color: #fff; }
 
-    .metric.fresh   { color: #d97706; }
-    .metric.frozen  { color: #1d6fca; }
-    .metric.weeks   { color: #7c3aed; }
-
-    .val-fresh  { color: #d97706; font-weight: 600; }
-    .val-frozen { color: #1d6fca; font-weight: 600; }
-    .val-null   { color: #9ca3af; }
+    .metric.carcass { color: #b91c1c; }
+    .metric.loin    { color: #d97706; }
+    .metric.belly   { color: #7c3aed; }
+    .metric.days    { color: #1d6fca; }
 
     .nav-link {
       display: inline-block;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      margin-right: 12px;
       font-size: .82rem;
       color: var(--accent);
       text-decoration: none;
@@ -60,11 +57,13 @@
 <body>
   <main class="shell">
     <header class="hero">
-      <a class="nav-link" href="index.html">← Hog Prices</a>
-      <a class="nav-link" href="pork.html">→ Pork Cutout</a>
-      <p class="eyebrow">USDA MARS API · AMS_3647</p>
-      <h1>Weekly Turkey Prices</h1>
-      <p class="sub">Whole Young Hen · 8–16 lb · U.S. Grade A — cents per lb.</p>
+      <div>
+        <a class="nav-link" href="index.html">← Hog Prices</a>
+        <a class="nav-link" href="turkey.html">← Turkey Prices</a>
+      </div>
+      <p class="eyebrow">USDA MPR Datamart · LM_PK602</p>
+      <h1>Daily Pork Cutout &amp; Primal Prices</h1>
+      <p class="sub">National · Negotiated Sales · $/cwt</p>
     </header>
 
     <section class="panel controls">
@@ -81,59 +80,62 @@
       <p id="status" class="status">Initializing…</p>
     </section>
 
-    <!-- condition filter -->
+    <!-- cut selector -->
     <section class="panel" style="padding:12px 20px;">
       <div class="filter-row">
-        <label for="condFilter">Show condition:</label>
-        <select id="condFilter">
-          <option value="all">Fresh + Frozen</option>
-          <option value="Fresh">Fresh only</option>
-          <option value="Frozen">Frozen only</option>
+        <label for="cutFilter">Show cuts:</label>
+        <select id="cutFilter">
+          <option value="all">All Primals</option>
+          <option value="pork_carcass">Carcass only</option>
+          <option value="pork_loin">Loin only</option>
+          <option value="pork_butt">Butt only</option>
+          <option value="pork_picnic">Picnic only</option>
+          <option value="pork_rib">Rib only</option>
+          <option value="pork_ham">Ham only</option>
+          <option value="pork_belly">Belly only</option>
         </select>
       </div>
     </section>
 
     <section class="panel metrics">
       <article>
-        <h2>Latest Fresh (¢/lb)</h2>
-        <p id="latestFresh" class="metric fresh">-</p>
+        <h2>Carcass ($/cwt)</h2>
+        <p id="latestCarcass" class="metric carcass">-</p>
       </article>
       <article>
-        <h2>Latest Frozen (¢/lb)</h2>
-        <p id="latestFrozen" class="metric frozen">-</p>
+        <h2>Loin ($/cwt)</h2>
+        <p id="latestLoin" class="metric loin">-</p>
       </article>
       <article>
-        <h2>Avg Fresh YTD</h2>
-        <p id="avgFresh" class="metric fresh">-</p>
+        <h2>Belly ($/cwt)</h2>
+        <p id="latestBelly" class="metric belly">-</p>
       </article>
       <article>
-        <h2>Total Weeks</h2>
-        <p id="totalWeeks" class="metric weeks">0</p>
+        <h2>Total Days</h2>
+        <p id="totalDays" class="metric days">0</p>
       </article>
     </section>
 
     <section class="panel chart-wrap">
       <h2>Price Trend</h2>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:#d97706"></span>Fresh</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#1d6fca"></span>Frozen</span>
-      </div>
-      <canvas id="priceChart" width="1200" height="420" aria-label="Weekly turkey price trend"></canvas>
+      <div class="legend" id="chartLegend"></div>
+      <canvas id="priceChart" width="1200" height="420" aria-label="Daily pork cutout price trend"></canvas>
     </section>
 
     <section class="panel table-wrap">
-      <h2>Weekly Data</h2>
+      <h2>Daily Data</h2>
       <div class="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>Week Start</th>
-              <th>Week End</th>
-              <th>Condition</th>
-              <th>Low (¢)</th>
-              <th>High (¢)</th>
-              <th>Wtd Avg (¢)</th>
-              <th>Volume (lbs)</th>
+              <th>Date</th>
+              <th>Carcass</th>
+              <th>Loin</th>
+              <th>Butt</th>
+              <th>Picnic</th>
+              <th>Rib</th>
+              <th>Ham</th>
+              <th>Belly</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -143,6 +145,6 @@
   </main>
 
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="turkey_app.js"></script>
+  <script src="pork_app.js"></script>
 </body>
 </html>
