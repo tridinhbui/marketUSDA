@@ -2,9 +2,32 @@ import { NextResponse } from "next/server";
 import { fetchHogsDateRange } from "@/lib/fetch-hogs-range";
 import { fetchTurkeyDateRange } from "@/lib/fetch-turkey-range";
 import { fetchPorkDateRange } from "@/lib/fetch-pork-range";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
+
+interface PorkCachedRow {
+  date: string;
+  pork_carcass: number | null;
+  pork_loin: number | null;
+  pork_butt: number | null;
+  pork_picnic: number | null;
+  pork_rib: number | null;
+  pork_ham: number | null;
+  pork_belly: number | null;
+}
+
+async function readPorkRowsFromCache(start: string, end: string): Promise<PorkCachedRow[]> {
+  const filePath = path.join(process.cwd(), "public", "data", "pork_cutout_daily.json");
+  const raw = await fs.readFile(filePath, "utf8");
+  const parsed = JSON.parse(raw) as PorkCachedRow[];
+  if (!Array.isArray(parsed)) return [];
+  return parsed
+    .filter((r) => r && typeof r.date === "string" && r.date >= start && r.date <= end)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
 
 /**
  * GET /api/fetch-range?tab=hog|turkey&start=YYYY-MM-DD&end=YYYY-MM-DD
@@ -50,14 +73,27 @@ export async function GET(request: Request) {
       });
     }
     if (tab === "pork") {
-      const { rows } = await fetchPorkDateRange(start, end);
-      return NextResponse.json({
-        tab: "pork",
-        startDate: start,
-        endDate: end,
-        generatedAt,
-        rows,
-      });
+      try {
+        const { rows } = await fetchPorkDateRange(start, end);
+        return NextResponse.json({
+          tab: "pork",
+          startDate: start,
+          endDate: end,
+          generatedAt,
+          rows,
+          source: "live",
+        });
+      } catch {
+        const rows = await readPorkRowsFromCache(start, end);
+        return NextResponse.json({
+          tab: "pork",
+          startDate: start,
+          endDate: end,
+          generatedAt,
+          rows,
+          source: "cache",
+        });
+      }
     }
     return NextResponse.json({ error: 'Query parameter tab must be "hog", "turkey", or "pork".' }, { status: 400 });
   } catch (e) {
