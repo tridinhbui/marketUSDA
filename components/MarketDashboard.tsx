@@ -79,6 +79,33 @@ const HOG_LINE = {
   western: "#d97706",
 };
 
+function mergeHogByDate(prev: HogRow[], incoming: HogRow[]): HogRow[] {
+  const map = new Map<string, HogRow>();
+  for (const r of prev) map.set(r.date, r);
+  for (const r of incoming) map.set(r.date, r);
+  return [...map.keys()].sort().map((d) => map.get(d)!);
+}
+
+function turkeyKey(r: { isoDate: string; condition: string }) {
+  return `${r.isoDate}\0${r.condition}`;
+}
+
+function mergeTurkeyRows(prev: TurkeyRow[], incoming: Omit<TurkeyRow, "isoDate">[]): TurkeyRow[] {
+  const mapped: TurkeyRow[] = incoming.map((r) => ({
+    ...r,
+    isoDate: toIso(r.week_start),
+    wtd_avg: typeof r.wtd_avg === "number" ? r.wtd_avg : Number(r.wtd_avg),
+    low_price: typeof r.low_price === "number" ? r.low_price : Number(r.low_price),
+    high_price: typeof r.high_price === "number" ? r.high_price : Number(r.high_price),
+  }));
+  const map = new Map<string, TurkeyRow>();
+  for (const r of prev) map.set(turkeyKey(r), r);
+  for (const r of mapped) map.set(turkeyKey(r), r);
+  return [...map.values()].sort(
+    (a, b) => a.isoDate.localeCompare(b.isoDate) || a.condition.localeCompare(b.condition)
+  );
+}
+
 const TURKEY_LINE = { Fresh: "#92400e", Frozen: "#451a03" };
 
 function exportHog(rows: HogRow[]) {
@@ -131,8 +158,17 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [condition, setCondition] = useState<Condition>("all");
 
   const [status, setStatus] = useState("Loading…");
-  const [refreshing, setRefreshing] = useState(false);
+  const [fetchingRange, setFetchingRange] = useState(false);
+  const [githubBusy, setGithubBusy] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const syncTabToUrl = useCallback(
     (t: Tab) => {
@@ -238,31 +274,159 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     };
   }, [startDate, endDate, hogFull, turkeyFull, condition, filterHog, filterTurkey, tab]);
 
-  async function refreshFixed() {
-    setRefreshing(true);
+  const reloadDeployedJson = useCallback(async () => {
+    const [h, t] = await Promise.all([loadHog(true), loadTurkey(true)]);
+    filterHog(h, startDate, endDate);
+    filterTurkey(t, startDate, endDate, condition);
+    const n =
+      tab === "hog"
+        ? h.filter((r) => r.date >= startDate && r.date <= endDate).length
+        : t.filter(
+            (r) =>
+              r.isoDate >= startDate &&
+              r.isoDate <= endDate &&
+              (condition === "all" || r.condition === condition)
+          ).length;
+    return n;
+  }, [loadHog, loadTurkey, filterHog, filterTurkey, startDate, endDate, condition, tab]);
+
+  async function fetchUsdaForRange() {
+    if (!startDate || !endDate || startDate > endDate) {
+      setStatus("Choose a valid date range (start ≤ end).");
+      return;
+    }
+    setFetchingRange(true);
     try {
-      setStatus("Refreshing data from server…");
-      const [h, t] = await Promise.all([loadHog(true), loadTurkey(true)]);
-      filterHog(h, startDate, endDate);
-      filterTurkey(t, startDate, endDate, condition);
-      const n =
-        tab === "hog"
-          ? h.filter((r) => r.date >= startDate && r.date <= endDate).length
-          : t.filter(
-              (r) =>
-                r.isoDate >= startDate &&
-                r.isoDate <= endDate &&
-                (condition === "all" || r.condition === condition)
-            ).length;
+      setStatus(`Fetching ${tab === "hog" ? "LM_HG217 (MPR)" : "AMS_3647 (MARS)"} for ${startDate} → ${endDate}…`);
+      const apiTab = tab === "hog" ? "hog" : "turkey";
+      const res = await fetch(
+        `/api/fetch-range?tab=${apiTab}&start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`
+      );
+      const data = (await res.json()) as {
+        error?: string;
+        rows?: unknown[];
+        generatedAt?: string;
+        tab?: string;
+      };
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+      if (data.tab === "hog") {
+        const rows = data.rows as HogRow[];
+        setHogFull((prev) => mergeHogByDate(prev, rows));
+        setHogMeta(data.generatedAt);
+      } else {
+        const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
+        setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
+        setTurkeyMeta(data.generatedAt);
+      }
+      const count = data.rows?.length ?? 0;
       setStatus(
-        n > 0
-          ? `Refreshed · ${n} ${tab === "hog" ? "trading days" : "rows"} in range`
-          : "Refreshed · no rows in range."
+        count > 0
+          ? `USDA live fetch OK · ${count} row(s) merged for ${startDate} → ${endDate}.`
+          : `USDA live fetch OK · no rows in that window (check dates or API).`
       );
     } catch (e) {
-      setStatus(`Refresh failed: ${e instanceof Error ? e.message : String(e)}`);
+      setStatus(`USDA fetch failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
-      setRefreshing(false);
+      if (mountedRef.current) setFetchingRange(false);
+    }
+  }
+
+  async function syncRepoViaGithub() {
+    const ok = window.confirm(
+      "This starts the GitHub Actions workflow that runs update_data.py, refreshes JSON in the repo, and may push commits to main. It can take several minutes. Only continue if you intend to refresh data on the server. Continue?"
+    );
+    if (!ok) return;
+
+    setGithubBusy(true);
+    let workflowFinished = false;
+    try {
+      setStatus("Dispatching GitHub workflow…");
+      const res = await fetch("/api/trigger-refresh", { method: "POST" });
+      const data = (await res.json()) as {
+        ok?: boolean;
+        pollSince?: string;
+        message?: string;
+        error?: string;
+        hint?: string;
+      };
+
+      if (!res.ok) {
+        const msg = [data.error, data.hint].filter(Boolean).join(" — ") || `Request failed (${res.status})`;
+        setStatus(msg);
+        return;
+      }
+
+      const pollSince = data.pollSince;
+      if (!pollSince) {
+        setStatus("Workflow dispatched but no poll timestamp was returned.");
+        return;
+      }
+
+      setStatus(data.message ?? "Workflow dispatched. Waiting for GitHub…");
+
+      const intervalMs = 4000;
+      const maxAttempts = 150;
+
+      for (let i = 0; i < maxAttempts; i++) {
+        await new Promise((r) => setTimeout(r, intervalMs));
+        if (!mountedRef.current) return;
+
+        const stRes = await fetch(`/api/workflow-status?since=${encodeURIComponent(pollSince)}`);
+        const st = (await stRes.json()) as {
+          error?: string;
+          found?: boolean;
+          phase?: string;
+          label?: string;
+          conclusion?: string | null;
+          html_url?: string;
+        };
+
+        if (!stRes.ok) {
+          setStatus(st.error ?? `Status check failed (${stRes.status}).`);
+          break;
+        }
+
+        if (st.label && mountedRef.current) setStatus(st.label);
+
+        if (st.found && st.phase === "done") {
+          workflowFinished = true;
+          if (st.conclusion === "success") {
+            if (!mountedRef.current) return;
+            setStatus("Workflow succeeded. Loading JSON from this deployment…");
+            try {
+              const n = await reloadDeployedJson();
+              if (!mountedRef.current) return;
+              setStatus(
+                n > 0
+                  ? `Repo sync complete · ${n} ${tab === "hog" ? "trading days" : "rows"} in range (if numbers look old, wait for deploy and reload).`
+                  : "Repo sync complete · no rows in the current date range."
+              );
+            } catch (e) {
+              if (!mountedRef.current) return;
+              setStatus(
+                `Workflow OK but loading JSON failed: ${e instanceof Error ? e.message : String(e)}`
+              );
+            }
+          } else {
+            const link = st.html_url ? ` ${st.html_url}` : "";
+            setStatus(`Workflow finished: ${st.conclusion ?? "unknown"}.${link}`);
+          }
+          break;
+        }
+      }
+
+      if (!workflowFinished && mountedRef.current) {
+        setStatus(
+          "Timed out waiting for the workflow to finish. Open GitHub Actions for status, then reload this page."
+        );
+      }
+    } catch (e) {
+      if (mountedRef.current) {
+        setStatus(`GitHub sync failed: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    } finally {
+      if (mountedRef.current) setGithubBusy(false);
     }
   }
 
@@ -345,16 +509,29 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </div>
         <div className="field field--action">
-          <label htmlFor="refresh-data-btn">Reload data</label>
+          <label htmlFor="fetch-usda-btn">Fetch USDA</label>
           <button
-            id="refresh-data-btn"
+            id="fetch-usda-btn"
             type="button"
             className="btn-brown"
-            onClick={() => void refreshFixed()}
-            disabled={refreshing}
-            title="Fetch the latest JSON from the server (after you change dates, use this to pull new files)"
+            onClick={() => void fetchUsdaForRange()}
+            disabled={fetchingRange || githubBusy}
+            title="Load live data from USDA for the start/end range (merges into the chart for this session)"
           >
-            {refreshing ? "Refreshing…" : "Refresh"}
+            {fetchingRange ? "Fetching…" : "Fetch range"}
+          </button>
+        </div>
+        <div className="field field--action">
+          <label htmlFor="github-sync-btn">Repo sync</label>
+          <button
+            id="github-sync-btn"
+            type="button"
+            className="btn-brown"
+            onClick={() => void syncRepoViaGithub()}
+            disabled={fetchingRange || githubBusy}
+            title="Confirm, then run GitHub Actions update-data workflow (requires GITHUB_TOKEN on the server)"
+          >
+            {githubBusy ? "GitHub…" : "Run GitHub update"}
           </button>
         </div>
         {tab === "turkey" && (

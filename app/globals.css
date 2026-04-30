@@ -159,11 +159,11 @@ body {
 }
 
 .controls--dashboard {
-  grid-template-columns: repeat(2, minmax(132px, 1fr)) auto minmax(160px, 1fr) auto;
+  grid-template-columns: repeat(2, minmax(120px, 1fr)) auto auto minmax(150px, 1fr) auto;
 }
 
 .controls--dashboard--hog {
-  grid-template-columns: repeat(2, minmax(132px, 1fr)) auto auto;
+  grid-template-columns: repeat(2, minmax(120px, 1fr)) auto auto auto;
 }
 
 .field {
