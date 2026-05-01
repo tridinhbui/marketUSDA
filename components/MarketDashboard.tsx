@@ -1463,24 +1463,12 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         <>
           <section className="panel metrics">
             <article>
-              <h2>Latest fresh (¢/lb)</h2>
-              <p className="metric metric--brown1">{fmt(lastFresh?.wtd_avg)}</p>
-            </article>
-            <article>
-              <h2>Latest frozen (¢/lb)</h2>
-              <p className="metric metric--brown2">{fmt(lastFrozen?.wtd_avg)}</p>
-            </article>
-            <article>
               <h2>Breast fresh wtd avg (¢/lb)</h2>
               <p className="metric" style={{ color: TURKEY_LINE.BreastFresh }}>{fmt(lastFresh?.breast_wtd_avg ?? null)}</p>
             </article>
             <article>
-              <h2>Avg fresh YTD</h2>
-              <p className="metric metric--brown1">{fmt(avgFresh)}</p>
-            </article>
-            <article>
-              <h2>Rows in range</h2>
-              <p className="metric metric--brown4">{turkeyRows.length}</p>
+              <h2>Breast frozen wtd avg (¢/lb)</h2>
+              <p className="metric" style={{ color: TURKEY_LINE.BreastFrozen }}>{fmt(lastFrozen?.breast_wtd_avg ?? null)}</p>
             </article>
           </section>
 
