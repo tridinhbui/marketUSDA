@@ -1479,10 +1479,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   <tr>
                     <th>Week start</th>
                     <th>Week end</th>
-                    <th>Condition</th>
-                    <th>Low (¢)</th>
-                    <th>High (¢)</th>
-                    <th>Wtd avg (¢)</th>
                     <th>Breast wtd avg (¢)</th>
                     <th>Volume (lbs)</th>
                   </tr>
@@ -1494,11 +1490,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                       <tr key={`${row.isoDate}-${row.condition}`}>
                         <td>{row.week_start}</td>
                         <td>{row.week_end}</td>
-                        <td className={cls}>{row.condition}</td>
-                        <td className={cls}>{fmt(row.low_price)}</td>
-                        <td className={cls}>{fmt(row.high_price)}</td>
-                        <td className={cls}>{fmt(row.wtd_avg)}</td>
-                        <td className={cls}>{fmt(row.breast_wtd_avg ?? null)}</td>
+                        <td>{fmt(row.breast_wtd_avg ?? null)}</td>
                         <td>{row.volume_lbs ?? "-"}</td>
                       </tr>
                     );
