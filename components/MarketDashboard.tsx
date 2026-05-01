@@ -256,7 +256,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [turkeyRows, setTurkeyRows] = useState<TurkeyRow[]>([]);
   const [turkeyMeta, setTurkeyMeta] = useState<string | undefined>();
   const [condition, setCondition] = useState<Condition>("all");
-  const [tableDateOrder, setTableDateOrder] = useState<TableDateOrder>("asc");
+  const [tableDateOrder, setTableDateOrder] = useState<TableDateOrder>("desc");
 
   const [porkFull, setPorkFull] = useState<PorkRow[]>([]);
   const [porkRows, setPorkRows] = useState<PorkRow[]>([]);
