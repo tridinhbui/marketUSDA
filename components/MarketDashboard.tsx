@@ -1024,21 +1024,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
               {fetchingRange ? "Loading…" : "Refresh"}
             </button>
           </div>
-          {tab === "turkey" && (
-            <div className="field field--grow">
-              <label htmlFor="condFilter">Condition</label>
-              <select
-                id="condFilter"
-                value={condition}
-                onChange={(e) => setCondition(e.target.value as Condition)}
-                className="select-brown"
-              >
-                <option value="all">Fresh + frozen</option>
-                <option value="Fresh">Fresh only</option>
-                <option value="Frozen">Frozen only</option>
-              </select>
-            </div>
-          )}
           <button
             type="button"
             className="btn-brown btn-export-dash"
@@ -1597,19 +1582,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
-          </div>
-          <div className="field field--grow">
-            <label htmlFor="adminCondFilter">Turkey condition</label>
-            <select
-              id="adminCondFilter"
-              value={condition}
-              onChange={(e) => setCondition(e.target.value as Condition)}
-              className="select-brown"
-            >
-              <option value="all">Fresh + frozen</option>
-              <option value="Fresh">Fresh only</option>
-              <option value="Frozen">Frozen only</option>
-            </select>
           </div>
           <div className="field">
             <label htmlFor="adminTableOrder">Table order</label>
