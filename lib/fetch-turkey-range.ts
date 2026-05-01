@@ -11,6 +11,7 @@ export interface TurkeyRowRaw {
   high_price: number;
   wtd_avg: number;
   volume_lbs: string | null;
+  breast_wtd_avg: number | null;
 }
 
 function asArray<T>(x: T | T[] | undefined): T[] {
@@ -66,6 +67,15 @@ function fmtMdY(d: Date): string {
   return `${m}/${day}/${y}`;
 }
 
+function mapBreastRow(r: Record<string, unknown>): { week_start: string; condition: string; breast_wtd_avg: number } | null {
+  if (r.item !== "Breasts,Boneless/Skinless" || r.class !== "Tom") return null;
+  const ws = String(r.report_begin_date ?? "");
+  const cond = String(r.condition ?? "");
+  const wtd = Number(r.wtd_avg_price ?? NaN);
+  if (!ws || !Number.isFinite(wtd)) return null;
+  return { week_start: ws, condition: cond, breast_wtd_avg: wtd };
+}
+
 function mapRow(r: Record<string, unknown>): TurkeyRowRaw | null {
   if (
     r.item !== "Whole Young" ||
@@ -91,6 +101,7 @@ function mapRow(r: Record<string, unknown>): TurkeyRowRaw | null {
     high_price: Number.isFinite(high) ? high : 0,
     wtd_avg: wtd,
     volume_lbs: vol,
+    breast_wtd_avg: null,
   };
 }
 
@@ -119,10 +130,18 @@ async function fetchChunk(from: Date, to: Date, creds: string): Promise<TurkeyRo
   for (const sec of sections as Record<string, unknown>[]) {
     if (sec.reportSection === "Report Detail") {
       const results = asArray<Record<string, unknown>>(sec.results as Record<string, unknown>[] | undefined);
+      const breastMap = new Map<string, number>();
+      for (const r of results) {
+        const b = mapBreastRow(r);
+        if (b) breastMap.set(`${b.week_start}|${b.condition}`, b.breast_wtd_avg);
+      }
       const out: TurkeyRowRaw[] = [];
       for (const r of results) {
         const row = mapRow(r);
-        if (row) out.push(row);
+        if (row) {
+          row.breast_wtd_avg = breastMap.get(`${row.week_start}|${row.condition}`) ?? null;
+          out.push(row);
+        }
       }
       return out;
     }

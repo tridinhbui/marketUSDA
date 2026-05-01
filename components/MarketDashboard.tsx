@@ -76,6 +76,7 @@ interface TurkeyRow {
   high_price: number;
   wtd_avg: number;
   volume_lbs: string | null;
+  breast_wtd_avg: number | null;
   isoDate: string;
 }
 
@@ -163,7 +164,7 @@ function mergeTurkeyRows(prev: TurkeyRow[], incoming: Omit<TurkeyRow, "isoDate">
   );
 }
 
-const TURKEY_LINE = { Fresh: "#92400e", Frozen: "#451a03" };
+const TURKEY_LINE = { Fresh: "#92400e", Frozen: "#451a03", BreastFresh: "#c2410c", BreastFrozen: "#7c2d12" };
 
 const PORK_LINE = {
   pork_carcass: "#b91c1c",
@@ -907,11 +908,13 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     ytdFresh.length > 0 ? ytdFresh.reduce((s, r) => s + Number(r.wtd_avg), 0) / ytdFresh.length : null;
 
   const chartData = useMemo(() => {
-    const chartDataMap = new Map<string, { isoDate: string; Fresh?: number; Frozen?: number }>();
+    const chartDataMap = new Map<string, { isoDate: string; Fresh?: number; Frozen?: number; BreastFresh?: number; BreastFrozen?: number }>();
     turkeyRows.forEach((r) => {
       const entry = chartDataMap.get(r.isoDate) ?? { isoDate: r.isoDate };
       if (r.condition === "Fresh") entry.Fresh = Number(r.wtd_avg);
       if (r.condition === "Frozen") entry.Frozen = Number(r.wtd_avg);
+      if (r.condition === "Fresh" && r.breast_wtd_avg != null) entry.BreastFresh = Number(r.breast_wtd_avg);
+      if (r.condition === "Frozen" && r.breast_wtd_avg != null) entry.BreastFrozen = Number(r.breast_wtd_avg);
       chartDataMap.set(r.isoDate, entry);
     });
     return Array.from(chartDataMap.values()).sort((a, b) => a.isoDate.localeCompare(b.isoDate));
@@ -1468,6 +1471,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
               <p className="metric metric--brown2">{fmt(lastFrozen?.wtd_avg)}</p>
             </article>
             <article>
+              <h2>Breast fresh wtd avg (¢/lb)</h2>
+              <p className="metric" style={{ color: TURKEY_LINE.BreastFresh }}>{fmt(lastFresh?.breast_wtd_avg ?? null)}</p>
+            </article>
+            <article>
               <h2>Avg fresh YTD</h2>
               <p className="metric metric--brown1">{fmt(avgFresh)}</p>
             </article>
@@ -1503,6 +1510,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                     <th>Low (¢)</th>
                     <th>High (¢)</th>
                     <th>Wtd avg (¢)</th>
+                    <th>Breast wtd avg (¢)</th>
                     <th>Volume (lbs)</th>
                   </tr>
                 </thead>
@@ -1517,6 +1525,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                         <td className={cls}>{fmt(row.low_price)}</td>
                         <td className={cls}>{fmt(row.high_price)}</td>
                         <td className={cls}>{fmt(row.wtd_avg)}</td>
+                        <td className={cls}>{fmt(row.breast_wtd_avg ?? null)}</td>
                         <td>{row.volume_lbs ?? "-"}</td>
                       </tr>
                     );
@@ -1531,11 +1540,19 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             <div className="legend">
               <span className="legend-item">
                 <span className="legend-dot" style={{ background: TURKEY_LINE.Fresh }} />
-                Fresh
+                Whole Hen Fresh
               </span>
               <span className="legend-item">
                 <span className="legend-dot" style={{ background: TURKEY_LINE.Frozen }} />
-                Frozen
+                Whole Hen Frozen
+              </span>
+              <span className="legend-item">
+                <span className="legend-dot" style={{ background: TURKEY_LINE.BreastFresh }} />
+                Breast Tom Fresh
+              </span>
+              <span className="legend-item">
+                <span className="legend-dot" style={{ background: TURKEY_LINE.BreastFrozen }} />
+                Breast Tom Frozen
               </span>
             </div>
             <div className="chart-box">
@@ -1558,6 +1575,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
                   <Line type="monotone" dataKey="Fresh" stroke={TURKEY_LINE.Fresh} dot={false} strokeWidth={2} connectNulls />
                   <Line type="monotone" dataKey="Frozen" stroke={TURKEY_LINE.Frozen} dot={false} strokeWidth={2} connectNulls />
+                  <Line type="monotone" dataKey="BreastFresh" stroke={TURKEY_LINE.BreastFresh} dot={false} strokeWidth={2} connectNulls />
+                  <Line type="monotone" dataKey="BreastFrozen" stroke={TURKEY_LINE.BreastFrozen} dot={false} strokeWidth={2} connectNulls />
                 </LineChart>
               </ResponsiveContainer>
             </div>
