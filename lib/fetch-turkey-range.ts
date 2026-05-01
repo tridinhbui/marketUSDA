@@ -176,13 +176,13 @@ async function fetchChunk(from: Date, to: Date, creds: string): Promise<TurkeyRo
       const breastMap = new Map<string, number>();
       for (const r of results) {
         const b = mapBreastRow(r);
-        if (b) breastMap.set(`${b.week_start}|${b.condition}`, b.breast_wtd_avg);
+        if (b) breastMap.set(b.week_start, b.breast_wtd_avg);
       }
       const out: TurkeyRowRaw[] = [];
       for (const r of results) {
         const row = mapRow(r);
         if (row) {
-          row.breast_wtd_avg = breastMap.get(`${row.week_start}|${row.condition}`) ?? null;
+          row.breast_wtd_avg = breastMap.get(row.week_start) ?? null;
           out.push(row);
         }
       }

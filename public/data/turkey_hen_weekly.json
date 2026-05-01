@@ -3,7 +3,7 @@
   "report": "AMS_3647 - Weekly National Turkey Report",
   "item": "Whole Young Hen, 8-16 lb, U.S. Grade A",
   "priceUnit": "Cents Per Lb",
-  "generatedAt": "2026-05-01T14:33:40Z",
+  "generatedAt": "2026-05-01T14:51:03Z",
   "rows": [
     {
       "week_start": "01/02/2023",
@@ -13,7 +13,7 @@
       "high_price": 179.0,
       "wtd_avg": 171.5,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 670.0
     },
     {
       "week_start": "01/09/2023",
@@ -43,7 +43,7 @@
       "high_price": 183.0,
       "wtd_avg": 183,
       "volume_lbs": "13",
-      "breast_wtd_avg": 665.5
+      "breast_wtd_avg": 625.0
     },
     {
       "week_start": "01/23/2023",
@@ -53,7 +53,7 @@
       "high_price": 180.0,
       "wtd_avg": 172,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 642.5
     },
     {
       "week_start": "01/23/2023",
@@ -73,7 +73,7 @@
       "high_price": 167.0,
       "wtd_avg": 167,
       "volume_lbs": "720",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 594.17
     },
     {
       "week_start": "01/30/2023",
@@ -103,7 +103,7 @@
       "high_price": 224.0,
       "wtd_avg": 180.71,
       "volume_lbs": "17",
-      "breast_wtd_avg": 551.0
+      "breast_wtd_avg": 450.0
     },
     {
       "week_start": "02/13/2023",
@@ -113,7 +113,7 @@
       "high_price": 173.0,
       "wtd_avg": 173,
       "volume_lbs": "624",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 512.0
     },
     {
       "week_start": "02/13/2023",
@@ -133,7 +133,7 @@
       "high_price": 180.0,
       "wtd_avg": 171.5,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 424.14
     },
     {
       "week_start": "02/27/2023",
@@ -153,7 +153,7 @@
       "high_price": 185.0,
       "wtd_avg": 185,
       "volume_lbs": "12",
-      "breast_wtd_avg": 398.64
+      "breast_wtd_avg": 405.0
     },
     {
       "week_start": "03/06/2023",
@@ -173,7 +173,7 @@
       "high_price": 201.0,
       "wtd_avg": 182.6,
       "volume_lbs": "15",
-      "breast_wtd_avg": 353.5
+      "breast_wtd_avg": 348.0
     },
     {
       "week_start": "03/13/2023",
@@ -183,7 +183,7 @@
       "high_price": 180.0,
       "wtd_avg": 171.5,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 326.74
     },
     {
       "week_start": "03/13/2023",
@@ -213,7 +213,7 @@
       "high_price": 201.0,
       "wtd_avg": 187.18,
       "volume_lbs": "33",
-      "breast_wtd_avg": 311.11
+      "breast_wtd_avg": 310.0
     },
     {
       "week_start": "03/27/2023",
@@ -233,7 +233,7 @@
       "high_price": 201.0,
       "wtd_avg": 182.33,
       "volume_lbs": "58",
-      "breast_wtd_avg": 320.0
+      "breast_wtd_avg": 275.0
     },
     {
       "week_start": "04/03/2023",
@@ -253,7 +253,7 @@
       "high_price": 201.0,
       "wtd_avg": 183.82,
       "volume_lbs": "22",
-      "breast_wtd_avg": 314.89
+      "breast_wtd_avg": 296.74
     },
     {
       "week_start": "04/10/2023",
@@ -273,7 +273,7 @@
       "high_price": 261.0,
       "wtd_avg": 186.55,
       "volume_lbs": "22",
-      "breast_wtd_avg": 320.17
+      "breast_wtd_avg": 274.0
     },
     {
       "week_start": "04/17/2023",
@@ -293,7 +293,7 @@
       "high_price": 201.0,
       "wtd_avg": 179.64,
       "volume_lbs": "14",
-      "breast_wtd_avg": 317.37
+      "breast_wtd_avg": 290.0
     },
     {
       "week_start": "04/24/2023",
@@ -313,7 +313,7 @@
       "high_price": 201.0,
       "wtd_avg": 179.64,
       "volume_lbs": "14",
-      "breast_wtd_avg": 320.41
+      "breast_wtd_avg": 272.0
     },
     {
       "week_start": "04/24/2023",
@@ -353,7 +353,7 @@
       "high_price": 201.0,
       "wtd_avg": 185.55,
       "volume_lbs": "11",
-      "breast_wtd_avg": 315.29
+      "breast_wtd_avg": 275.0
     },
     {
       "week_start": "05/08/2023",
@@ -383,7 +383,7 @@
       "high_price": 201.0,
       "wtd_avg": 181.91,
       "volume_lbs": "11",
-      "breast_wtd_avg": 320.0
+      "breast_wtd_avg": 261.5
     },
     {
       "week_start": "05/22/2023",
@@ -393,7 +393,7 @@
       "high_price": 162.0,
       "wtd_avg": 150.5,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 312.14
     },
     {
       "week_start": "05/22/2023",
@@ -413,7 +413,7 @@
       "high_price": 175.0,
       "wtd_avg": 167.5,
       "volume_lbs": "320",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 312.14
     },
     {
       "week_start": "05/29/2023",
@@ -423,7 +423,7 @@
       "high_price": 158.0,
       "wtd_avg": 156.15,
       "volume_lbs": "364",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 291.54
     },
     {
       "week_start": "05/29/2023",
@@ -443,7 +443,7 @@
       "high_price": 156.0,
       "wtd_avg": 156,
       "volume_lbs": "40",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 273.19
     },
     {
       "week_start": "06/05/2023",
@@ -473,7 +473,7 @@
       "high_price": 200.0,
       "wtd_avg": 160.91,
       "volume_lbs": "11",
-      "breast_wtd_avg": 276.0
+      "breast_wtd_avg": 227.82
     },
     {
       "week_start": "06/12/2023",
@@ -503,7 +503,7 @@
       "high_price": 200.0,
       "wtd_avg": 160.91,
       "volume_lbs": "11",
-      "breast_wtd_avg": 272.69
+      "breast_wtd_avg": 225.57
     },
     {
       "week_start": "06/26/2023",
@@ -523,7 +523,7 @@
       "high_price": 199.0,
       "wtd_avg": 157.21,
       "volume_lbs": "14",
-      "breast_wtd_avg": 268.73
+      "breast_wtd_avg": 231.0
     },
     {
       "week_start": "06/26/2023",
@@ -553,7 +553,7 @@
       "high_price": 200.0,
       "wtd_avg": 157.29,
       "volume_lbs": "14",
-      "breast_wtd_avg": 266.82
+      "breast_wtd_avg": 231.0
     },
     {
       "week_start": "07/10/2023",
@@ -573,7 +573,7 @@
       "high_price": 200.0,
       "wtd_avg": 157.29,
       "volume_lbs": "14",
-      "breast_wtd_avg": 265.93
+      "breast_wtd_avg": 215.67
     },
     {
       "week_start": "07/17/2023",
@@ -603,7 +603,7 @@
       "high_price": 149.0,
       "wtd_avg": 135,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "07/24/2023",
@@ -633,7 +633,7 @@
       "high_price": 154.0,
       "wtd_avg": 154,
       "volume_lbs": "10",
-      "breast_wtd_avg": 261.63
+      "breast_wtd_avg": 185.0
     },
     {
       "week_start": "08/07/2023",
@@ -653,7 +653,7 @@
       "high_price": 202.0,
       "wtd_avg": 158.36,
       "volume_lbs": "11",
-      "breast_wtd_avg": 261.78
+      "breast_wtd_avg": 186.15
     },
     {
       "week_start": "08/14/2023",
@@ -663,7 +663,7 @@
       "high_price": 143.0,
       "wtd_avg": 130.73,
       "volume_lbs": "600",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "08/14/2023",
@@ -683,7 +683,7 @@
       "high_price": 114.0,
       "wtd_avg": 114,
       "volume_lbs": "320",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "08/21/2023",
@@ -703,7 +703,7 @@
       "high_price": 202.0,
       "wtd_avg": 142.57,
       "volume_lbs": "14",
-      "breast_wtd_avg": 259.25
+      "breast_wtd_avg": 140.0
     },
     {
       "week_start": "08/21/2023",
@@ -733,7 +733,7 @@
       "high_price": 202.0,
       "wtd_avg": 142.57,
       "volume_lbs": "14",
-      "breast_wtd_avg": 256.29
+      "breast_wtd_avg": 190.0
     },
     {
       "week_start": "08/28/2023",
@@ -763,7 +763,7 @@
       "high_price": 202.0,
       "wtd_avg": 142.57,
       "volume_lbs": "14",
-      "breast_wtd_avg": 256.27
+      "breast_wtd_avg": 173.33
     },
     {
       "week_start": "09/04/2023",
@@ -813,7 +813,7 @@
       "high_price": 202.0,
       "wtd_avg": 131.41,
       "volume_lbs": "17",
-      "breast_wtd_avg": 259.32
+      "breast_wtd_avg": 185.0
     },
     {
       "week_start": "10/02/2023",
@@ -833,7 +833,7 @@
       "high_price": 127.0,
       "wtd_avg": 127,
       "volume_lbs": "13",
-      "breast_wtd_avg": 260.0
+      "breast_wtd_avg": 200.0
     },
     {
       "week_start": "10/09/2023",
@@ -843,7 +843,7 @@
       "high_price": 124.0,
       "wtd_avg": 116,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "10/09/2023",
@@ -863,7 +863,7 @@
       "high_price": 122.0,
       "wtd_avg": 115.5,
       "volume_lbs": "1701",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "10/16/2023",
@@ -883,7 +883,7 @@
       "high_price": 126.0,
       "wtd_avg": 126,
       "volume_lbs": "200",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "10/23/2023",
@@ -903,7 +903,7 @@
       "high_price": 174.0,
       "wtd_avg": 146.74,
       "volume_lbs": "1634",
-      "breast_wtd_avg": 256.67
+      "breast_wtd_avg": 180.64
     },
     {
       "week_start": "10/30/2023",
@@ -923,7 +923,7 @@
       "high_price": 174.0,
       "wtd_avg": 146.97,
       "volume_lbs": "2976",
-      "breast_wtd_avg": 260.0
+      "breast_wtd_avg": 189.0
     },
     {
       "week_start": "10/30/2023",
@@ -943,7 +943,7 @@
       "high_price": 96.0,
       "wtd_avg": 96,
       "volume_lbs": "160",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 258.33
     },
     {
       "week_start": "11/06/2023",
@@ -963,7 +963,7 @@
       "high_price": 115.0,
       "wtd_avg": 106.82,
       "volume_lbs": "440",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 258.33
     },
     {
       "week_start": "11/13/2023",
@@ -983,7 +983,7 @@
       "high_price": 160.0,
       "wtd_avg": 142.71,
       "volume_lbs": "695",
-      "breast_wtd_avg": 258.33
+      "breast_wtd_avg": 185.0
     },
     {
       "week_start": "11/20/2023",
@@ -993,7 +993,7 @@
       "high_price": 92.0,
       "wtd_avg": 92,
       "volume_lbs": "40",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "11/20/2023",
@@ -1003,7 +1003,7 @@
       "high_price": 120.0,
       "wtd_avg": 120,
       "volume_lbs": "40",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "11/27/2023",
@@ -1033,7 +1033,7 @@
       "high_price": 163.0,
       "wtd_avg": 146.61,
       "volume_lbs": "654",
-      "breast_wtd_avg": 258.75
+      "breast_wtd_avg": 197.67
     },
     {
       "week_start": "12/11/2023",
@@ -1053,7 +1053,7 @@
       "high_price": 163.0,
       "wtd_avg": 147.5,
       "volume_lbs": "1050",
-      "breast_wtd_avg": 260.0
+      "breast_wtd_avg": 194.0
     },
     {
       "week_start": "12/18/2023",
@@ -1083,7 +1083,7 @@
       "high_price": 100.0,
       "wtd_avg": 86.5,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "01/01/2024",
@@ -1093,7 +1093,7 @@
       "high_price": 100.0,
       "wtd_avg": 86.5,
       "volume_lbs": "0",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 265.0
     },
     {
       "week_start": "01/08/2024",
@@ -1133,7 +1133,7 @@
       "high_price": 105.0,
       "wtd_avg": 105,
       "volume_lbs": "20",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "02/05/2024",
@@ -1153,7 +1153,7 @@
       "high_price": 112.0,
       "wtd_avg": 95.92,
       "volume_lbs": "3332",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 264.2
     },
     {
       "week_start": "02/12/2024",
@@ -1173,7 +1173,7 @@
       "high_price": 105.0,
       "wtd_avg": 99,
       "volume_lbs": "35",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "02/26/2024",
@@ -1193,7 +1193,7 @@
       "high_price": 177.0,
       "wtd_avg": 110.64,
       "volume_lbs": "11",
-      "breast_wtd_avg": 273.18
+      "breast_wtd_avg": 190.67
     },
     {
       "week_start": "03/04/2024",
@@ -1203,7 +1203,7 @@
       "high_price": 103.0,
       "wtd_avg": 95.43,
       "volume_lbs": "42",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 252.5
     },
     {
       "week_start": "03/04/2024",
@@ -1223,7 +1223,7 @@
       "high_price": 97.0,
       "wtd_avg": 97,
       "volume_lbs": "400",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 252.5
     },
     {
       "week_start": "03/11/2024",
@@ -1243,7 +1243,7 @@
       "high_price": 155.0,
       "wtd_avg": 131.62,
       "volume_lbs": "271",
-      "breast_wtd_avg": 254.29
+      "breast_wtd_avg": 187.5
     },
     {
       "week_start": "03/18/2024",
@@ -1263,7 +1263,7 @@
       "high_price": 155.0,
       "wtd_avg": 118.1,
       "volume_lbs": "62",
-      "breast_wtd_avg": 256.0
+      "breast_wtd_avg": 180.0
     },
     {
       "week_start": "03/25/2024",
@@ -1283,7 +1283,7 @@
       "high_price": 262.0,
       "wtd_avg": 123.82,
       "volume_lbs": "11",
-      "breast_wtd_avg": 252.5
+      "breast_wtd_avg": 176.0
     },
     {
       "week_start": "04/01/2024",
@@ -1303,7 +1303,7 @@
       "high_price": 103.0,
       "wtd_avg": 92.25,
       "volume_lbs": "884",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 258.33
     },
     {
       "week_start": "04/08/2024",
@@ -1323,7 +1323,7 @@
       "high_price": 103.0,
       "wtd_avg": 91,
       "volume_lbs": "60",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 245.0
     },
     {
       "week_start": "04/15/2024",
@@ -1343,7 +1343,7 @@
       "high_price": 103.0,
       "wtd_avg": 103,
       "volume_lbs": "20",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 260.0
     },
     {
       "week_start": "04/22/2024",
@@ -1363,7 +1363,7 @@
       "high_price": 103.0,
       "wtd_avg": 103,
       "volume_lbs": "20",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 252.5
     },
     {
       "week_start": "05/06/2024",
@@ -1383,7 +1383,7 @@
       "high_price": 113.0,
       "wtd_avg": 113,
       "volume_lbs": "16",
-      "breast_wtd_avg": 228.91
+      "breast_wtd_avg": 176.0
     },
     {
       "week_start": "05/13/2024",
@@ -1403,7 +1403,7 @@
       "high_price": 143.0,
       "wtd_avg": 108.18,
       "volume_lbs": "17",
-      "breast_wtd_avg": 220.6
+      "breast_wtd_avg": 176.0
     },
     {
       "week_start": "05/20/2024",
@@ -1423,7 +1423,7 @@
       "high_price": 143.0,
       "wtd_avg": 108.18,
       "volume_lbs": "17",
-      "breast_wtd_avg": 223.08
+      "breast_wtd_avg": 174.0
     },
     {
       "week_start": "05/27/2024",
@@ -1443,7 +1443,7 @@
       "high_price": 143.0,
       "wtd_avg": 106.79,
       "volume_lbs": "14",
-      "breast_wtd_avg": 220.0
+      "breast_wtd_avg": 176.0
     },
     {
       "week_start": "06/03/2024",
@@ -1463,7 +1463,7 @@
       "high_price": 155.0,
       "wtd_avg": 110,
       "volume_lbs": "15",
-      "breast_wtd_avg": 216.25
+      "breast_wtd_avg": 155.0
     },
     {
       "week_start": "06/10/2024",
@@ -1483,7 +1483,7 @@
       "high_price": 155.0,
       "wtd_avg": 109,
       "volume_lbs": "18",
-      "breast_wtd_avg": 214.35
+      "breast_wtd_avg": 174.0
     },
     {
       "week_start": "06/10/2024",
@@ -1513,7 +1513,7 @@
       "high_price": 155.0,
       "wtd_avg": 110,
       "volume_lbs": "15",
-      "breast_wtd_avg": 214.0
+      "breast_wtd_avg": 128.33
     },
     {
       "week_start": "06/24/2024",
@@ -1533,7 +1533,7 @@
       "high_price": 155.0,
       "wtd_avg": 110,
       "volume_lbs": "15",
-      "breast_wtd_avg": 220.0
+      "breast_wtd_avg": 144.0
     },
     {
       "week_start": "06/24/2024",
@@ -1563,7 +1563,7 @@
       "high_price": 155.0,
       "wtd_avg": 110,
       "volume_lbs": "15",
-      "breast_wtd_avg": 217.5
+      "breast_wtd_avg": 120.0
     },
     {
       "week_start": "07/08/2024",
@@ -1583,7 +1583,7 @@
       "high_price": 155.0,
       "wtd_avg": 110,
       "volume_lbs": "15",
-      "breast_wtd_avg": 220.0
+      "breast_wtd_avg": 124.0
     },
     {
       "week_start": "07/15/2024",
@@ -1603,7 +1603,7 @@
       "high_price": 155.0,
       "wtd_avg": 109.13,
       "volume_lbs": "15",
-      "breast_wtd_avg": 218.85
+      "breast_wtd_avg": 125.0
     },
     {
       "week_start": "07/22/2024",
@@ -1623,7 +1623,7 @@
       "high_price": 155.0,
       "wtd_avg": 110.43,
       "volume_lbs": "14",
-      "breast_wtd_avg": 220.0
+      "breast_wtd_avg": 125.0
     },
     {
       "week_start": "07/29/2024",
@@ -1643,7 +1643,7 @@
       "high_price": 155.0,
       "wtd_avg": 109.57,
       "volume_lbs": "14",
-      "breast_wtd_avg": 222.05
+      "breast_wtd_avg": 133.0
     },
     {
       "week_start": "08/05/2024",
@@ -1673,7 +1673,7 @@
       "high_price": 155.0,
       "wtd_avg": 116.43,
       "volume_lbs": "14",
-      "breast_wtd_avg": 215.0
+      "breast_wtd_avg": 131.3
     },
     {
       "week_start": "08/19/2024",
@@ -1693,7 +1693,7 @@
       "high_price": 155.0,
       "wtd_avg": 132.29,
       "volume_lbs": "35",
-      "breast_wtd_avg": 221.88
+      "breast_wtd_avg": 147.29
     },
     {
       "week_start": "08/19/2024",
@@ -1723,7 +1723,7 @@
       "high_price": 155.0,
       "wtd_avg": 110.87,
       "volume_lbs": "15",
-      "breast_wtd_avg": 219.25
+      "breast_wtd_avg": 142.0
     },
     {
       "week_start": "09/02/2024",
@@ -1743,7 +1743,7 @@
       "high_price": 160.0,
       "wtd_avg": 111.2,
       "volume_lbs": "15",
-      "breast_wtd_avg": 218.21
+      "breast_wtd_avg": 152.0
     },
     {
       "week_start": "09/09/2024",
@@ -1763,7 +1763,7 @@
       "high_price": 160.0,
       "wtd_avg": 111.2,
       "volume_lbs": "15",
-      "breast_wtd_avg": 220.0
+      "breast_wtd_avg": 175.0
     },
     {
       "week_start": "09/16/2024",
@@ -1773,7 +1773,7 @@
       "high_price": 105.0,
       "wtd_avg": 87.67,
       "volume_lbs": "180",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 220.0
     },
     {
       "week_start": "09/23/2024",
@@ -1793,7 +1793,7 @@
       "high_price": 160.0,
       "wtd_avg": 111.2,
       "volume_lbs": "15",
-      "breast_wtd_avg": 196.88
+      "breast_wtd_avg": 165.0
     },
     {
       "week_start": "09/30/2024",
@@ -1813,7 +1813,7 @@
       "high_price": 160.0,
       "wtd_avg": 108.93,
       "volume_lbs": "14",
-      "breast_wtd_avg": 197.49
+      "breast_wtd_avg": 160.22
     },
     {
       "week_start": "10/07/2024",
@@ -1833,7 +1833,7 @@
       "high_price": 219.0,
       "wtd_avg": 219,
       "volume_lbs": "12",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 193.65
     },
     {
       "week_start": "10/14/2024",
@@ -1843,7 +1843,7 @@
       "high_price": 103.0,
       "wtd_avg": 96.16,
       "volume_lbs": "860",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 193.65
     },
     {
       "week_start": "10/14/2024",
@@ -1873,7 +1873,7 @@
       "high_price": 160.0,
       "wtd_avg": 111.2,
       "volume_lbs": "15",
-      "breast_wtd_avg": 198.0
+      "breast_wtd_avg": 162.0
     },
     {
       "week_start": "10/28/2024",
@@ -1893,7 +1893,7 @@
       "high_price": 160.0,
       "wtd_avg": 117.61,
       "volume_lbs": "390",
-      "breast_wtd_avg": 193.37
+      "breast_wtd_avg": 170.0
     },
     {
       "week_start": "11/04/2024",
@@ -1913,7 +1913,7 @@
       "high_price": 164.0,
       "wtd_avg": 119.42,
       "volume_lbs": "1848",
-      "breast_wtd_avg": 197.89
+      "breast_wtd_avg": 168.0
     },
     {
       "week_start": "11/11/2024",
@@ -1933,7 +1933,7 @@
       "high_price": 160.0,
       "wtd_avg": 118.17,
       "volume_lbs": "2743",
-      "breast_wtd_avg": 192.0
+      "breast_wtd_avg": 174.0
     },
     {
       "week_start": "11/18/2024",
@@ -1953,7 +1953,7 @@
       "high_price": 135.0,
       "wtd_avg": 118.21,
       "volume_lbs": "3648",
-      "breast_wtd_avg": 198.07
+      "breast_wtd_avg": 165.0
     },
     {
       "week_start": "11/18/2024",
@@ -1973,7 +1973,7 @@
       "high_price": 104.0,
       "wtd_avg": 94.55,
       "volume_lbs": "220",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 197.64
     },
     {
       "week_start": "11/25/2024",
@@ -2013,7 +2013,7 @@
       "high_price": 128.0,
       "wtd_avg": 125.87,
       "volume_lbs": "172",
-      "breast_wtd_avg": 215.0
+      "breast_wtd_avg": 189.0
     },
     {
       "week_start": "12/16/2024",
@@ -2023,7 +2023,7 @@
       "high_price": 104.0,
       "wtd_avg": 104,
       "volume_lbs": "20",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 205.77
     },
     {
       "week_start": "12/16/2024",
@@ -2033,7 +2033,7 @@
       "high_price": 108.0,
       "wtd_avg": 108,
       "volume_lbs": "120",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 205.77
     },
     {
       "week_start": "12/23/2024",
@@ -2043,7 +2043,7 @@
       "high_price": 100.0,
       "wtd_avg": 100,
       "volume_lbs": "20",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 213.0
     },
     {
       "week_start": "12/23/2024",
@@ -2063,7 +2063,7 @@
       "high_price": 100.0,
       "wtd_avg": 100,
       "volume_lbs": "20",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 213.67
     },
     {
       "week_start": "01/13/2025",
@@ -2093,7 +2093,7 @@
       "high_price": 164.0,
       "wtd_avg": 109.21,
       "volume_lbs": "14",
-      "breast_wtd_avg": 238.0
+      "breast_wtd_avg": 221.0
     },
     {
       "week_start": "01/27/2025",
@@ -2113,7 +2113,7 @@
       "high_price": 164.0,
       "wtd_avg": 96.13,
       "volume_lbs": "61",
-      "breast_wtd_avg": 234.14
+      "breast_wtd_avg": 223.0
     },
     {
       "week_start": "02/03/2025",
@@ -2133,7 +2133,7 @@
       "high_price": 164.0,
       "wtd_avg": 100.31,
       "volume_lbs": "13",
-      "breast_wtd_avg": 242.36
+      "breast_wtd_avg": 259.0
     },
     {
       "week_start": "02/10/2025",
@@ -2163,7 +2163,7 @@
       "high_price": 164.0,
       "wtd_avg": 105.4,
       "volume_lbs": "43",
-      "breast_wtd_avg": 263.25
+      "breast_wtd_avg": 274.42
     },
     {
       "week_start": "02/24/2025",
@@ -2183,7 +2183,7 @@
       "high_price": 140.0,
       "wtd_avg": 117.6,
       "volume_lbs": "5",
-      "breast_wtd_avg": 268.8
+      "breast_wtd_avg": 300.0
     },
     {
       "week_start": "03/03/2025",
@@ -2203,7 +2203,7 @@
       "high_price": 116.0,
       "wtd_avg": 104.86,
       "volume_lbs": "280",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 300.0
     },
     {
       "week_start": "03/10/2025",
@@ -2233,7 +2233,7 @@
       "high_price": 140.0,
       "wtd_avg": 120.5,
       "volume_lbs": "14",
-      "breast_wtd_avg": 309.5
+      "breast_wtd_avg": 323.51
     },
     {
       "week_start": "03/24/2025",
@@ -2253,7 +2253,7 @@
       "high_price": 150.0,
       "wtd_avg": 123.07,
       "volume_lbs": "14",
-      "breast_wtd_avg": 323.5
+      "breast_wtd_avg": 337.33
     },
     {
       "week_start": "03/31/2025",
@@ -2273,7 +2273,7 @@
       "high_price": 141.0,
       "wtd_avg": 141,
       "volume_lbs": "12",
-      "breast_wtd_avg": 327.0
+      "breast_wtd_avg": 337.0
     },
     {
       "week_start": "04/07/2025",
@@ -2293,7 +2293,7 @@
       "high_price": 143.0,
       "wtd_avg": 132.55,
       "volume_lbs": "220",
-      "breast_wtd_avg": 336.9
+      "breast_wtd_avg": 341.5
     },
     {
       "week_start": "04/14/2025",
@@ -2313,7 +2313,7 @@
       "high_price": 129.0,
       "wtd_avg": 129,
       "volume_lbs": "60",
-      "breast_wtd_avg": 337.0
+      "breast_wtd_avg": 380.0
     },
     {
       "week_start": "04/21/2025",
@@ -2343,7 +2343,7 @@
       "high_price": 118.0,
       "wtd_avg": 109,
       "volume_lbs": "160",
-      "breast_wtd_avg": 372.85
+      "breast_wtd_avg": 348.0
     },
     {
       "week_start": "05/05/2025",
@@ -2373,7 +2373,7 @@
       "high_price": 163.0,
       "wtd_avg": 152.75,
       "volume_lbs": "4",
-      "breast_wtd_avg": 359.0
+      "breast_wtd_avg": 381.0
     },
     {
       "week_start": "05/19/2025",
@@ -2393,7 +2393,7 @@
       "high_price": 163.0,
       "wtd_avg": 140.71,
       "volume_lbs": "7",
-      "breast_wtd_avg": 363.91
+      "breast_wtd_avg": 380.0
     },
     {
       "week_start": "05/26/2025",
@@ -2413,7 +2413,7 @@
       "high_price": 163.0,
       "wtd_avg": 141.29,
       "volume_lbs": "7",
-      "breast_wtd_avg": 365.0
+      "breast_wtd_avg": 386.63
     },
     {
       "week_start": "06/02/2025",
@@ -2443,7 +2443,7 @@
       "high_price": 163.0,
       "wtd_avg": 139,
       "volume_lbs": "6",
-      "breast_wtd_avg": 391.58
+      "breast_wtd_avg": 394.81
     },
     {
       "week_start": "06/16/2025",
@@ -2473,7 +2473,7 @@
       "high_price": 147.0,
       "wtd_avg": 147,
       "volume_lbs": "40",
-      "breast_wtd_avg": 418.0
+      "breast_wtd_avg": 454.0
     },
     {
       "week_start": "07/07/2025",
@@ -2493,7 +2493,7 @@
       "high_price": 169.0,
       "wtd_avg": 164.79,
       "volume_lbs": "380",
-      "breast_wtd_avg": 450.0
+      "breast_wtd_avg": 496.0
     },
     {
       "week_start": "07/14/2025",
@@ -2503,7 +2503,7 @@
       "high_price": 151.0,
       "wtd_avg": 148.75,
       "volume_lbs": "80",
-      "breast_wtd_avg": 450.0
+      "breast_wtd_avg": 496.0
     },
     {
       "week_start": "07/21/2025",
@@ -2513,7 +2513,7 @@
       "high_price": 153.0,
       "wtd_avg": 151,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 473.25
     },
     {
       "week_start": "07/28/2025",
@@ -2523,7 +2523,7 @@
       "high_price": 154.0,
       "wtd_avg": 153.25,
       "volume_lbs": "320",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 520.31
     },
     {
       "week_start": "08/04/2025",
@@ -2533,7 +2533,7 @@
       "high_price": 154.0,
       "wtd_avg": 154,
       "volume_lbs": "40",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 547.84
     },
     {
       "week_start": "08/11/2025",
@@ -2543,7 +2543,7 @@
       "high_price": 164.0,
       "wtd_avg": 159.36,
       "volume_lbs": "560",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 576.0
     },
     {
       "week_start": "08/18/2025",
@@ -2593,7 +2593,7 @@
       "high_price": 157.0,
       "wtd_avg": 154.66,
       "volume_lbs": "387",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 679.0
     },
     {
       "week_start": "09/01/2025",
@@ -2613,7 +2613,7 @@
       "high_price": 160.0,
       "wtd_avg": 155.67,
       "volume_lbs": "120",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 679.0
     },
     {
       "week_start": "09/08/2025",
@@ -2623,7 +2623,7 @@
       "high_price": 160.0,
       "wtd_avg": 155.5,
       "volume_lbs": "160",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 670.71
     },
     {
       "week_start": "09/08/2025",
@@ -2633,7 +2633,7 @@
       "high_price": 153.0,
       "wtd_avg": 153,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 670.71
     },
     {
       "week_start": "09/15/2025",
@@ -2643,7 +2643,7 @@
       "high_price": 170.0,
       "wtd_avg": 170,
       "volume_lbs": "40",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 696.09
     },
     {
       "week_start": "09/15/2025",
@@ -2653,7 +2653,7 @@
       "high_price": 169.0,
       "wtd_avg": 164.68,
       "volume_lbs": "520",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 696.09
     },
     {
       "week_start": "09/15/2025",
@@ -2663,7 +2663,7 @@
       "high_price": 177.0,
       "wtd_avg": 177,
       "volume_lbs": "400",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 696.09
     },
     {
       "week_start": "09/22/2025",
@@ -2673,7 +2673,7 @@
       "high_price": 164.0,
       "wtd_avg": 163.8,
       "volume_lbs": "41",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 719.06
     },
     {
       "week_start": "09/22/2025",
@@ -2693,7 +2693,7 @@
       "high_price": 175.0,
       "wtd_avg": 168.2,
       "volume_lbs": "91",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 708.0
     },
     {
       "week_start": "09/29/2025",
@@ -2713,7 +2713,7 @@
       "high_price": 174.0,
       "wtd_avg": 174,
       "volume_lbs": "40",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 723.43
     },
     {
       "week_start": "10/06/2025",
@@ -2743,7 +2743,7 @@
       "high_price": 175.0,
       "wtd_avg": 175,
       "volume_lbs": "4",
-      "breast_wtd_avg": 722.0
+      "breast_wtd_avg": 699.0
     },
     {
       "week_start": "10/20/2025",
@@ -2753,7 +2753,7 @@
       "high_price": 174.0,
       "wtd_avg": 168.45,
       "volume_lbs": "530",
-      "breast_wtd_avg": 709.0
+      "breast_wtd_avg": 722.0
     },
     {
       "week_start": "10/20/2025",
@@ -2773,7 +2773,7 @@
       "high_price": 175.0,
       "wtd_avg": 168.66,
       "volume_lbs": "1107",
-      "breast_wtd_avg": 716.54
+      "breast_wtd_avg": 722.0
     },
     {
       "week_start": "10/27/2025",
@@ -2793,7 +2793,7 @@
       "high_price": 176.0,
       "wtd_avg": 172.8,
       "volume_lbs": "100",
-      "breast_wtd_avg": 722.0
+      "breast_wtd_avg": 722.17
     },
     {
       "week_start": "11/03/2025",
@@ -2833,7 +2833,7 @@
       "high_price": 177.0,
       "wtd_avg": 167.57,
       "volume_lbs": "280",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "11/17/2025",
@@ -2853,7 +2853,7 @@
       "high_price": 177.0,
       "wtd_avg": 171.75,
       "volume_lbs": "160",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "12/01/2025",
@@ -2863,7 +2863,7 @@
       "high_price": 177.0,
       "wtd_avg": 174.67,
       "volume_lbs": "60",
-      "breast_wtd_avg": 713.0
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "12/01/2025",
@@ -2883,7 +2883,7 @@
       "high_price": 153.0,
       "wtd_avg": 153,
       "volume_lbs": "280",
-      "breast_wtd_avg": 713.0
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "12/08/2025",
@@ -2893,7 +2893,7 @@
       "high_price": 178.0,
       "wtd_avg": 175.5,
       "volume_lbs": "100",
-      "breast_wtd_avg": 715.59
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "12/08/2025",
@@ -2913,7 +2913,7 @@
       "high_price": 183.0,
       "wtd_avg": 169.67,
       "volume_lbs": "240",
-      "breast_wtd_avg": 715.59
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "12/15/2025",
@@ -2933,7 +2933,7 @@
       "high_price": 177.0,
       "wtd_avg": 177,
       "volume_lbs": "40",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "12/29/2025",
@@ -2953,7 +2953,7 @@
       "high_price": 177.0,
       "wtd_avg": 177,
       "volume_lbs": "40",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "01/12/2026",
@@ -2963,7 +2963,7 @@
       "high_price": 177.0,
       "wtd_avg": 175,
       "volume_lbs": "60",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 723.0
     },
     {
       "week_start": "01/19/2026",
@@ -2973,7 +2973,7 @@
       "high_price": 177.0,
       "wtd_avg": 175.29,
       "volume_lbs": "35",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 717.25
     },
     {
       "week_start": "01/26/2026",
@@ -2983,7 +2983,7 @@
       "high_price": 175.0,
       "wtd_avg": 170.67,
       "volume_lbs": "60",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 600.0
     },
     {
       "week_start": "02/09/2026",
@@ -2993,7 +2993,7 @@
       "high_price": 173.0,
       "wtd_avg": 167.5,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 595.0
     },
     {
       "week_start": "02/16/2026",
@@ -3003,7 +3003,7 @@
       "high_price": 173.0,
       "wtd_avg": 167.5,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 580.0
     },
     {
       "week_start": "02/23/2026",
@@ -3013,7 +3013,7 @@
       "high_price": 173.0,
       "wtd_avg": 167.5,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 569.0
     },
     {
       "week_start": "03/02/2026",
@@ -3023,7 +3023,7 @@
       "high_price": 173.0,
       "wtd_avg": 168.5,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 562.73
     },
     {
       "week_start": "03/09/2026",
@@ -3033,7 +3033,7 @@
       "high_price": 173.0,
       "wtd_avg": 168,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 516.67
     },
     {
       "week_start": "03/16/2026",
@@ -3053,7 +3053,7 @@
       "high_price": 174.0,
       "wtd_avg": 168,
       "volume_lbs": "100",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 491.67
     },
     {
       "week_start": "03/30/2026",
@@ -3063,7 +3063,7 @@
       "high_price": 178.0,
       "wtd_avg": 171,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 489.89
     },
     {
       "week_start": "04/06/2026",
@@ -3073,7 +3073,7 @@
       "high_price": 180.0,
       "wtd_avg": 172,
       "volume_lbs": "80",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 485.0
     },
     {
       "week_start": "04/13/2026",
@@ -3103,7 +3103,7 @@
       "high_price": 180.0,
       "wtd_avg": 174,
       "volume_lbs": "30",
-      "breast_wtd_avg": null
+      "breast_wtd_avg": 537.5
     }
   ]
 }
