@@ -248,6 +248,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [startDate, setStartDate] = useState("2019-01-01");
   const [endDate, setEndDate] = useState(todayIso());
 
+  /* Per-table date filters for the admin preview tables */
+  const [hogAdminStart, setHogAdminStart] = useState("2019-01-01");
+  const [hogAdminEnd, setHogAdminEnd] = useState(todayIso());
+  const [turkeyAdminStart, setTurkeyAdminStart] = useState("2019-01-01");
+  const [turkeyAdminEnd, setTurkeyAdminEnd] = useState(todayIso());
+  const [porkAdminStart, setPorkAdminStart] = useState("2019-01-01");
+  const [porkAdminEnd, setPorkAdminEnd] = useState(todayIso());
+
   const [hogFull, setHogFull] = useState<HogRow[]>([]);
   const [hogRows, setHogRows] = useState<HogRow[]>([]);
   const [hogMeta, setHogMeta] = useState<string | undefined>();
@@ -897,6 +905,33 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   }, [turkeyRowsChrono, tableDateOrder]);
 
   const freshRows = turkeyRows.filter((r) => r.condition === "Fresh");
+
+  /* Admin per-table filtered rows — filter from the full dataset using each table's own date range */
+  const hogAdminRows = useMemo(() => {
+    if (!hogAdminStart || !hogAdminEnd || hogAdminStart > hogAdminEnd) return [];
+    const filtered = hogFull.filter((r) => r.date >= hogAdminStart && r.date <= hogAdminEnd);
+    return tableDateOrder === "desc"
+      ? filtered.sort((a, b) => b.date.localeCompare(a.date))
+      : filtered.sort((a, b) => a.date.localeCompare(b.date));
+  }, [hogFull, hogAdminStart, hogAdminEnd, tableDateOrder]);
+
+  const turkeyAdminRows = useMemo(() => {
+    if (!turkeyAdminStart || !turkeyAdminEnd || turkeyAdminStart > turkeyAdminEnd) return [];
+    const filtered = turkeyFull
+      .filter((r) => r.isoDate >= turkeyAdminStart && r.isoDate <= turkeyAdminEnd)
+      .filter((r) => condition === "all" || r.condition === condition);
+    return tableDateOrder === "desc"
+      ? filtered.sort((a, b) => b.isoDate.localeCompare(a.isoDate) || b.condition.localeCompare(a.condition))
+      : filtered.sort((a, b) => a.isoDate.localeCompare(b.isoDate) || a.condition.localeCompare(b.condition));
+  }, [turkeyFull, turkeyAdminStart, turkeyAdminEnd, condition, tableDateOrder]);
+
+  const porkAdminRows = useMemo(() => {
+    if (!porkAdminStart || !porkAdminEnd || porkAdminStart > porkAdminEnd) return [];
+    const filtered = porkFull.filter((r) => r.date >= porkAdminStart && r.date <= porkAdminEnd);
+    return tableDateOrder === "desc"
+      ? filtered.sort((a, b) => b.date.localeCompare(a.date))
+      : filtered.sort((a, b) => a.date.localeCompare(b.date));
+  }, [porkFull, porkAdminStart, porkAdminEnd, tableDateOrder]);
   const frozenRows = turkeyRows.filter((r) => r.condition === "Frozen");
   const lastFresh = (() => {
     const s = [...freshRows].sort((a, b) => a.isoDate.localeCompare(b.isoDate));
@@ -1556,29 +1591,11 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       <section className="panel admin-data-preview" aria-label="Session data tables">
         <h2 className="admin-panel__title">Data in this session</h2>
         <p className="admin-panel__hint">
-          Always shown: daily hog ($/cwt), weekly turkey (¢/lb), and daily pork cutout ($/cwt) for the same
-          date range as the controls above or the filters below.
+          Always shown: daily hog ($/cwt), weekly turkey (¢/lb), and daily pork cutout ($/cwt).
+          Each table has its own date range filter.
         </p>
 
         <div className="admin-preview-controls">
-          <div className="field">
-            <label htmlFor="adminStartDate">Start date</label>
-            <input
-              id="adminStartDate"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="adminEndDate">End date</label>
-            <input
-              id="adminEndDate"
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </div>
           <div className="field">
             <label htmlFor="adminTableOrder">Table order</label>
             <select
@@ -1598,8 +1615,18 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             <div className="admin-preview-table__head">
               <h3>Daily hogs · LM_HG217</h3>
               <span className="admin-preview-count">
-                {hogRows.length} day{hogRows.length === 1 ? "" : "s"}
+                {hogAdminRows.length} day{hogAdminRows.length === 1 ? "" : "s"}
               </span>
+            </div>
+            <div className="admin-preview-controls" style={{ marginBottom: 8 }}>
+              <div className="field">
+                <label htmlFor="hogAdminStart">Start date</label>
+                <input id="hogAdminStart" type="date" value={hogAdminStart} onChange={(e) => setHogAdminStart(e.target.value)} />
+              </div>
+              <div className="field">
+                <label htmlFor="hogAdminEnd">End date</label>
+                <input id="hogAdminEnd" type="date" value={hogAdminEnd} onChange={(e) => setHogAdminEnd(e.target.value)} />
+              </div>
             </div>
             {hogMeta && (
               <p className="admin-preview-meta">Last hog pull / file timestamp: {formatUpdatedEn(hogMeta)}</p>
@@ -1615,14 +1642,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {hogRowsForTable.length === 0 ? (
+                  {hogAdminRows.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="admin-preview-empty">
                         No hog rows in this range (session may be empty until Refresh or deploy reload).
                       </td>
                     </tr>
                   ) : (
-                    hogRowsForTable.map((row) => (
+                    hogAdminRows.map((row) => (
                       <tr key={row.date}>
                         <td>{row.date}</td>
                         <td className={row.national != null ? "td-br1" : "val-null"}>{fmt(row.national)}</td>
@@ -1640,8 +1667,31 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             <div className="admin-preview-table__head">
               <h3>Weekly turkey · AMS_3647</h3>
               <span className="admin-preview-count">
-                {turkeyRows.length} row{turkeyRows.length === 1 ? "" : "s"}
+                {turkeyAdminRows.length} row{turkeyAdminRows.length === 1 ? "" : "s"}
               </span>
+            </div>
+            <div className="admin-preview-controls" style={{ marginBottom: 8 }}>
+              <div className="field">
+                <label htmlFor="turkeyAdminStart">Start date</label>
+                <input id="turkeyAdminStart" type="date" value={turkeyAdminStart} onChange={(e) => setTurkeyAdminStart(e.target.value)} />
+              </div>
+              <div className="field">
+                <label htmlFor="turkeyAdminEnd">End date</label>
+                <input id="turkeyAdminEnd" type="date" value={turkeyAdminEnd} onChange={(e) => setTurkeyAdminEnd(e.target.value)} />
+              </div>
+              <div className="field">
+                <label htmlFor="adminCondFilter">Condition</label>
+                <select
+                  id="adminCondFilter"
+                  value={condition}
+                  onChange={(e) => setCondition(e.target.value as Condition)}
+                  className="select-brown"
+                >
+                  <option value="all">Fresh + frozen</option>
+                  <option value="Fresh">Fresh only</option>
+                  <option value="Frozen">Frozen only</option>
+                </select>
+              </div>
             </div>
             {turkeyMeta && (
               <p className="admin-preview-meta">Last turkey pull / file timestamp: {formatUpdatedEn(turkeyMeta)}</p>
@@ -1660,14 +1710,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {turkeyRowsForTable.length === 0 ? (
+                  {turkeyAdminRows.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="admin-preview-empty">
                         No turkey rows in this range (session may be empty until Refresh or deploy reload).
                       </td>
                     </tr>
                   ) : (
-                    turkeyRowsForTable.map((row) => {
+                    turkeyAdminRows.map((row) => {
                       const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
                       return (
                         <tr key={`${row.isoDate}-${row.condition}`}>
@@ -1691,8 +1741,18 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             <div className="admin-preview-table__head">
               <h3>Daily pork · LM_PK602</h3>
               <span className="admin-preview-count">
-                {porkRows.length} day{porkRows.length === 1 ? "" : "s"}
+                {porkAdminRows.length} day{porkAdminRows.length === 1 ? "" : "s"}
               </span>
+            </div>
+            <div className="admin-preview-controls" style={{ marginBottom: 8 }}>
+              <div className="field">
+                <label htmlFor="porkAdminStart">Start date</label>
+                <input id="porkAdminStart" type="date" value={porkAdminStart} onChange={(e) => setPorkAdminStart(e.target.value)} />
+              </div>
+              <div className="field">
+                <label htmlFor="porkAdminEnd">End date</label>
+                <input id="porkAdminEnd" type="date" value={porkAdminEnd} onChange={(e) => setPorkAdminEnd(e.target.value)} />
+              </div>
             </div>
             {porkMeta && (
               <p className="admin-preview-meta">Last pork pull / file timestamp: {formatUpdatedEn(porkMeta)}</p>
@@ -1712,14 +1772,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {porkRowsForTable.length === 0 ? (
+                  {porkAdminRows.length === 0 ? (
                     <tr>
                       <td colSpan={8} className="admin-preview-empty">
                         No pork rows in this range (session may be empty until Refresh or deploy reload).
                       </td>
                     </tr>
                   ) : (
-                    porkRowsForTable.map((row) => (
+                    porkAdminRows.map((row) => (
                       <tr key={row.date}>
                         <td>{row.date}</td>
                         <td>{fmt(row.pork_carcass)}</td>
