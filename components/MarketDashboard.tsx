@@ -498,6 +498,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     condition,
   ]);
 
+  useEffect(() => {
+  ensureSessionDataLoaded();
+  }, []);
+  
   const pullUsdaRange = useCallback(
     async (apiTab: "hog" | "turkey" | "pork", start: string, end: string, introStatus: string) => {
       if (!start || !end || start > end) {
