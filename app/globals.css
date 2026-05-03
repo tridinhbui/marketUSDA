@@ -393,8 +393,16 @@ select:focus {
 
 .admin-preview-tables {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
+}
+
+.admin-table-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 8px;
 }
 
 .admin-preview-table {
