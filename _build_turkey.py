@@ -39,6 +39,7 @@ def fetch_chunk(d_from, d_to):
     return []
 
 all_rows = []
+all_breast_rows = []
 cur = START
 while cur <= END:
     chunk_end = min(cur + timedelta(days=CHUNK - 1), END)
@@ -51,12 +52,26 @@ while cur <= END:
         and r.get('size') == '8-16 lb'
         and r.get('grade') == 'U.S. Grade A'
     ]
-    print(f'{len(filtered)} rows')
+    breast = [
+        r for r in rows
+        if r.get('item') == 'Breasts,Boneless/Skinless'
+        and r.get('class') == 'Tom'
+    ]
+    print(f'{len(filtered)} hen rows, {len(breast)} breast rows')
     all_rows.extend(filtered)
+    all_breast_rows.extend(breast)
     cur = chunk_end + timedelta(days=1)
 
 all_rows.sort(key=lambda r: datetime.strptime(r['report_begin_date'], '%m/%d/%Y'))
-print(f'Total: {len(all_rows)} records')
+print(f'Total: {len(all_rows)} hen records, {len(all_breast_rows)} breast records')
+
+# Build breast wtd_avg lookup by (week_start, condition)
+breast_map = {}
+for r in all_breast_rows:
+    key = r['report_begin_date']
+    wtd = r.get('wtd_avg_price')
+    if wtd is not None:
+        breast_map[key] = float(wtd)
 
 # Write to JSON
 import os
@@ -76,6 +91,7 @@ output = {
             'high_price': float(r['high_price']),
             'wtd_avg':    r['wtd_avg_price'],
             'volume_lbs': r.get('volume', None),
+            'breast_wtd_avg': breast_map.get(r['report_begin_date'], None),
         }
         for r in all_rows
     ]

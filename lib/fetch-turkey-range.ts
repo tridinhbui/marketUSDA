@@ -1,3 +1,4 @@
+import https from "node:https";
 import { getMarsApiKey } from "@/lib/mars-credentials";
 
 const BASE = "https://marsapi.ams.usda.gov/services/v1.1/reports/3647";
@@ -11,6 +12,7 @@ export interface TurkeyRowRaw {
   high_price: number;
   wtd_avg: number;
   volume_lbs: string | null;
+  breast_wtd_avg: number | null;
 }
 
 function asArray<T>(x: T | T[] | undefined): T[] {
@@ -66,6 +68,15 @@ function fmtMdY(d: Date): string {
   return `${m}/${day}/${y}`;
 }
 
+function mapBreastRow(r: Record<string, unknown>): { week_start: string; condition: string; breast_wtd_avg: number } | null {
+  if (r.item !== "Breasts,Boneless/Skinless" || r.class !== "Tom") return null;
+  const ws = String(r.report_begin_date ?? "");
+  const cond = String(r.condition ?? "");
+  const wtd = Number(r.wtd_avg_price ?? NaN);
+  if (!ws || !Number.isFinite(wtd)) return null;
+  return { week_start: ws, condition: cond, breast_wtd_avg: wtd };
+}
+
 function mapRow(r: Record<string, unknown>): TurkeyRowRaw | null {
   if (
     r.item !== "Whole Young" ||
@@ -91,7 +102,61 @@ function mapRow(r: Record<string, unknown>): TurkeyRowRaw | null {
     high_price: Number.isFinite(high) ? high : 0,
     wtd_avg: wtd,
     volume_lbs: vol,
+    breast_wtd_avg: null,
   };
+}
+
+function getJsonViaHttps(
+  url: string,
+  authHeader: string,
+  rejectUnauthorized: boolean
+): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const req = https.get(
+      {
+        hostname: parsed.hostname,
+        path: parsed.pathname + parsed.search,
+        port: 443,
+        headers: {
+          Authorization: authHeader,
+          "User-Agent": "marketUSDA/1.0 (Next.js; USDA MARS 3647)",
+          Accept: "application/json",
+        },
+        rejectUnauthorized,
+      },
+      (res) => {
+        const chunks: Buffer[] = [];
+        res.on("data", (c: Buffer) => chunks.push(c));
+        res.on("end", () => {
+          const body = Buffer.concat(chunks).toString("utf-8");
+          if ((res.statusCode ?? 0) >= 300) {
+            reject(new Error(`MARS 3647 HTTP ${res.statusCode}: ${body.slice(0, 200)}`));
+            return;
+          }
+          try {
+            resolve(JSON.parse(body));
+          } catch (e) {
+            reject(new Error(`MARS 3647 JSON parse error: ${String(e)}`));
+          }
+        });
+      }
+    );
+    req.on("error", reject);
+    req.setTimeout(30000, () => { req.destroy(new Error("MARS 3647 request timeout")); });
+  });
+}
+
+async function fetchJsonWithSslFallback(url: string, authHeader: string): Promise<unknown> {
+  try {
+    return await getJsonViaHttps(url, authHeader, true);
+  } catch (e) {
+    const msg = String(e);
+    if (msg.includes("certificate") || msg.includes("SSL") || msg.includes("CERT") || msg.includes("TLS")) {
+      return await getJsonViaHttps(url, authHeader, false);
+    }
+    throw e;
+  }
 }
 
 async function fetchChunk(from: Date, to: Date, creds: string): Promise<TurkeyRowRaw[]> {
@@ -102,27 +167,24 @@ async function fetchChunk(from: Date, to: Date, creds: string): Promise<TurkeyRo
     allSections: "true",
   });
   const url = `${BASE}?${params.toString()}`;
-  const res = await fetch(url, {
-    next: { revalidate: 0 },
-    headers: {
-      Authorization: `Basic ${creds}`,
-      "User-Agent": "marketUSDA/1.0 (Next.js; USDA MARS 3647)",
-      Accept: "application/json",
-    },
-  });
-  if (!res.ok) {
-    const t = await res.text();
-    throw new Error(`MARS 3647 HTTP ${res.status}: ${t.slice(0, 200)}`);
-  }
-  const data = (await res.json()) as unknown;
+  const authHeader = `Basic ${creds}`;
+  const data = await fetchJsonWithSslFallback(url, authHeader);
   const sections = Array.isArray(data) ? data : [data];
   for (const sec of sections as Record<string, unknown>[]) {
     if (sec.reportSection === "Report Detail") {
       const results = asArray<Record<string, unknown>>(sec.results as Record<string, unknown>[] | undefined);
+      const breastMap = new Map<string, number>();
+      for (const r of results) {
+        const b = mapBreastRow(r);
+        if (b) breastMap.set(b.week_start, b.breast_wtd_avg);
+      }
       const out: TurkeyRowRaw[] = [];
       for (const r of results) {
         const row = mapRow(r);
-        if (row) out.push(row);
+        if (row) {
+          row.breast_wtd_avg = breastMap.get(row.week_start) ?? null;
+          out.push(row);
+        }
       }
       return out;
     }
