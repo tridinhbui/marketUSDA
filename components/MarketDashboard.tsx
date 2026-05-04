@@ -11,6 +11,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { supabase } from "@/lib/supabase";
 
 const HOG_URL = "/data/lm_hg217_daily_prices.json";
 const TURKEY_URL = "/data/turkey_hen_weekly.json";
@@ -336,36 +337,57 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     [router, searchParams]
   );
 
-  const loadHog = useCallback(async (bust: boolean) => {
-    const res = await fetch(HOG_URL, { cache: bust ? "no-store" : "default" });
-    if (!res.ok) throw new Error(`Hog data HTTP ${res.status}`);
-    const payload: HogPayload = await res.json();
-    const rows = Array.isArray(payload.rows) ? payload.rows : [];
+  const loadHog = useCallback(async (_bust?: boolean) => {
+    const { data, error } = await supabase
+      .from("hog_daily")
+      .select("date, national, iowa_mn, western")
+      .order("date", { ascending: true })
+      .range(0, 4999);
+    if (error) throw new Error(`Hog data error: ${error.message}`);
+    const rows: HogRow[] = (data ?? []).map((r) => ({
+      date: r.date,
+      national: r.national,
+      iowaMn: r.iowa_mn,
+      western: r.western,
+    }));
     setHogFull(rows);
-    setHogMeta(payload.generatedAt);
+    setHogMeta(new Date().toISOString());
     return rows;
   }, []);
 
-  const loadTurkey = useCallback(async (bust: boolean) => {
-    const res = await fetch(TURKEY_URL, { cache: bust ? "no-store" : "default" });
-    if (!res.ok) throw new Error(`Turkey data HTTP ${res.status}`);
-    const payload: TurkeyPayload = await res.json();
-    const rows: TurkeyRow[] = (payload.rows ?? []).map((r) => ({
-      ...r,
+  const loadTurkey = useCallback(async (_bust?: boolean) => {
+    const { data, error } = await supabase
+      .from("turkey_weekly")
+      .select("week_start, week_end, condition, low_price, high_price, wtd_avg, volume_lbs, breast_wtd_avg")
+      .order("week_start", { ascending: true })
+      .range(0, 4999);
+    if (error) throw new Error(`Turkey data error: ${error.message}`);
+    const rows: TurkeyRow[] = (data ?? []).map((r) => ({
+      week_start: r.week_start,
+      week_end: r.week_end,
+      condition: r.condition,
+      low_price: r.low_price,
+      high_price: r.high_price,
+      wtd_avg: r.wtd_avg,
+      volume_lbs: r.volume_lbs,
+      breast_wtd_avg: r.breast_wtd_avg,
       isoDate: toIso(r.week_start),
     }));
     setTurkeyFull(rows);
-    setTurkeyMeta(payload.generatedAt);
+    setTurkeyMeta(new Date().toISOString());
     return rows;
   }, []);
 
-  const loadPork = useCallback(async (bust: boolean) => {
-    const res = await fetch(PORK_URL, { cache: bust ? "no-store" : "default" });
-    if (!res.ok) throw new Error(`Pork data HTTP ${res.status}`);
-    const payload: PorkPayload = await res.json();
-    const rows = Array.isArray(payload) ? (payload as PorkRow[]) : (payload.rows ?? []);
+  const loadPork = useCallback(async (_bust?: boolean) => {
+    const { data, error } = await supabase
+      .from("pork_daily")
+      .select("date, pork_carcass, pork_loin, pork_butt, pork_picnic, pork_rib, pork_ham, pork_belly")
+      .order("date", { ascending: true })
+      .range(0, 4999);
+    if (error) throw new Error(`Pork data error: ${error.message}`);
+    const rows: PorkRow[] = data ?? [];
     setPorkFull(rows);
-    setPorkMeta((payload as PorkPayload).generatedAt);
+    setPorkMeta(new Date().toISOString());
     return rows;
   }, []);
 
@@ -1618,7 +1640,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                 {hogAdminRows.length} day{hogAdminRows.length === 1 ? "" : "s"}
               </span>
             </div>
-            <div className="admin-preview-controls" style={{ marginBottom: 8 }}>
+            <div className="admin-table-filters">
               <div className="field">
                 <label htmlFor="hogAdminStart">Start date</label>
                 <input id="hogAdminStart" type="date" value={hogAdminStart} onChange={(e) => setHogAdminStart(e.target.value)} />
@@ -1670,7 +1692,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                 {turkeyAdminRows.length} row{turkeyAdminRows.length === 1 ? "" : "s"}
               </span>
             </div>
-            <div className="admin-preview-controls" style={{ marginBottom: 8 }}>
+            <div className="admin-table-filters">
               <div className="field">
                 <label htmlFor="turkeyAdminStart">Start date</label>
                 <input id="turkeyAdminStart" type="date" value={turkeyAdminStart} onChange={(e) => setTurkeyAdminStart(e.target.value)} />
@@ -1744,7 +1766,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                 {porkAdminRows.length} day{porkAdminRows.length === 1 ? "" : "s"}
               </span>
             </div>
-            <div className="admin-preview-controls" style={{ marginBottom: 8 }}>
+            <div className="admin-table-filters">
               <div className="field">
                 <label htmlFor="porkAdminStart">Start date</label>
                 <input id="porkAdminStart" type="date" value={porkAdminStart} onChange={(e) => setPorkAdminStart(e.target.value)} />
