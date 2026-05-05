@@ -664,8 +664,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     return rows;
   }, []);
 
-  const loadPorkComprehensive = useCallback(async (bust: boolean) => {
-    const res = await fetch(PORK_COMPREHENSIVE_URL, { cache: bust ? "no-store" : "default" });
+  const loadPorkComprehensive = useCallback(async (_bust: boolean) => {
+    const res = await fetch(PORK_COMPREHENSIVE_URL, { cache: "no-store" });
     if (res.status === 404) {
       setPorkComprehensiveFull([]);
       setPorkComprehensiveMeta(undefined);
@@ -679,6 +679,16 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     setPorkComprehensiveMeta((payload as PorkComprehensivePayload).generatedAt);
     return mergedRows;
   }, []);
+
+  /* Load all static JSONs once on mount so every tab shows data immediately */
+  useEffect(() => {
+    void Promise.all([
+      loadHog(false),
+      loadTurkey(false),
+      loadPork(false),
+      loadPorkComprehensive(false),
+    ]).catch(() => {});
+  }, [loadHog, loadTurkey, loadPork, loadPorkComprehensive]);
 
   const filterHog = useCallback(
     (rows: HogRow[], start: string, end: string) => {

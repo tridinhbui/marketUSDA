@@ -111,7 +111,7 @@ def parse_chunk(xml_text: str):
             continue
 
         row = {
-            "date": report_for_date,
+            "date": report_date,
             "report_date": report_date,
         }
         for out_key, attr_key in FIELDS.items():

@@ -136,7 +136,7 @@ function parseXml(xmlText: string): Map<string, ParsedPorkComprehensiveRow> {
 
     const row: ParsedPorkComprehensiveRow = {
       report_date: reportDateIso,
-      date: reportForDateIso,
+      date: reportDateIso,
       carcass: parseFloat2(attrs.avg_cutout_carcass),
       loin: parseFloat2(attrs.avg_cutout_loin),
       butt: parseFloat2(attrs.avg_cutout_butt),

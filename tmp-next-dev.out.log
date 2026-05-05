@@ -1,0 +1,9 @@
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3002
+
+ ✓ Starting...
+ ✓ Ready in 3.6s
+ ○ Compiling /api/fetch-range ...
+ ✓ Compiled /api/fetch-range in 1023ms (85 modules)
+ GET /api/fetch-range?tab=turkey&start=2026-04-01&end=2026-04-10 200 in 1497ms
+ ✓ Compiled in 2.6s (203 modules)
