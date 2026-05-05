@@ -61,6 +61,16 @@ function fmt(v) {
   return Number(v).toFixed(2);
 }
 
+function fmtVolume(v) {
+  if (v == null || v === "") return "-";
+  const n = Number(v);
+  if (!Number.isFinite(n)) return "-";
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(n);
+}
+
 // ── data ───────────────────────────────────────────────────────────────────────
 
 let fullRows    = [];
@@ -71,9 +81,20 @@ async function loadDataset() {
   const res = await fetch(DATA_URL, { cache: "no-store" });
   if (!res.ok) throw new Error(`Cannot load ${DATA_URL} (HTTP ${res.status})`);
   const payload = await res.json();
+  const wholeHenRows = Array.isArray(payload.wholeHenRows)
+    ? payload.wholeHenRows
+    : Array.isArray(payload.rows)
+      ? payload.rows
+      : [];
   // Normalise: add isoDate field for easy comparison
-  fullRows = (Array.isArray(payload.rows) ? payload.rows : []).map((r) => ({
+  fullRows = wholeHenRows.map((r) => ({
     ...r,
+    volume_1000_lbs:
+      r.volume_1000_lbs != null && r.volume_1000_lbs !== ""
+        ? Number(r.volume_1000_lbs)
+        : r.volume_lbs != null && r.volume_lbs !== ""
+          ? Number(r.volume_lbs)
+          : null,
     isoDate: toIso(r.week_start),
   }));
   showDataUpdated(payload.generatedAt);
@@ -102,7 +123,7 @@ function renderTable(rows) {
       `<td class="${cls}">${fmt(row.low_price)}</td>`,
       `<td class="${cls}">${fmt(row.high_price)}</td>`,
       `<td class="${cls}">${fmt(row.wtd_avg)}</td>`,
-      `<td>${row.volume_lbs != null ? row.volume_lbs : "-"}</td>`,
+      `<td>${fmtVolume(row.volume_1000_lbs)}</td>`,
     ].join("");
     frag.appendChild(tr);
   });
@@ -219,8 +240,8 @@ function exportExcel(rows) {
     return;
   }
   const data = [
-    ["Week Start", "Week End", "Condition", "Low (¢/lb)", "High (¢/lb)", "Wtd Avg (¢/lb)", "Volume (lbs)"],
-    ...rows.map((r) => [r.week_start, r.week_end, r.condition, r.low_price, r.high_price, r.wtd_avg, r.volume_lbs]),
+    ["Week Start", "Week End", "Condition", "Low (¢/lb)", "High (¢/lb)", "Wtd Avg (¢/lb)", "Volume (1,000 lbs)"],
+    ...rows.map((r) => [r.week_start, r.week_end, r.condition, r.low_price, r.high_price, r.wtd_avg, r.volume_1000_lbs]),
   ];
   const ws = XLSX.utils.aoa_to_sheet(data);
   ws["!cols"] = [{ wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 16 }, { wch: 14 }];

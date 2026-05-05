@@ -12,7 +12,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.1",
     "fast-xml-parser": "^5.7.2",
     "next": "^14.2.29",
     "react": "^18.3.1",
