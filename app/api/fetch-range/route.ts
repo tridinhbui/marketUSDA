@@ -40,13 +40,17 @@ export async function GET(request: Request) {
       });
     }
     if (tab === "turkey") {
-      const { rows } = await fetchTurkeyDateRange(start, end);
+      const { wholeHenRows, breastRows } = await fetchTurkeyDateRange(start, end);
       return NextResponse.json({
         tab: "turkey",
         startDate: start,
         endDate: end,
         generatedAt,
-        rows,
+        schemaVersion: 2,
+        priceUnit: "Cents Per Lb",
+        volumeUnit: "1,000 lbs",
+        wholeHenRows,
+        breastRows,
       });
     }
     if (tab === "pork") {
