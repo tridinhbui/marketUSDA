@@ -18,12 +18,12 @@ def upsert_rows(table: str, rows: list[dict], on_conflict: str = "date"):
         print(f"  [supabase] SUPABASE_SERVICE_KEY not set — skipping {table} upload.")
         return
 
-    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    url = f"{SUPABASE_URL}/rest/v1/{table}?on_conflict={on_conflict}"
     headers = {
         "apikey": SUPABASE_KEY,
         "Authorization": f"Bearer {SUPABASE_KEY}",
         "Content-Type": "application/json",
-        "Prefer": f"resolution=merge-duplicates",
+        "Prefer": "resolution=merge-duplicates",
     }
 
     # Supabase REST API handles upsert in batches
