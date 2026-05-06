@@ -132,6 +132,22 @@ def main():
     OUT_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"Wrote {len(rows)} rows to {OUT_PATH}")
 
+    # Upload to Supabase
+    try:
+        from _supabase_upload import upsert_rows
+        sb_rows = [
+            {
+                "date": r["date"],
+                "national": r["national"],
+                "iowa_mn": r["iowaMn"],
+                "western": r["western"],
+            }
+            for r in rows
+        ]
+        upsert_rows("hog_daily", sb_rows, on_conflict="date")
+    except Exception as e:
+        print(f"  [supabase] hog upload failed: {e}")
+
 
 if __name__ == "__main__":
     main()

@@ -13,7 +13,6 @@ SCRIPTS = [
     "_build_turkey.py",      # turkey — MARS API (USDA_MARS_API_KEY optional)
     "_build_pork.py",        # retail pork — MARS API
     "_build_pork_cutout.py", # LM_PK602 pork cutout + primals — MPR Datamart
-    "_build_pork_comprehensive.py", # LM_PK680 weekly comprehensive pork — MPR Datamart
 ]
 
 

@@ -4,15 +4,7 @@ import MarketDashboard from "@/components/MarketDashboard";
 export default function Page({ searchParams }: { searchParams: { tab?: string } }) {
   const tabQ = searchParams.tab;
   const initialTab =
-    tabQ === "turkey"
-      ? "turkey"
-      : tabQ === "admin"
-        ? "admin"
-        : tabQ === "pork"
-          ? "pork"
-          : tabQ === "pork-comprehensive"
-            ? "pork-comprehensive"
-            : "hog";
+    tabQ === "turkey" ? "turkey" : tabQ === "admin" ? "admin" : tabQ === "pork" ? "pork" : "hog";
   return (
     <Suspense
       fallback={
