@@ -8,8 +8,8 @@
     "western"
   ],
   "startDate": "2023-01-01",
-  "endDate": "2026-05-19",
-  "generatedAt": "2026-05-19T08:20:14Z",
+  "endDate": "2026-05-04",
+  "generatedAt": "2026-05-04T07:43:08Z",
   "rows": [
     {
       "date": "2023-01-03",
@@ -5110,72 +5110,6 @@
       "national": 92.54,
       "iowaMn": 93.83,
       "western": 93.35
-    },
-    {
-      "date": "2026-05-04",
-      "national": 94.44,
-      "iowaMn": null,
-      "western": null
-    },
-    {
-      "date": "2026-05-05",
-      "national": 95.45,
-      "iowaMn": 95.53,
-      "western": 95.48
-    },
-    {
-      "date": "2026-05-06",
-      "national": 94.59,
-      "iowaMn": 94.75,
-      "western": 94.75
-    },
-    {
-      "date": "2026-05-07",
-      "national": 90.7,
-      "iowaMn": null,
-      "western": null
-    },
-    {
-      "date": "2026-05-08",
-      "national": 93.77,
-      "iowaMn": null,
-      "western": null
-    },
-    {
-      "date": "2026-05-11",
-      "national": null,
-      "iowaMn": null,
-      "western": null
-    },
-    {
-      "date": "2026-05-12",
-      "national": 95.19,
-      "iowaMn": 95.37,
-      "western": 95.36
-    },
-    {
-      "date": "2026-05-13",
-      "national": 95.51,
-      "iowaMn": null,
-      "western": null
-    },
-    {
-      "date": "2026-05-14",
-      "national": 93.32,
-      "iowaMn": 93.14,
-      "western": 93.32
-    },
-    {
-      "date": "2026-05-15",
-      "national": 91.52,
-      "iowaMn": null,
-      "western": 91.65
-    },
-    {
-      "date": "2026-05-18",
-      "national": 94.88,
-      "iowaMn": 95.44,
-      "western": 95.44
     }
   ]
 }

@@ -11,13 +11,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { supabase } from "@/lib/supabase";
 
 const HOG_URL = "/data/lm_hg217_daily_prices.json";
 const TURKEY_URL = "/data/turkey_hen_weekly.json";
 const PORK_URL = "/data/pork_cutout_daily.json";
+const PORK_COMPREHENSIVE_URL = "/data/pork_comprehensive_weekly.json";
 
-type Tab = "hog" | "turkey" | "pork" | "admin";
+type Tab = "hog" | "turkey" | "pork" | "pork-comprehensive" | "admin";
 
 interface HogRow {
   date: string;
@@ -73,17 +73,30 @@ interface TurkeyRow {
   week_start: string;
   week_end: string;
   condition: string;
-  low_price: number;
-  high_price: number;
-  wtd_avg: number;
-  volume_lbs: string | null;
-  breast_wtd_avg: number | null;
+  low_price: number | null;
+  high_price: number | null;
+  wtd_avg: number | null;
+  volume_1000_lbs: number | null;
   isoDate: string;
+}
+
+interface TurkeyRowWire {
+  week_start: string;
+  week_end: string;
+  condition: string;
+  low_price?: number | string | null;
+  high_price?: number | string | null;
+  wtd_avg?: number | string | null;
+  volume_1000_lbs?: number | string | null;
+  volume_lbs?: number | string | null;
+  breast_wtd_avg?: number | string | null;
 }
 
 interface TurkeyPayload {
   generatedAt?: string;
-  rows: Omit<TurkeyRow, "isoDate">[];
+  rows?: TurkeyRowWire[];
+  wholeHenRows?: TurkeyRowWire[];
+  breastRows?: TurkeyRowWire[];
 }
 
 interface PorkRow {
@@ -102,6 +115,25 @@ interface PorkPayload {
   rows: PorkRow[];
 }
 
+type PorkCutKey = "carcass" | "loin" | "butt" | "picnic" | "rib" | "ham" | "belly";
+
+interface PorkComprehensiveRow {
+  date: string;
+  carcass: number | null;
+  loin: number | null;
+  butt: number | null;
+  picnic: number | null;
+  rib: number | null;
+  ham: number | null;
+  belly: number | null;
+  synthesized?: boolean;
+}
+
+interface PorkComprehensivePayload {
+  generatedAt?: string;
+  rows: (PorkComprehensiveRow & { report_for_date?: string; report_date?: string })[];
+}
+
 type Condition = "all" | "Fresh" | "Frozen";
 /** Table row order: oldest date at top, or newest at top. */
 type TableDateOrder = "asc" | "desc";
@@ -116,9 +148,25 @@ function toIso(mmddyyyy: string) {
   return `${y}-${m.padStart(2, "0")}-${dd.padStart(2, "0")}`;
 }
 
+function asNumberOrNull(v: unknown) {
+  if (v == null || v === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
 function fmt(v: number | null | undefined) {
   if (v == null) return "-";
   return Number(v).toFixed(2);
+}
+
+function fmtVolume(v: number | null | undefined) {
+  if (v == null) return "-";
+  const n = Number(v);
+  if (!Number.isFinite(n)) return "-";
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(n);
 }
 
 function formatUpdatedEn(raw?: string) {
@@ -145,47 +193,271 @@ function mergeHogByDate(prev: HogRow[], incoming: HogRow[]): HogRow[] {
   return [...map.keys()].sort().map((d) => map.get(d)!);
 }
 
-function turkeyKey(r: { isoDate: string; condition: string }) {
-  return `${r.isoDate}\0${r.condition}`;
+function turkeyRowKey(r: TurkeyRow) {
+  return [
+    r.isoDate,
+    r.week_end,
+    r.condition,
+    r.low_price ?? "",
+    r.high_price ?? "",
+    r.wtd_avg ?? "",
+    r.volume_1000_lbs ?? "",
+  ].join("\0");
 }
 
-function mergeTurkeyRows(prev: TurkeyRow[], incoming: Omit<TurkeyRow, "isoDate">[]): TurkeyRow[] {
-  const mapped: TurkeyRow[] = incoming.map((r) => ({
-    ...r,
-    isoDate: toIso(r.week_start),
-    wtd_avg: typeof r.wtd_avg === "number" ? r.wtd_avg : Number(r.wtd_avg),
-    low_price: typeof r.low_price === "number" ? r.low_price : Number(r.low_price),
-    high_price: typeof r.high_price === "number" ? r.high_price : Number(r.high_price),
-  }));
-  const map = new Map<string, TurkeyRow>();
-  for (const r of prev) map.set(turkeyKey(r), r);
-  for (const r of mapped) map.set(turkeyKey(r), r);
-  return [...map.values()].sort(
-    (a, b) => a.isoDate.localeCompare(b.isoDate) || a.condition.localeCompare(b.condition)
+function compareNullableNumber(a: number | null, b: number | null) {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return a - b;
+}
+
+function compareTurkeyRows(a: TurkeyRow, b: TurkeyRow) {
+  return (
+    a.isoDate.localeCompare(b.isoDate) ||
+    a.condition.localeCompare(b.condition) ||
+    compareNullableNumber(a.low_price, b.low_price) ||
+    compareNullableNumber(a.high_price, b.high_price) ||
+    compareNullableNumber(a.wtd_avg, b.wtd_avg) ||
+    compareNullableNumber(a.volume_1000_lbs, b.volume_1000_lbs)
   );
+}
+
+function normalizeTurkeyRow(r: TurkeyRowWire): TurkeyRow {
+  return {
+    week_start: r.week_start,
+    week_end: r.week_end,
+    condition: r.condition,
+    low_price: asNumberOrNull(r.low_price),
+    high_price: asNumberOrNull(r.high_price),
+    wtd_avg: asNumberOrNull(r.wtd_avg),
+    volume_1000_lbs: asNumberOrNull(r.volume_1000_lbs ?? r.volume_lbs),
+    isoDate: toIso(r.week_start),
+  };
+}
+
+function mergeTurkeyRows(prev: TurkeyRow[], incoming: TurkeyRowWire[]): TurkeyRow[] {
+  const mapped = incoming.map(normalizeTurkeyRow);
+  const map = new Map<string, TurkeyRow>();
+  for (const r of prev) map.set(turkeyRowKey(r), r);
+  for (const r of mapped) map.set(turkeyRowKey(r), r);
+  return [...map.values()].sort(compareTurkeyRows);
+}
+
+function parseTurkeyPayload(payload: TurkeyPayload) {
+  if (Array.isArray(payload.wholeHenRows) || Array.isArray(payload.breastRows)) {
+    return {
+      wholeHenRows: mergeTurkeyRows([], payload.wholeHenRows ?? []),
+      breastRows: mergeTurkeyRows([], payload.breastRows ?? []),
+      /*
+      "pork-comprehensive": `Fetching weekly comprehensive pork prices from USDA for ${startDate} â†’ ${endDate}â€¦`,
+      */
+    };
+  }
+
+  const legacyRows = payload.rows ?? [];
+  const breastRows: TurkeyRowWire[] = legacyRows
+    .filter((r) => asNumberOrNull(r.breast_wtd_avg) != null)
+    .map((r) => ({
+      week_start: r.week_start,
+      week_end: r.week_end,
+      condition: r.condition,
+      low_price: null,
+      high_price: null,
+      wtd_avg: asNumberOrNull(r.breast_wtd_avg),
+      volume_1000_lbs: null,
+    }));
+
+  return {
+    wholeHenRows: mergeTurkeyRows([], legacyRows),
+    breastRows: mergeTurkeyRows([], breastRows),
+  };
+}
+
+function filterTurkeyRows(rows: TurkeyRow[], start: string, end: string, cond: Condition) {
+  if (!start || !end || start > end) return [];
+  return rows
+    .filter((r) => r.isoDate >= start && r.isoDate <= end)
+    .filter((r) => cond === "all" || r.condition === cond)
+    .sort(compareTurkeyRows);
+}
+
+interface TurkeySeriesPoint {
+  isoDate: string;
+  week_start: string;
+  condition: Exclude<Condition, "all">;
+  wtd_avg: number | null;
+  volume_1000_lbs: number | null;
+}
+
+function summarizeTurkeySeries(rows: TurkeyRow[]): TurkeySeriesPoint[] {
+  const buckets = new Map<string, TurkeyRow[]>();
+  for (const row of rows) {
+    const key = `${row.isoDate}\0${row.condition}`;
+    const bucket = buckets.get(key);
+    if (bucket) bucket.push(row);
+    else buckets.set(key, [row]);
+  }
+
+  return [...buckets.values()]
+    .map((bucket) => {
+      const first = bucket[0];
+      const priced = bucket.filter((row) => row.wtd_avg != null);
+      const totalVolume = bucket.reduce(
+        (sum, row) => sum + (row.volume_1000_lbs != null ? row.volume_1000_lbs : 0),
+        0
+      );
+      const canWeight =
+        priced.length > 0 && priced.every((row) => row.volume_1000_lbs != null && row.volume_1000_lbs > 0);
+      const wtd_avg =
+        priced.length === 0
+          ? null
+          : canWeight
+            ? priced.reduce(
+                (sum, row) => sum + (row.wtd_avg ?? 0) * (row.volume_1000_lbs ?? 0),
+                0
+              ) / totalVolume
+            : priced.reduce((sum, row) => sum + (row.wtd_avg ?? 0), 0) / priced.length;
+
+      return {
+        isoDate: first.isoDate,
+        week_start: first.week_start,
+        condition: first.condition as Exclude<Condition, "all">,
+        wtd_avg,
+        volume_1000_lbs: totalVolume > 0 ? totalVolume : null,
+      };
+    })
+    .sort((a, b) => a.isoDate.localeCompare(b.isoDate) || a.condition.localeCompare(b.condition));
 }
 
 const TURKEY_LINE = { Fresh: "#92400e", Frozen: "#451a03", BreastFresh: "#c2410c", BreastFrozen: "#7c2d12" };
 
-const PORK_LINE = {
-  pork_carcass: "#b91c1c",
-  pork_loin: "#d97706",
-  pork_butt: "#16a34a",
-  pork_picnic: "#0891b2",
-  pork_rib: "#7c3aed",
-  pork_ham: "#db2777",
-  pork_belly: "#ea580c",
+const PORK_CUT_COLORS: Record<PorkCutKey, string> = {
+  carcass: "#b91c1c",
+  loin: "#d97706",
+  butt: "#16a34a",
+  picnic: "#0891b2",
+  rib: "#7c3aed",
+  ham: "#db2777",
+  belly: "#ea580c",
 };
 
-const PORK_FIELD_LABELS: Record<keyof typeof PORK_LINE, string> = {
-  pork_carcass: "Carcass",
-  pork_loin: "Loin",
-  pork_butt: "Butt",
-  pork_picnic: "Picnic",
-  pork_rib: "Rib",
-  pork_ham: "Ham",
-  pork_belly: "Belly",
+const PORK_FIELD_LABELS: Record<PorkCutKey, string> = {
+  carcass: "Carcass",
+  loin: "Loin",
+  butt: "Butt",
+  picnic: "Picnic",
+  rib: "Rib",
+  ham: "Ham",
+  belly: "Belly",
 };
+
+const PORK_NEGOTIATED_FIELD_KEYS: Record<PorkCutKey, keyof PorkRow> = {
+  carcass: "pork_carcass",
+  loin: "pork_loin",
+  butt: "pork_butt",
+  picnic: "pork_picnic",
+  rib: "pork_rib",
+  ham: "pork_ham",
+  belly: "pork_belly",
+};
+
+const PORK_NEGOTIATED_LINE = {
+  pork_carcass: PORK_CUT_COLORS.carcass,
+  pork_loin: PORK_CUT_COLORS.loin,
+  pork_butt: PORK_CUT_COLORS.butt,
+  pork_picnic: PORK_CUT_COLORS.picnic,
+  pork_rib: PORK_CUT_COLORS.rib,
+  pork_ham: PORK_CUT_COLORS.ham,
+  pork_belly: PORK_CUT_COLORS.belly,
+};
+
+function normalizePorkComprehensiveRow(
+  row: PorkComprehensiveRow & { report_for_date?: string; report_date?: string }
+): PorkComprehensiveRow | null {
+  const date = row.date ?? row.report_for_date;
+  if (!date) return null;
+  return {
+    date,
+    carcass: row.carcass ?? null,
+    loin: row.loin ?? null,
+    butt: row.butt ?? null,
+    picnic: row.picnic ?? null,
+    rib: row.rib ?? null,
+    ham: row.ham ?? null,
+    belly: row.belly ?? null,
+    synthesized: row.synthesized === true ? true : undefined,
+  };
+}
+
+function mergePorkComprehensiveRows(
+  prev: PorkComprehensiveRow[],
+  incoming: (PorkComprehensiveRow & { report_for_date?: string; report_date?: string })[]
+) {
+  const map = new Map<string, PorkComprehensiveRow>();
+  for (const row of prev) map.set(row.date, row);
+  for (const row of incoming) {
+    const normalized = normalizePorkComprehensiveRow(row);
+    if (!normalized) continue;
+    map.set(normalized.date, normalized);
+  }
+  return [...map.values()].sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function toWeekEndingFriday(dateIso: string) {
+  const [y, m, d] = dateIso.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  const weekday = date.getUTCDay();
+  const delta = weekday === 0 ? -2 : weekday === 6 ? -1 : 5 - weekday;
+  date.setUTCDate(date.getUTCDate() + delta);
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+}
+
+function getPorkNegotiatedCutValue(row: PorkRow, cut: PorkCutKey): number | null {
+  return row[PORK_NEGOTIATED_FIELD_KEYS[cut]] as number | null;
+}
+
+function buildWeeklyNegotiatedPork(rows: PorkRow[]): PorkComprehensiveRow[] {
+  const buckets = new Map<
+    string,
+    {
+      sums: Record<PorkCutKey, number>;
+      counts: Record<PorkCutKey, number>;
+    }
+  >();
+
+  for (const row of rows) {
+    const weekEnding = toWeekEndingFriday(row.date);
+    const bucket =
+      buckets.get(weekEnding) ??
+      {
+        sums: { carcass: 0, loin: 0, butt: 0, picnic: 0, rib: 0, ham: 0, belly: 0 },
+        counts: { carcass: 0, loin: 0, butt: 0, picnic: 0, rib: 0, ham: 0, belly: 0 },
+      };
+
+    (Object.keys(PORK_FIELD_LABELS) as PorkCutKey[]).forEach((cut) => {
+      const value = getPorkNegotiatedCutValue(row, cut);
+      if (value == null) return;
+      bucket.sums[cut] += value;
+      bucket.counts[cut] += 1;
+    });
+
+    buckets.set(weekEnding, bucket);
+  }
+
+  return [...buckets.entries()]
+    .map(([weekEnding, bucket]) => ({
+      date: weekEnding,
+      carcass: bucket.counts.carcass ? bucket.sums.carcass / bucket.counts.carcass : null,
+      loin: bucket.counts.loin ? bucket.sums.loin / bucket.counts.loin : null,
+      butt: bucket.counts.butt ? bucket.sums.butt / bucket.counts.butt : null,
+      picnic: bucket.counts.picnic ? bucket.sums.picnic / bucket.counts.picnic : null,
+      rib: bucket.counts.rib ? bucket.sums.rib / bucket.counts.rib : null,
+      ham: bucket.counts.ham ? bucket.sums.ham / bucket.counts.ham : null,
+      belly: bucket.counts.belly ? bucket.sums.belly / bucket.counts.belly : null,
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
 
 const EMPTY_DATA_HINT =
   "No data loaded yet. Set a date range and press Refresh to fetch from USDA.";
@@ -225,19 +497,45 @@ function exportPork(rows: PorkRow[]) {
   });
 }
 
+function exportPorkComprehensive(rows: PorkComprehensiveRow[]) {
+  import("xlsx").then((XLSX) => {
+    const data = [
+      ["Date", "Carcass", "Loin", "Butt", "Picnic", "Rib", "Ham", "Belly"],
+      ...rows.map((r) => [r.date, r.carcass, r.loin, r.butt, r.picnic, r.rib, r.ham, r.belly]),
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    ws["!cols"] = [{ wch: 12 }, ...Array(7).fill({ wch: 10 })];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "LM_PK680");
+    const from = rows[0]?.date ?? "start";
+    const to = rows[rows.length - 1]?.date ?? "end";
+    XLSX.writeFile(wb, `LM_PK680_${from}_${to}.xlsx`);
+  });
+}
+
 function exportTurkey(rows: TurkeyRow[]) {
   import("xlsx").then((XLSX) => {
     const data = [
-      ["Week Start", "Week End", "Condition", "Low (¢/lb)", "High (¢/lb)", "Wtd Avg (¢/lb)", "Volume (lbs)"],
-      ...rows.map((r) => [r.week_start, r.week_end, r.condition, r.low_price, r.high_price, r.wtd_avg, r.volume_lbs]),
+      [
+        "Week Start",
+        "Week End",
+        "WEEKLY DATA TURKEY BREASTS FRESH Wtd Avg (¢/lb)",
+        "Volume (1,000 lbs)",
+      ],
+      ...rows.map((r) => [
+        r.week_start,
+        r.week_end,
+        r.wtd_avg,
+        r.volume_1000_lbs,
+      ]),
     ];
     const ws = XLSX.utils.aoa_to_sheet(data);
-    ws["!cols"] = [{ wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 16 }, { wch: 14 }];
+    ws["!cols"] = [{ wch: 12 }, { wch: 12 }, { wch: 34 }, { wch: 18 }];
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Turkey Hen 8-16lb");
+    XLSX.utils.book_append_sheet(wb, ws, "Turkey Breast Fresh");
     const from = rows[0]?.week_start ?? "start";
     const to = rows[rows.length - 1]?.week_start ?? "end";
-    XLSX.writeFile(wb, `Turkey_WholeHen_8-16lb_${from}_${to}.xlsx`);
+    XLSX.writeFile(wb, `Turkey_Breast_BS_Tom_Fresh_${from}_${to}.xlsx`);
   });
 }
 
@@ -249,20 +547,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [startDate, setStartDate] = useState("2019-01-01");
   const [endDate, setEndDate] = useState(todayIso());
 
-  /* Per-table date filters for the admin preview tables */
-  const [hogAdminStart, setHogAdminStart] = useState("2019-01-01");
-  const [hogAdminEnd, setHogAdminEnd] = useState(todayIso());
-  const [turkeyAdminStart, setTurkeyAdminStart] = useState("2019-01-01");
-  const [turkeyAdminEnd, setTurkeyAdminEnd] = useState(todayIso());
-  const [porkAdminStart, setPorkAdminStart] = useState("2019-01-01");
-  const [porkAdminEnd, setPorkAdminEnd] = useState(todayIso());
-
   const [hogFull, setHogFull] = useState<HogRow[]>([]);
   const [hogRows, setHogRows] = useState<HogRow[]>([]);
   const [hogMeta, setHogMeta] = useState<string | undefined>();
 
   const [turkeyFull, setTurkeyFull] = useState<TurkeyRow[]>([]);
   const [turkeyRows, setTurkeyRows] = useState<TurkeyRow[]>([]);
+  const [turkeyBreastFull, setTurkeyBreastFull] = useState<TurkeyRow[]>([]);
+  const [turkeyBreastRows, setTurkeyBreastRows] = useState<TurkeyRow[]>([]);
   const [turkeyMeta, setTurkeyMeta] = useState<string | undefined>();
   const [condition, setCondition] = useState<Condition>("all");
   const [tableDateOrder, setTableDateOrder] = useState<TableDateOrder>("desc");
@@ -270,6 +562,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [porkFull, setPorkFull] = useState<PorkRow[]>([]);
   const [porkRows, setPorkRows] = useState<PorkRow[]>([]);
   const [porkMeta, setPorkMeta] = useState<string | undefined>();
+  const [porkComprehensiveFull, setPorkComprehensiveFull] = useState<PorkComprehensiveRow[]>([]);
+  const [porkComprehensiveRows, setPorkComprehensiveRows] = useState<PorkComprehensiveRow[]>([]);
+  const [porkComprehensiveMeta, setPorkComprehensiveMeta] = useState<string | undefined>();
+  const [porkComparisonCut, setPorkComparisonCut] = useState<PorkCutKey>("carcass");
 
   const [status, setStatus] = useState(() => (initialTab === "admin" ? ADMIN_TAB_HINT : EMPTY_DATA_HINT));
   const [fetchingRange, setFetchingRange] = useState(false);
@@ -291,6 +587,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   /** Invalidate in-flight hog USDA responses when a newer hog request starts. */
   const hogPullGenRef = useRef(0);
   const porkPullGenRef = useRef(0);
+  const porkComprehensivePullGenRef = useRef(0);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -330,6 +627,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       if (t === "turkey") q.set("tab", "turkey");
       else if (t === "admin") q.set("tab", "admin");
       else if (t === "pork") q.set("tab", "pork");
+      else if (t === "pork-comprehensive") q.set("tab", "pork-comprehensive");
       else q.delete("tab");
       const s = q.toString();
       router.replace(s ? `/?${s}` : "/", { scroll: false });
@@ -337,59 +635,62 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     [router, searchParams]
   );
 
-  const loadHog = useCallback(async (_bust?: boolean) => {
-    const { data, error } = await supabase
-      .from("hog_daily")
-      .select("date, national, iowa_mn, western")
-      .order("date", { ascending: true })
-      .range(0, 4999);
-    if (error) throw new Error(`Hog data error: ${error.message}`);
-    const rows: HogRow[] = (data ?? []).map((r) => ({
-      date: r.date,
-      national: r.national,
-      iowaMn: r.iowa_mn,
-      western: r.western,
-    }));
+  const loadHog = useCallback(async (bust: boolean) => {
+    const res = await fetch(HOG_URL, { cache: bust ? "no-store" : "default" });
+    if (!res.ok) throw new Error(`Hog data HTTP ${res.status}`);
+    const payload: HogPayload = await res.json();
+    const rows = Array.isArray(payload.rows) ? payload.rows : [];
     setHogFull(rows);
-    setHogMeta(new Date().toISOString());
+    setHogMeta(payload.generatedAt);
     return rows;
   }, []);
 
-  const loadTurkey = useCallback(async (_bust?: boolean) => {
-    const { data, error } = await supabase
-      .from("turkey_weekly")
-      .select("week_start, week_end, condition, low_price, high_price, wtd_avg, volume_lbs, breast_wtd_avg")
-      .order("week_start", { ascending: true })
-      .range(0, 4999);
-    if (error) throw new Error(`Turkey data error: ${error.message}`);
-    const rows: TurkeyRow[] = (data ?? []).map((r) => ({
-      week_start: r.week_start,
-      week_end: r.week_end,
-      condition: r.condition,
-      low_price: r.low_price,
-      high_price: r.high_price,
-      wtd_avg: r.wtd_avg,
-      volume_lbs: r.volume_lbs,
-      breast_wtd_avg: r.breast_wtd_avg,
-      isoDate: toIso(r.week_start),
-    }));
-    setTurkeyFull(rows);
-    setTurkeyMeta(new Date().toISOString());
-    return rows;
+  const loadTurkey = useCallback(async (bust: boolean) => {
+    const res = await fetch(TURKEY_URL, { cache: bust ? "no-store" : "default" });
+    if (!res.ok) throw new Error(`Turkey data HTTP ${res.status}`);
+    const payload: TurkeyPayload = await res.json();
+    const parsed = parseTurkeyPayload(payload);
+    setTurkeyFull(parsed.wholeHenRows);
+    setTurkeyBreastFull(parsed.breastRows);
+    setTurkeyMeta(payload.generatedAt);
+    return parsed;
   }, []);
 
-  const loadPork = useCallback(async (_bust?: boolean) => {
-    const { data, error } = await supabase
-      .from("pork_daily")
-      .select("date, pork_carcass, pork_loin, pork_butt, pork_picnic, pork_rib, pork_ham, pork_belly")
-      .order("date", { ascending: true })
-      .range(0, 4999);
-    if (error) throw new Error(`Pork data error: ${error.message}`);
-    const rows: PorkRow[] = data ?? [];
+  const loadPork = useCallback(async (bust: boolean) => {
+    const res = await fetch(PORK_URL, { cache: bust ? "no-store" : "default" });
+    if (!res.ok) throw new Error(`Pork data HTTP ${res.status}`);
+    const payload: PorkPayload = await res.json();
+    const rows = Array.isArray(payload) ? (payload as PorkRow[]) : (payload.rows ?? []);
     setPorkFull(rows);
-    setPorkMeta(new Date().toISOString());
+    setPorkMeta((payload as PorkPayload).generatedAt);
     return rows;
   }, []);
+
+  const loadPorkComprehensive = useCallback(async (_bust: boolean) => {
+    const res = await fetch(PORK_COMPREHENSIVE_URL, { cache: "no-store" });
+    if (res.status === 404) {
+      setPorkComprehensiveFull([]);
+      setPorkComprehensiveMeta(undefined);
+      return [];
+    }
+    if (!res.ok) throw new Error(`Comprehensive pork data HTTP ${res.status}`);
+    const payload: PorkComprehensivePayload = await res.json();
+    const rows = Array.isArray(payload) ? (payload as unknown as PorkComprehensiveRow[]) : (payload.rows ?? []);
+    const mergedRows = mergePorkComprehensiveRows([], rows);
+    setPorkComprehensiveFull(mergedRows);
+    setPorkComprehensiveMeta((payload as PorkComprehensivePayload).generatedAt);
+    return mergedRows;
+  }, []);
+
+  /* Load all static JSONs once on mount so every tab shows data immediately */
+  useEffect(() => {
+    void Promise.all([
+      loadHog(false),
+      loadTurkey(false),
+      loadPork(false),
+      loadPorkComprehensive(false),
+    ]).catch(() => {});
+  }, [loadHog, loadTurkey, loadPork, loadPorkComprehensive]);
 
   const filterHog = useCallback(
     (rows: HogRow[], start: string, end: string) => {
@@ -406,16 +707,9 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   );
 
   const filterTurkey = useCallback(
-    (rows: TurkeyRow[], start: string, end: string, cond: Condition) => {
-      if (!start || !end || start > end) {
-        setTurkeyRows([]);
-        return;
-      }
-      const filtered = rows
-        .filter((r) => r.isoDate >= start && r.isoDate <= end)
-        .filter((r) => cond === "all" || r.condition === cond)
-        .sort((a, b) => a.isoDate.localeCompare(b.isoDate));
-      setTurkeyRows(filtered);
+    (wholeHenRows: TurkeyRow[], breastRows: TurkeyRow[], start: string, end: string, cond: Condition) => {
+      setTurkeyRows(filterTurkeyRows(wholeHenRows, start, end, cond));
+      setTurkeyBreastRows(filterTurkeyRows(breastRows, start, end, cond));
     },
     []
   );
@@ -434,16 +728,31 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     []
   );
 
+  const filterPorkComprehensive = useCallback(
+    (rows: PorkComprehensiveRow[], start: string, end: string) => {
+      if (!start || !end || start > end) {
+        setPorkComprehensiveRows([]);
+        return;
+      }
+      const filtered = rows
+        .filter((r) => r.date >= start && r.date <= end)
+        .sort((a, b) => a.date.localeCompare(b.date));
+      setPorkComprehensiveRows(filtered);
+    },
+    []
+  );
+
   /* Apply filters when dates / full data / condition change (debounced for date inputs) */
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       const invalidRange = !startDate || !endDate || startDate > endDate;
-      const noLoadedData = !hogFull.length && !turkeyFull.length && !porkFull.length;
+      const noLoadedData = !hogFull.length && !turkeyFull.length && !porkFull.length && !porkComprehensiveFull.length;
 
       filterHog(hogFull, startDate, endDate);
-      filterTurkey(turkeyFull, startDate, endDate, condition);
+      filterTurkey(turkeyFull, turkeyBreastFull, startDate, endDate, condition);
       filterPork(porkFull, startDate, endDate);
+      filterPorkComprehensive(porkComprehensiveFull, startDate, endDate);
 
       if (tab === "admin") return;
 
@@ -461,13 +770,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         tab === "hog"
           ? hogFull.filter((r) => r.date >= startDate && r.date <= endDate).length
           : tab === "pork"
-          ? porkFull.filter((r) => r.date >= startDate && r.date <= endDate).length
-          : turkeyFull.filter(
-              (r) =>
-                r.isoDate >= startDate &&
-                r.isoDate <= endDate &&
-                (condition === "all" || r.condition === condition)
-            ).length;
+            ? porkFull.filter((r) => r.date >= startDate && r.date <= endDate).length
+            : tab === "pork-comprehensive"
+              ? porkComprehensiveFull.filter((r) => r.date >= startDate && r.date <= endDate).length
+              : filterTurkeyRows(turkeyFull, startDate, endDate, condition).length;
       setStatus(
         n > 0
           ? `${n} ${tab === "hog" || tab === "pork" ? "trading days" : "rows"} in range ${startDate} → ${endDate}`
@@ -477,70 +783,104 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [startDate, endDate, hogFull, turkeyFull, porkFull, condition, filterHog, filterTurkey, filterPork, tab]);
-
-  const reloadDeployedJson = useCallback(async () => {
-    const [h, t, p] = await Promise.all([loadHog(true), loadTurkey(true), loadPork(true)]);
-    filterHog(h, startDate, endDate);
-    filterTurkey(t, startDate, endDate, condition);
-    filterPork(p, startDate, endDate);
-    const nHog = h.filter((r) => r.date >= startDate && r.date <= endDate).length;
-    const nTurkey = t.filter(
-      (r) =>
-        r.isoDate >= startDate &&
-        r.isoDate <= endDate &&
-        (condition === "all" || r.condition === condition)
-    ).length;
-    const nPork = p.filter((r) => r.date >= startDate && r.date <= endDate).length;
-    return { nHog, nTurkey, nPork };
-  }, [loadHog, loadTurkey, loadPork, filterHog, filterTurkey, filterPork, startDate, endDate, condition]);
-
-  const ensureSessionDataLoaded = useCallback(async () => {
-    const [h, t, p] = await Promise.all([
-      hogFull.length ? Promise.resolve(hogFull) : loadHog(false),
-      turkeyFull.length ? Promise.resolve(turkeyFull) : loadTurkey(false),
-      porkFull.length ? Promise.resolve(porkFull) : loadPork(false),
-    ]);
-    filterHog(h, startDate, endDate);
-    filterTurkey(t, startDate, endDate, condition);
-    filterPork(p, startDate, endDate);
-    return {
-      nHog: h.filter((r) => r.date >= startDate && r.date <= endDate).length,
-      nTurkey: t.filter(
-        (r) =>
-          r.isoDate >= startDate &&
-          r.isoDate <= endDate &&
-          (condition === "all" || r.condition === condition)
-      ).length,
-      nPork: p.filter((r) => r.date >= startDate && r.date <= endDate).length,
-    };
   }, [
+    startDate,
+    endDate,
     hogFull,
     turkeyFull,
+    turkeyBreastFull,
     porkFull,
-    loadHog,
-    loadTurkey,
-    loadPork,
+    porkComprehensiveFull,
+    condition,
     filterHog,
     filterTurkey,
     filterPork,
+    filterPorkComprehensive,
+    tab,
+  ]);
+
+  const reloadDeployedJson = useCallback(async () => {
+    const [h, t, p, pc] = await Promise.all([
+      loadHog(true),
+      loadTurkey(true),
+      loadPork(true),
+      loadPorkComprehensive(true),
+    ]);
+    filterHog(h, startDate, endDate);
+    filterTurkey(t.wholeHenRows, t.breastRows, startDate, endDate, condition);
+    filterPork(p, startDate, endDate);
+    filterPorkComprehensive(pc, startDate, endDate);
+    const nHog = h.filter((r) => r.date >= startDate && r.date <= endDate).length;
+    const nTurkey = filterTurkeyRows(t.wholeHenRows, startDate, endDate, condition).length;
+    const nPork = p.filter((r) => r.date >= startDate && r.date <= endDate).length;
+    const nPorkComprehensive = pc.filter((r) => r.date >= startDate && r.date <= endDate).length;
+    return { nHog, nTurkey, nPork, nPorkComprehensive };
+  }, [
+    loadHog,
+    loadTurkey,
+    loadPork,
+    loadPorkComprehensive,
+    filterHog,
+    filterTurkey,
+    filterPork,
+    filterPorkComprehensive,
     startDate,
     endDate,
     condition,
   ]);
 
-  useEffect(() => {
-  ensureSessionDataLoaded();
-  }, []);
-  
+  const ensureSessionDataLoaded = useCallback(async () => {
+    const [h, t, p, pc] = await Promise.all([
+      hogFull.length ? Promise.resolve(hogFull) : loadHog(false),
+      turkeyFull.length || turkeyBreastFull.length
+        ? Promise.resolve({ wholeHenRows: turkeyFull, breastRows: turkeyBreastFull })
+        : loadTurkey(false),
+      porkFull.length ? Promise.resolve(porkFull) : loadPork(false),
+      porkComprehensiveFull.length ? Promise.resolve(porkComprehensiveFull) : loadPorkComprehensive(false),
+    ]);
+    filterHog(h, startDate, endDate);
+    filterTurkey(t.wholeHenRows, t.breastRows, startDate, endDate, condition);
+    filterPork(p, startDate, endDate);
+    filterPorkComprehensive(pc, startDate, endDate);
+    return {
+      nHog: h.filter((r) => r.date >= startDate && r.date <= endDate).length,
+      nTurkey: filterTurkeyRows(t.wholeHenRows, startDate, endDate, condition).length,
+      nPork: p.filter((r) => r.date >= startDate && r.date <= endDate).length,
+      nPorkComprehensive: pc.filter((r) => r.date >= startDate && r.date <= endDate).length,
+    };
+  }, [
+    hogFull,
+    turkeyFull,
+    turkeyBreastFull,
+    porkFull,
+    porkComprehensiveFull,
+    loadHog,
+    loadTurkey,
+    loadPork,
+    loadPorkComprehensive,
+    filterHog,
+    filterTurkey,
+    filterPork,
+    filterPorkComprehensive,
+    startDate,
+    endDate,
+    condition,
+  ]);
+
   const pullUsdaRange = useCallback(
-    async (apiTab: "hog" | "turkey" | "pork", start: string, end: string, introStatus: string) => {
+    async (apiTab: "hog" | "turkey" | "pork" | "pork-comprehensive", start: string, end: string, introStatus: string) => {
       if (!start || !end || start > end) {
         setStatus("Choose a valid date range (start ≤ end).");
         return;
       }
       const myGen =
-        apiTab === "hog" ? ++hogPullGenRef.current : apiTab === "pork" ? ++porkPullGenRef.current : 0;
+        apiTab === "hog"
+          ? ++hogPullGenRef.current
+          : apiTab === "pork"
+            ? ++porkPullGenRef.current
+            : apiTab === "pork-comprehensive"
+              ? ++porkComprehensivePullGenRef.current
+              : 0;
       setFetchingRange(true);
       try {
         setStatus(introStatus);
@@ -696,6 +1036,51 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           return;
         }
 
+        if (apiTab === "pork-comprehensive") {
+          setPorkComprehensiveFull([]);
+          setPorkComprehensiveRows([]);
+
+          const [compRes, negotiatedRes] = await Promise.all([
+            fetch(`/api/fetch-pork-comprehensive-range?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`, {
+              cache: "no-store",
+            }),
+            fetch(`/api/fetch-range?tab=pork&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`, {
+              cache: "no-store",
+            }),
+          ]);
+
+          const compData = (await compRes.json()) as {
+            error?: string;
+            rows?: PorkComprehensiveRow[];
+            generatedAt?: string;
+          };
+          if (!compRes.ok) throw new Error(compData.error || `HTTP ${compRes.status}`);
+
+          const negotiatedData = (await negotiatedRes.json()) as {
+            error?: string;
+            rows?: PorkRow[];
+            generatedAt?: string;
+          };
+          if (!negotiatedRes.ok) throw new Error(negotiatedData.error || `HTTP ${negotiatedRes.status}`);
+
+          if (myGen !== porkComprehensivePullGenRef.current) return;
+
+          const comprehensiveRows = mergePorkComprehensiveRows([], compData.rows ?? []);
+          const negotiatedRows = [...(negotiatedData.rows ?? [])].sort((a, b) => a.date.localeCompare(b.date));
+
+          setPorkComprehensiveFull(comprehensiveRows);
+          setPorkFull(negotiatedRows);
+          if (compData.generatedAt) setPorkComprehensiveMeta(compData.generatedAt);
+          if (negotiatedData.generatedAt) setPorkMeta(negotiatedData.generatedAt);
+
+          setStatus(
+            comprehensiveRows.length > 0 || negotiatedRows.length > 0
+              ? `Loaded ${comprehensiveRows.length} weekly comprehensive row(s) and refreshed ${negotiatedRows.length} negotiated day(s) for ${start} â†’ ${end}.`
+              : `USDA returned no rows for that range â€” try different dates.`
+          );
+          return;
+        }
+
         if (apiTab === "turkey") {
           turkeyLogStickBottomRef.current = true;
           setTurkeyFetchLog([
@@ -710,24 +1095,31 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         );
         const data = (await res.json()) as {
           error?: string;
-          rows?: unknown[];
+          rows?: TurkeyRowWire[];
           generatedAt?: string;
           tab?: string;
+          wholeHenRows?: TurkeyRowWire[];
+          breastRows?: TurkeyRowWire[];
         };
         if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
-        const rows = data.rows as Omit<TurkeyRow, "isoDate">[];
-        setTurkeyFull((prev) => mergeTurkeyRows(prev, rows));
+        const parsed = parseTurkeyPayload(data);
+        setTurkeyFull((prev) => mergeTurkeyRows(prev, parsed.wholeHenRows));
+        setTurkeyBreastFull((prev) => mergeTurkeyRows(prev, parsed.breastRows));
         setTurkeyMeta(data.generatedAt);
-        const count = data.rows?.length ?? 0;
+        const wholeHenCount = parsed.wholeHenRows.length;
+        const breastCount = parsed.breastRows.length;
         setTurkeyFetchLog((prev) => [
           ...prev,
           { t: new Date().toISOString(), message: "USDA response received" },
-          { t: new Date().toISOString(), message: `Done: ${count} row(s)` },
+          {
+            t: new Date().toISOString(),
+            message: `Done: ${wholeHenCount} whole hen row(s), ${breastCount} breast row(s)`,
+          },
         ]);
         setStatus(
-          count > 0
-            ? `Loaded ${count} row(s) from USDA for ${start} → ${end}.`
+          wholeHenCount + breastCount > 0
+            ? `Loaded ${wholeHenCount} whole hen row(s) and ${breastCount} breast row(s) from USDA for ${start} → ${end}.`
             : `USDA returned no rows for that range — try different dates.`
         );
       } catch (e) {
@@ -760,11 +1152,12 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   );
 
   async function fetchUsdaForRange() {
-    if (tab !== "hog" && tab !== "turkey" && tab !== "pork") return;
-    const introMap: Record<"hog" | "turkey" | "pork", string> = {
+    if (tab !== "hog" && tab !== "turkey" && tab !== "pork" && tab !== "pork-comprehensive") return;
+    const introMap: Record<"hog" | "turkey" | "pork" | "pork-comprehensive", string> = {
       hog: `Fetching daily hog prices from USDA for ${startDate} → ${endDate}…`,
       turkey: `Fetching weekly turkey prices from USDA for ${startDate} → ${endDate}…`,
       pork: `Fetching daily pork cutout prices from USDA for ${startDate} → ${endDate}…`,
+      "pork-comprehensive": `Fetching weekly comprehensive pork prices from USDA for ${startDate} → ${endDate}…`,
     };
     await pullUsdaRange(tab, startDate, endDate, introMap[tab]);
   }
@@ -832,10 +1225,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             if (!mountedRef.current) return;
             setStatus("Update finished. Loading the latest saved data…");
             try {
-              const { nHog, nTurkey, nPork } = await reloadDeployedJson();
+              const { nHog, nTurkey, nPork, nPorkComprehensive } = await reloadDeployedJson();
               if (!mountedRef.current) return;
               setStatus(
-                nHog + nTurkey + nPork > 0
+                nHog + nTurkey + nPork + nPorkComprehensive > 0
                   ? `Saved data refreshed (${startDate} → ${endDate}): ${nHog} hog day(s), ${nTurkey} turkey row(s), ${nPork} pork day(s) in range.`
                   : "Saved data refreshed — no rows in your current date range. Try widening dates."
               );
@@ -912,11 +1305,50 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
 
   const porkLast = porkRowsChrono[porkRowsChrono.length - 1];
 
+  const porkComprehensiveRowsChrono = useMemo(
+    () => [...porkComprehensiveRows].sort((a, b) => a.date.localeCompare(b.date)),
+    [porkComprehensiveRows]
+  );
+
+  const porkComprehensiveRowsForTable = useMemo(() => {
+    const s = [...porkComprehensiveRowsChrono];
+    if (tableDateOrder === "desc") s.reverse();
+    return s;
+  }, [porkComprehensiveRowsChrono, tableDateOrder]);
+
+  const porkComprehensiveLast = porkComprehensiveRowsChrono[porkComprehensiveRowsChrono.length - 1];
+  const porkNegotiatedWeeklyRows = useMemo(() => buildWeeklyNegotiatedPork(porkRows), [porkRows]);
+  const porkComparisonData = useMemo(() => {
+    const chartMap = new Map<string, { date: string; negotiated?: number | null; comprehensive?: number | null; spread?: number | null }>();
+
+    porkNegotiatedWeeklyRows.forEach((row) => {
+      const value = row[porkComparisonCut];
+      const entry = chartMap.get(row.date) ?? { date: row.date };
+      entry.negotiated = value;
+      chartMap.set(row.date, entry);
+    });
+
+    porkComprehensiveRowsChrono.forEach((row) => {
+      const value = row[porkComparisonCut];
+      const entry = chartMap.get(row.date) ?? { date: row.date };
+      entry.comprehensive = value;
+      chartMap.set(row.date, entry);
+    });
+
+    return [...chartMap.values()]
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map((row) => ({
+        ...row,
+        spread:
+          row.comprehensive != null && row.negotiated != null
+            ? row.comprehensive - row.negotiated
+            : null,
+      }));
+  }, [porkNegotiatedWeeklyRows, porkComprehensiveRowsChrono, porkComparisonCut]);
+  const porkComparisonLatest = porkComparisonData[porkComparisonData.length - 1];
+
   const turkeyRowsChrono = useMemo(
-    () =>
-      [...turkeyRows].sort(
-        (a, b) => a.isoDate.localeCompare(b.isoDate) || a.condition.localeCompare(b.condition)
-      ),
+    () => [...turkeyRows].sort(compareTurkeyRows),
     [turkeyRows]
   );
 
@@ -926,60 +1358,62 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     return s;
   }, [turkeyRowsChrono, tableDateOrder]);
 
-  const freshRows = turkeyRows.filter((r) => r.condition === "Fresh");
+  const turkeyBreastRowsChrono = useMemo(
+    () => [...turkeyBreastRows].sort(compareTurkeyRows),
+    [turkeyBreastRows]
+  );
 
-  /* Admin per-table filtered rows — filter from the full dataset using each table's own date range */
-  const hogAdminRows = useMemo(() => {
-    if (!hogAdminStart || !hogAdminEnd || hogAdminStart > hogAdminEnd) return [];
-    const filtered = hogFull.filter((r) => r.date >= hogAdminStart && r.date <= hogAdminEnd);
-    return tableDateOrder === "desc"
-      ? filtered.sort((a, b) => b.date.localeCompare(a.date))
-      : filtered.sort((a, b) => a.date.localeCompare(b.date));
-  }, [hogFull, hogAdminStart, hogAdminEnd, tableDateOrder]);
+  const turkeyBreastRowsForTable = useMemo(() => {
+    const s = [...turkeyBreastRowsChrono];
+    if (tableDateOrder === "desc") s.reverse();
+    return s;
+  }, [turkeyBreastRowsChrono, tableDateOrder]);
 
-  const turkeyAdminRows = useMemo(() => {
-    if (!turkeyAdminStart || !turkeyAdminEnd || turkeyAdminStart > turkeyAdminEnd) return [];
-    const filtered = turkeyFull
-      .filter((r) => r.isoDate >= turkeyAdminStart && r.isoDate <= turkeyAdminEnd)
-      .filter((r) => condition === "all" || r.condition === condition);
-    return tableDateOrder === "desc"
-      ? filtered.sort((a, b) => b.isoDate.localeCompare(a.isoDate) || b.condition.localeCompare(a.condition))
-      : filtered.sort((a, b) => a.isoDate.localeCompare(b.isoDate) || a.condition.localeCompare(b.condition));
-  }, [turkeyFull, turkeyAdminStart, turkeyAdminEnd, condition, tableDateOrder]);
+  const turkeyBreastFreshRowsForTable = useMemo(() => {
+    const s = filterTurkeyRows(turkeyBreastFull, startDate, endDate, "Fresh");
+    if (tableDateOrder === "desc") s.reverse();
+    return s;
+  }, [turkeyBreastFull, startDate, endDate, tableDateOrder]);
 
-  const porkAdminRows = useMemo(() => {
-    if (!porkAdminStart || !porkAdminEnd || porkAdminStart > porkAdminEnd) return [];
-    const filtered = porkFull.filter((r) => r.date >= porkAdminStart && r.date <= porkAdminEnd);
-    return tableDateOrder === "desc"
-      ? filtered.sort((a, b) => b.date.localeCompare(a.date))
-      : filtered.sort((a, b) => a.date.localeCompare(b.date));
-  }, [porkFull, porkAdminStart, porkAdminEnd, tableDateOrder]);
-  const frozenRows = turkeyRows.filter((r) => r.condition === "Frozen");
-  const lastFresh = (() => {
-    const s = [...freshRows].sort((a, b) => a.isoDate.localeCompare(b.isoDate));
-    return s.length ? s[s.length - 1] : undefined;
-  })();
-  const lastFrozen = (() => {
-    const s = [...frozenRows].sort((a, b) => a.isoDate.localeCompare(b.isoDate));
-    return s.length ? s[s.length - 1] : undefined;
-  })();
+  const wholeHenSeries = useMemo(() => summarizeTurkeySeries(turkeyRows), [turkeyRows]);
+  const breastSeries = useMemo(() => summarizeTurkeySeries(turkeyBreastRows), [turkeyBreastRows]);
+  const wholeHenFreshSeries = wholeHenSeries.filter((r) => r.condition === "Fresh");
+  const wholeHenFrozenSeries = wholeHenSeries.filter((r) => r.condition === "Frozen");
+  const breastFreshSeries = breastSeries.filter((r) => r.condition === "Fresh");
+  const breastFrozenSeries = breastSeries.filter((r) => r.condition === "Frozen");
+  const latestWholeHenFresh = wholeHenFreshSeries[wholeHenFreshSeries.length - 1];
+  const latestWholeHenFrozen = wholeHenFrozenSeries[wholeHenFrozenSeries.length - 1];
+  const latestBreastFresh = breastFreshSeries[breastFreshSeries.length - 1];
+  const latestBreastFrozen = breastFrozenSeries[breastFrozenSeries.length - 1];
   const thisYear = new Date().getFullYear().toString();
-  const ytdFresh = freshRows.filter((r) => r.isoDate.startsWith(thisYear));
+  const ytdFresh = wholeHenFreshSeries.filter((r) => r.isoDate.startsWith(thisYear));
   const avgFresh =
-    ytdFresh.length > 0 ? ytdFresh.reduce((s, r) => s + Number(r.wtd_avg), 0) / ytdFresh.length : null;
+    ytdFresh.length > 0
+      ? ytdFresh.reduce((sum, row) => sum + (row.wtd_avg ?? 0), 0) / ytdFresh.length
+      : null;
 
   const chartData = useMemo(() => {
-    const chartDataMap = new Map<string, { isoDate: string; Fresh?: number; Frozen?: number; BreastFresh?: number; BreastFrozen?: number }>();
-    turkeyRows.forEach((r) => {
-      const entry = chartDataMap.get(r.isoDate) ?? { isoDate: r.isoDate };
-      if (r.condition === "Fresh") entry.Fresh = Number(r.wtd_avg);
-      if (r.condition === "Frozen") entry.Frozen = Number(r.wtd_avg);
-      if (r.condition === "Fresh" && r.breast_wtd_avg != null) entry.BreastFresh = Number(r.breast_wtd_avg);
-      if (r.condition === "Frozen" && r.breast_wtd_avg != null) entry.BreastFrozen = Number(r.breast_wtd_avg);
-      chartDataMap.set(r.isoDate, entry);
+    const chartDataMap = new Map<
+      string,
+      { isoDate: string; Fresh?: number; Frozen?: number; BreastFresh?: number; BreastFrozen?: number }
+    >();
+
+    wholeHenSeries.forEach((row) => {
+      const entry = chartDataMap.get(row.isoDate) ?? { isoDate: row.isoDate };
+      if (row.condition === "Fresh" && row.wtd_avg != null) entry.Fresh = row.wtd_avg;
+      if (row.condition === "Frozen" && row.wtd_avg != null) entry.Frozen = row.wtd_avg;
+      chartDataMap.set(row.isoDate, entry);
     });
+
+    breastSeries.forEach((row) => {
+      const entry = chartDataMap.get(row.isoDate) ?? { isoDate: row.isoDate };
+      if (row.condition === "Fresh" && row.wtd_avg != null) entry.BreastFresh = row.wtd_avg;
+      if (row.condition === "Frozen" && row.wtd_avg != null) entry.BreastFrozen = row.wtd_avg;
+      chartDataMap.set(row.isoDate, entry);
+    });
+
     return Array.from(chartDataMap.values()).sort((a, b) => a.isoDate.localeCompare(b.isoDate));
-  }, [turkeyRows]);
+  }, [wholeHenSeries, breastSeries]);
 
   return (
     <main className="shell">
@@ -1010,7 +1444,16 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             className={`tab-btn ${tab === "pork" ? "tab-btn--active" : ""}`}
             onClick={() => selectTab("pork")}
           >
-            Daily pork (LM_PK602)
+            Negotiated Pork (LM_PK602)
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "pork-comprehensive"}
+            className={`tab-btn ${tab === "pork-comprehensive" ? "tab-btn--active" : ""}`}
+            onClick={() => selectTab("pork-comprehensive")}
+          >
+            Comprehensive Pork (LM_PK680)
           </button>
           <button
             type="button"
@@ -1042,9 +1485,16 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         ) : tab === "pork" ? (
           <>
             <p className="eyebrow">USDA MPR Datamart · LM_PK602 negotiated carcass cutout</p>
-            <h1>Daily pork cutout prices</h1>
+            <h1>Daily negotiated pork cutout prices</h1>
             <p className="sub">Carcass, loin, butt, picnic, rib, ham, belly — $/cwt. Reloading this page clears all data until you press Refresh.</p>
             {porkMeta && <p className="data-updated">Dataset updated: {formatUpdatedEn(porkMeta)}</p>}
+          </>
+        ) : tab === "pork-comprehensive" ? (
+          <>
+            <p className="eyebrow">USDA MPR Datamart Â· LM_PK680 national weekly comprehensive pork report</p>
+            <h1>Weekly comprehensive pork prices</h1>
+            <p className="sub">Comprehensive values blend negotiated, contract, and formula transactions. Comparison charts align LM_PK680 with weekly averages derived from LM_PK602 daily negotiated prices.</p>
+            {porkComprehensiveMeta && <p className="data-updated">Dataset updated: {formatUpdatedEn(porkComprehensiveMeta)}</p>}
           </>
         ) : (
           <>
@@ -1092,15 +1542,19 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
               tab === "hog"
                 ? exportHog(hogRowsForTable)
                 : tab === "pork"
-                ? exportPork(porkRowsForTable)
-                : exportTurkey(turkeyRowsForTable)
+                  ? exportPork(porkRowsForTable)
+                  : tab === "pork-comprehensive"
+                    ? exportPorkComprehensive(porkComprehensiveRowsForTable)
+                    : exportTurkey(turkeyBreastFreshRowsForTable)
             }
             disabled={
               tab === "hog"
                 ? hogRows.length === 0
                 : tab === "pork"
-                ? porkRows.length === 0
-                : turkeyRows.length === 0
+                  ? porkRows.length === 0
+                  : tab === "pork-comprehensive"
+                    ? porkComprehensiveRows.length === 0
+                    : turkeyBreastFreshRowsForTable.length === 0
             }
           >
             Export Excel
@@ -1421,7 +1875,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
 
           <section className="panel table-wrap">
             <div className="table-wrap-head">
-              <h2>Daily data ($/cwt)</h2>
+              <h2>Daily negotiated data ($/cwt)</h2>
               <div className="field field--table-sort">
                 <label htmlFor="tableDateOrderPork">Table order by date</label>
                 <select
@@ -1468,12 +1922,12 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
           </section>
 
           <section className="panel chart-wrap">
-            <h2>Price trend ($/cwt)</h2>
+            <h2>Negotiated price trend ($/cwt)</h2>
             <div className="legend">
-              {(Object.keys(PORK_LINE) as (keyof typeof PORK_LINE)[]).map((k) => (
+              {(Object.keys(PORK_NEGOTIATED_LINE) as (keyof typeof PORK_NEGOTIATED_LINE)[]).map((k) => (
                 <span key={k} className="legend-item">
-                  <span className="legend-dot" style={{ background: PORK_LINE[k] }} />
-                  {PORK_FIELD_LABELS[k]}
+                  <span className="legend-dot" style={{ background: PORK_NEGOTIATED_LINE[k] }} />
+                  {PORK_FIELD_LABELS[k.replace("pork_", "") as PorkCutKey]}
                 </span>
               ))}
             </div>
@@ -1495,9 +1949,192 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                     width={44}
                   />
                   <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
-                  {(Object.keys(PORK_LINE) as (keyof typeof PORK_LINE)[]).map((k) => (
-                    <Line key={k} type="monotone" dataKey={k} stroke={PORK_LINE[k]} dot={false} strokeWidth={2} connectNulls name={PORK_FIELD_LABELS[k]} />
+                  {(Object.keys(PORK_NEGOTIATED_LINE) as (keyof typeof PORK_NEGOTIATED_LINE)[]).map((k) => (
+                    <Line
+                      key={k}
+                      type="monotone"
+                      dataKey={k}
+                      stroke={PORK_NEGOTIATED_LINE[k]}
+                      dot={false}
+                      strokeWidth={2}
+                      connectNulls
+                      name={PORK_FIELD_LABELS[k.replace("pork_", "") as PorkCutKey]}
+                    />
                   ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+        </>
+      )}
+
+      {tab === "pork-comprehensive" && (
+        <>
+          <section className="panel metrics">
+            <article>
+              <h2>Latest carcass</h2>
+              <p className="metric metric--brown1">{fmt(porkComprehensiveLast?.carcass)}</p>
+            </article>
+            <article>
+              <h2>Latest belly</h2>
+              <p className="metric metric--brown2">{fmt(porkComprehensiveLast?.belly)}</p>
+            </article>
+            <article>
+              <h2>Latest spread</h2>
+              <p className="metric metric--brown3">{fmt(porkComparisonLatest?.spread ?? null)}</p>
+            </article>
+            <article>
+              <h2>Weeks in range</h2>
+              <p className="metric metric--brown4">{porkComprehensiveRows.length}</p>
+            </article>
+          </section>
+
+          <section className="panel table-wrap">
+            <div className="table-wrap-head">
+              <h2>Weekly Comprehensive Pork Prices ($/cwt)</h2>
+              <div className="field field--table-sort">
+                <label htmlFor="tableDateOrderPorkComprehensive">Table order by week</label>
+                <select
+                  id="tableDateOrderPorkComprehensive"
+                  className="select-brown select-brown--compact"
+                  value={tableDateOrder}
+                  onChange={(e) => setTableDateOrder(e.target.value as TableDateOrder)}
+                >
+                  <option value="asc">Oldest at top â†’ newest down</option>
+                  <option value="desc">Newest at top â†’ oldest down</option>
+                </select>
+              </div>
+            </div>
+            {porkComprehensiveRowsChrono.some((r) => r.synthesized) && (
+              <p className="admin-panel__hint">
+                USDA stopped publishing LM_PK680 on 2025-06-30. Weeks marked * are
+                derived from LM_PK602 daily negotiated prices averaged per week, so the
+                table stays current — note these reflect negotiated trade only, not the
+                contract/formula blend the original comprehensive report included.
+              </p>
+            )}
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Carcass</th>
+                    <th>Loin</th>
+                    <th>Butt</th>
+                    <th>Picnic</th>
+                    <th>Rib</th>
+                    <th>Ham</th>
+                    <th>Belly</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {porkComprehensiveRowsForTable.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="admin-preview-empty">
+                        No comprehensive pork rows in this range.
+                      </td>
+                    </tr>
+                  ) : (
+                    porkComprehensiveRowsForTable.map((row) => (
+                      <tr key={row.date}>
+                        <td>{row.date}{row.synthesized ? " *" : ""}</td>
+                        <td className={row.carcass != null ? "td-br1" : "val-null"}>{fmt(row.carcass)}</td>
+                        <td className={row.loin != null ? "td-br2" : "val-null"}>{fmt(row.loin)}</td>
+                        <td className={row.butt != null ? "td-br3" : "val-null"}>{fmt(row.butt)}</td>
+                        <td>{fmt(row.picnic)}</td>
+                        <td>{fmt(row.rib)}</td>
+                        <td>{fmt(row.ham)}</td>
+                        <td className={row.belly != null ? "td-br1" : "val-null"}>{fmt(row.belly)}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="panel chart-wrap">
+            <div className="table-wrap-head">
+              <h2>Negotiated vs Comprehensive ($/cwt)</h2>
+              <div className="field field--table-sort">
+                <label htmlFor="porkComparisonCut">Cut for comparison</label>
+                <select
+                  id="porkComparisonCut"
+                  className="select-brown select-brown--compact"
+                  value={porkComparisonCut}
+                  onChange={(e) => setPorkComparisonCut(e.target.value as PorkCutKey)}
+                >
+                  {(Object.keys(PORK_FIELD_LABELS) as PorkCutKey[]).map((cut) => (
+                    <option key={cut} value={cut}>
+                      {PORK_FIELD_LABELS[cut]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <p className="admin-panel__hint">
+              Negotiated is averaged from LM_PK602 daily rows into weekly Friday buckets so it can be compared directly against LM_PK680 week-ending values.
+            </p>
+            <div className="legend">
+              <span className="legend-item">
+                <span className="legend-dot" style={{ background: PORK_CUT_COLORS[porkComparisonCut] }} />
+                Negotiated weekly avg
+              </span>
+              <span className="legend-item">
+                <span className="legend-dot" style={{ background: "#1d4ed8" }} />
+                Comprehensive
+              </span>
+              <span className="legend-item">
+                <span className="legend-dot" style={{ background: "#57534e" }} />
+                Spread
+              </span>
+            </div>
+            <div className="chart-box">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={porkComparisonData} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
+                    tickFormatter={(v: string) => v.slice(0, 7)}
+                    interval="preserveStartEnd"
+                    minTickGap={60}
+                  />
+                  <YAxis
+                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
+                    domain={["auto", "auto"]}
+                    tickFormatter={(v: number) => v.toFixed(0)}
+                    width={44}
+                  />
+                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
+                  <Line
+                    type="monotone"
+                    dataKey="negotiated"
+                    stroke={PORK_CUT_COLORS[porkComparisonCut]}
+                    dot={false}
+                    strokeWidth={2}
+                    connectNulls
+                    name="Negotiated weekly avg"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="comprehensive"
+                    stroke="#1d4ed8"
+                    dot={false}
+                    strokeWidth={2}
+                    connectNulls
+                    name="Comprehensive"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="spread"
+                    stroke="#57534e"
+                    strokeDasharray="6 4"
+                    dot={false}
+                    strokeWidth={2}
+                    connectNulls
+                    name="Spread"
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -1509,18 +2146,42 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
         <>
           <section className="panel metrics">
             <article>
-              <h2>Breast fresh wtd avg (¢/lb)</h2>
-              <p className="metric" style={{ color: TURKEY_LINE.BreastFresh }}>{fmt(lastFresh?.breast_wtd_avg ?? null)}</p>
+              <h2>Whole Hen fresh (¢/lb)</h2>
+              <p className="metric" style={{ color: TURKEY_LINE.Fresh }}>
+                {fmt(latestWholeHenFresh?.wtd_avg ?? null)}
+              </p>
             </article>
             <article>
-              <h2>Breast frozen wtd avg (¢/lb)</h2>
-              <p className="metric" style={{ color: TURKEY_LINE.BreastFrozen }}>{fmt(lastFrozen?.breast_wtd_avg ?? null)}</p>
+              <h2>Whole Hen frozen (¢/lb)</h2>
+              <p className="metric" style={{ color: TURKEY_LINE.Frozen }}>
+                {fmt(latestWholeHenFrozen?.wtd_avg ?? null)}
+              </p>
+            </article>
+            <article>
+              <h2>Breast fresh (¢/lb)</h2>
+              <p className="metric" style={{ color: TURKEY_LINE.BreastFresh }}>
+                {fmt(latestBreastFresh?.wtd_avg ?? null)}
+              </p>
+            </article>
+            <article>
+              <h2>Breast frozen (¢/lb)</h2>
+              <p className="metric" style={{ color: TURKEY_LINE.BreastFrozen }}>
+                {fmt(latestBreastFrozen?.wtd_avg ?? null)}
+              </p>
+            </article>
+            <article>
+              <h2>Whole Hen fresh YTD</h2>
+              <p className="metric" style={{ color: TURKEY_LINE.Fresh }}>{fmt(avgFresh)}</p>
+            </article>
+            <article>
+              <h2>Whole Hen rows</h2>
+              <p className="metric" style={{ color: TURKEY_LINE.Frozen }}>{turkeyRows.length}</p>
             </article>
           </section>
 
           <section className="panel table-wrap">
             <div className="table-wrap-head">
-              <h2>Weekly data</h2>
+              <h2>WEEKLY DATA TURKEY BREASTS FRESH</h2>
               <div className="field field--table-sort">
                 <label htmlFor="tableDateOrderTurkey">Table order by week</label>
                 <select
@@ -1534,28 +2195,37 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                 </select>
               </div>
             </div>
+            <p className="admin-panel__hint">
+              Showing the Fresh breast series only, with the same simple columns as your source sheet.
+              USDA volume is reported in units of 1,000 lbs.
+            </p>
             <div className="table-scroll">
               <table>
                 <thead>
                   <tr>
                     <th>Week start</th>
                     <th>Week end</th>
-                    <th>Breast wtd avg (¢)</th>
-                    <th>Volume (lbs)</th>
+                    <th>Wtd avg (¢)</th>
+                    <th>Volume (1,000 lbs)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {turkeyRowsForTable.map((row) => {
-                    const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
-                    return (
-                      <tr key={`${row.isoDate}-${row.condition}`}>
+                  {turkeyBreastFreshRowsForTable.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="admin-preview-empty">
+                        No fresh breast rows in this range.
+                      </td>
+                    </tr>
+                  ) : (
+                    turkeyBreastFreshRowsForTable.map((row) => (
+                      <tr key={turkeyRowKey(row)}>
                         <td>{row.week_start}</td>
                         <td>{row.week_end}</td>
-                        <td>{fmt(row.breast_wtd_avg ?? null)}</td>
-                        <td>{row.volume_lbs ?? "-"}</td>
+                        <td className="td-br1">{fmt(row.wtd_avg)}</td>
+                        <td>{fmtVolume(row.volume_1000_lbs)}</td>
                       </tr>
-                    );
-                  })}
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -1613,11 +2283,29 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       <section className="panel admin-data-preview" aria-label="Session data tables">
         <h2 className="admin-panel__title">Data in this session</h2>
         <p className="admin-panel__hint">
-          Always shown: daily hog ($/cwt), weekly turkey (¢/lb), and daily pork cutout ($/cwt).
-          Each table has its own date range filter.
+          Always shown: daily hog ($/cwt), weekly turkey (¢/lb), and daily pork cutout ($/cwt) for the same
+          date range as the controls above or the filters below.
         </p>
 
         <div className="admin-preview-controls">
+          <div className="field">
+            <label htmlFor="adminStartDate">Start date</label>
+            <input
+              id="adminStartDate"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="adminEndDate">End date</label>
+            <input
+              id="adminEndDate"
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
           <div className="field">
             <label htmlFor="adminTableOrder">Table order</label>
             <select
@@ -1637,18 +2325,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             <div className="admin-preview-table__head">
               <h3>Daily hogs · LM_HG217</h3>
               <span className="admin-preview-count">
-                {hogAdminRows.length} day{hogAdminRows.length === 1 ? "" : "s"}
+                {hogRows.length} day{hogRows.length === 1 ? "" : "s"}
               </span>
-            </div>
-            <div className="admin-table-filters">
-              <div className="field">
-                <label htmlFor="hogAdminStart">Start date</label>
-                <input id="hogAdminStart" type="date" value={hogAdminStart} onChange={(e) => setHogAdminStart(e.target.value)} />
-              </div>
-              <div className="field">
-                <label htmlFor="hogAdminEnd">End date</label>
-                <input id="hogAdminEnd" type="date" value={hogAdminEnd} onChange={(e) => setHogAdminEnd(e.target.value)} />
-              </div>
             </div>
             {hogMeta && (
               <p className="admin-preview-meta">Last hog pull / file timestamp: {formatUpdatedEn(hogMeta)}</p>
@@ -1664,14 +2342,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {hogAdminRows.length === 0 ? (
+                  {hogRowsForTable.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="admin-preview-empty">
                         No hog rows in this range (session may be empty until Refresh or deploy reload).
                       </td>
                     </tr>
                   ) : (
-                    hogAdminRows.map((row) => (
+                    hogRowsForTable.map((row) => (
                       <tr key={row.date}>
                         <td>{row.date}</td>
                         <td className={row.national != null ? "td-br1" : "val-null"}>{fmt(row.national)}</td>
@@ -1687,33 +2365,10 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
 
           <div className="admin-preview-table">
             <div className="admin-preview-table__head">
-              <h3>Weekly turkey · AMS_3647</h3>
+              <h3>Weekly turkey Breast · AMS_3647</h3>
               <span className="admin-preview-count">
-                {turkeyAdminRows.length} row{turkeyAdminRows.length === 1 ? "" : "s"}
+                {turkeyBreastRows.length} row{turkeyBreastRows.length === 1 ? "" : "s"}
               </span>
-            </div>
-            <div className="admin-table-filters">
-              <div className="field">
-                <label htmlFor="turkeyAdminStart">Start date</label>
-                <input id="turkeyAdminStart" type="date" value={turkeyAdminStart} onChange={(e) => setTurkeyAdminStart(e.target.value)} />
-              </div>
-              <div className="field">
-                <label htmlFor="turkeyAdminEnd">End date</label>
-                <input id="turkeyAdminEnd" type="date" value={turkeyAdminEnd} onChange={(e) => setTurkeyAdminEnd(e.target.value)} />
-              </div>
-              <div className="field">
-                <label htmlFor="adminCondFilter">Condition</label>
-                <select
-                  id="adminCondFilter"
-                  value={condition}
-                  onChange={(e) => setCondition(e.target.value as Condition)}
-                  className="select-brown"
-                >
-                  <option value="all">Fresh + frozen</option>
-                  <option value="Fresh">Fresh only</option>
-                  <option value="Frozen">Frozen only</option>
-                </select>
-              </div>
             </div>
             {turkeyMeta && (
               <p className="admin-preview-meta">Last turkey pull / file timestamp: {formatUpdatedEn(turkeyMeta)}</p>
@@ -1728,28 +2383,79 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                     <th>Low (¢)</th>
                     <th>High (¢)</th>
                     <th>Wtd avg (¢)</th>
-                    <th>Volume</th>
+                    <th>Volume (1,000 lbs)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {turkeyAdminRows.length === 0 ? (
+                  {turkeyBreastRowsForTable.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="admin-preview-empty">
-                        No turkey rows in this range (session may be empty until Refresh or deploy reload).
+                        No turkey breast rows in this range.
                       </td>
                     </tr>
                   ) : (
-                    turkeyAdminRows.map((row) => {
+                    turkeyBreastRowsForTable.map((row) => {
                       const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
                       return (
-                        <tr key={`${row.isoDate}-${row.condition}`}>
+                        <tr key={turkeyRowKey(row)}>
                           <td>{row.week_start}</td>
                           <td>{row.week_end}</td>
                           <td className={cls}>{row.condition}</td>
                           <td className={cls}>{fmt(row.low_price)}</td>
                           <td className={cls}>{fmt(row.high_price)}</td>
                           <td className={cls}>{fmt(row.wtd_avg)}</td>
-                          <td>{row.volume_lbs ?? "-"}</td>
+                          <td>{fmtVolume(row.volume_1000_lbs)}</td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="admin-preview-table">
+            <div className="admin-preview-table__head">
+              <h3>Weekly turkey Whole Hen · AMS_3647</h3>
+              <span className="admin-preview-count">
+                {turkeyRows.length} row{turkeyRows.length === 1 ? "" : "s"}
+              </span>
+            </div>
+            {turkeyMeta && (
+              <p className="admin-preview-meta">Last turkey pull / file timestamp: {formatUpdatedEn(turkeyMeta)}</p>
+            )}
+            <div className="table-scroll admin-table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Week start</th>
+                    <th>Week end</th>
+                    <th>Condition</th>
+                    <th>Low (¢)</th>
+                    <th>High (¢)</th>
+                    <th>Wtd avg (¢)</th>
+                    <th>Volume (1,000 lbs)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {turkeyRowsForTable.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="admin-preview-empty">
+                        No turkey rows in this range (session may be empty until Refresh or deploy reload).
+                      </td>
+                    </tr>
+                  ) : (
+                    turkeyRowsForTable.map((row) => {
+                      const cls = row.condition === "Fresh" ? "td-br1" : "td-br2";
+                      return (
+                        <tr key={turkeyRowKey(row)}>
+                          <td>{row.week_start}</td>
+                          <td>{row.week_end}</td>
+                          <td className={cls}>{row.condition}</td>
+                          <td className={cls}>{fmt(row.low_price)}</td>
+                          <td className={cls}>{fmt(row.high_price)}</td>
+                          <td className={cls}>{fmt(row.wtd_avg)}</td>
+                          <td>{fmtVolume(row.volume_1000_lbs)}</td>
                         </tr>
                       );
                     })
@@ -1763,18 +2469,8 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             <div className="admin-preview-table__head">
               <h3>Daily pork · LM_PK602</h3>
               <span className="admin-preview-count">
-                {porkAdminRows.length} day{porkAdminRows.length === 1 ? "" : "s"}
+                {porkRows.length} day{porkRows.length === 1 ? "" : "s"}
               </span>
-            </div>
-            <div className="admin-table-filters">
-              <div className="field">
-                <label htmlFor="porkAdminStart">Start date</label>
-                <input id="porkAdminStart" type="date" value={porkAdminStart} onChange={(e) => setPorkAdminStart(e.target.value)} />
-              </div>
-              <div className="field">
-                <label htmlFor="porkAdminEnd">End date</label>
-                <input id="porkAdminEnd" type="date" value={porkAdminEnd} onChange={(e) => setPorkAdminEnd(e.target.value)} />
-              </div>
             </div>
             {porkMeta && (
               <p className="admin-preview-meta">Last pork pull / file timestamp: {formatUpdatedEn(porkMeta)}</p>
@@ -1794,14 +2490,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {porkAdminRows.length === 0 ? (
+                  {porkRowsForTable.length === 0 ? (
                     <tr>
                       <td colSpan={8} className="admin-preview-empty">
                         No pork rows in this range (session may be empty until Refresh or deploy reload).
                       </td>
                     </tr>
                   ) : (
-                    porkAdminRows.map((row) => (
+                    porkRowsForTable.map((row) => (
                       <tr key={row.date}>
                         <td>{row.date}</td>
                         <td>{fmt(row.pork_carcass)}</td>
