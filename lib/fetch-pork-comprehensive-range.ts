@@ -1,4 +1,5 @@
 import https from "node:https";
+import { fetchPorkDateRange } from "./fetch-pork-range";
 
 const BASE = "https://mpr.datamart.ams.usda.gov/ws/report/v1/pork/LM_PK680";
 const CHUNK_DAYS = 730;
@@ -24,6 +25,7 @@ export interface PorkComprehensiveRowRaw {
   rib: number | null;
   ham: number | null;
   belly: number | null;
+  synthesized?: boolean;
 }
 
 interface ParsedPorkComprehensiveRow extends PorkComprehensiveRowRaw {
@@ -234,6 +236,84 @@ function mergeWeeklyRows(
   }
 }
 
+function isoWeekday(iso: string): number {
+  const p = parseIsoParts(iso);
+  if (!p) return 0;
+  return new Date(Date.UTC(p.y, p.m - 1, p.d)).getUTCDay();
+}
+
+function fridayOfWeek(iso: string): string {
+  const wd = isoWeekday(iso);
+  // Mon=1..Fri=5, Sat=6, Sun=0. Push to Friday of the same Sun..Sat week.
+  const delta = wd === 0 ? -2 : wd === 6 ? -1 : 5 - wd;
+  return addDays(iso, delta);
+}
+
+function mondayAfter(fridayIso: string): string {
+  return addDays(fridayIso, 3);
+}
+
+async function synthesizeFromNegotiated(
+  isoStart: string,
+  isoEnd: string,
+  existing: Map<string, ParsedPorkComprehensiveRow>
+): Promise<void> {
+  if (compareIso(isoStart, isoEnd) > 0) return;
+  const { rows: dailyRows } = await fetchPorkDateRange(isoStart, isoEnd);
+  if (dailyRows.length === 0) return;
+
+  const buckets = new Map<
+    string,
+    { sums: Record<PorkComprehensiveField, number>; counts: Record<PorkComprehensiveField, number> }
+  >();
+  const dailyKey: Record<PorkComprehensiveField, keyof (typeof dailyRows)[number]> = {
+    carcass: "pork_carcass",
+    loin: "pork_loin",
+    butt: "pork_butt",
+    picnic: "pork_picnic",
+    rib: "pork_rib",
+    ham: "pork_ham",
+    belly: "pork_belly",
+  };
+
+  for (const r of dailyRows) {
+    const friday = fridayOfWeek(r.date);
+    let b = buckets.get(friday);
+    if (!b) {
+      b = {
+        sums: { carcass: 0, loin: 0, butt: 0, picnic: 0, rib: 0, ham: 0, belly: 0 },
+        counts: { carcass: 0, loin: 0, butt: 0, picnic: 0, rib: 0, ham: 0, belly: 0 },
+      };
+      buckets.set(friday, b);
+    }
+    for (const f of FIELDS) {
+      const v = r[dailyKey[f]] as number | null;
+      if (typeof v === "number" && Number.isFinite(v)) {
+        b.sums[f] += v;
+        b.counts[f] += 1;
+      }
+    }
+  }
+
+  for (const [friday, b] of buckets) {
+    if (existing.has(friday)) continue;
+    const reportDateIso = mondayAfter(friday);
+    const row: ParsedPorkComprehensiveRow = {
+      report_date: reportDateIso,
+      date: reportDateIso,
+      carcass: b.counts.carcass ? b.sums.carcass / b.counts.carcass : null,
+      loin: b.counts.loin ? b.sums.loin / b.counts.loin : null,
+      butt: b.counts.butt ? b.sums.butt / b.counts.butt : null,
+      picnic: b.counts.picnic ? b.sums.picnic / b.counts.picnic : null,
+      rib: b.counts.rib ? b.sums.rib / b.counts.rib : null,
+      ham: b.counts.ham ? b.sums.ham / b.counts.ham : null,
+      belly: b.counts.belly ? b.sums.belly / b.counts.belly : null,
+      synthesized: true,
+    };
+    if (rowHasAnyValue(row)) existing.set(friday, row);
+  }
+}
+
 export async function fetchPorkComprehensiveDateRange(
   isoStart: string,
   isoEnd: string
@@ -248,6 +328,19 @@ export async function fetchPorkComprehensiveDateRange(
   const merged = new Map<string, ParsedPorkComprehensiveRow>();
   for (const { from, to } of chunkRange(isoStart, fetchEnd)) {
     mergeWeeklyRows(merged, await fetchChunk(from, to));
+  }
+
+  // LM_PK680 was discontinued by USDA on 2025-06-30. Fill any gap up to isoEnd
+  // with weekly averages derived from the still-active LM_PK602 daily negotiated
+  // report so the dashboard stays current. Synthesized rows are flagged.
+  const lastRealFriday = [...merged.keys()].sort().pop() ?? null;
+  const synthFrom = lastRealFriday ? addDays(lastRealFriday, 1) : isoStart;
+  if (compareIso(synthFrom, isoEnd) <= 0) {
+    try {
+      await synthesizeFromNegotiated(synthFrom, isoEnd, merged);
+    } catch {
+      // Synthesis is best-effort; never let it fail the real fetch.
+    }
   }
 
   const rows = [...merged.values()]

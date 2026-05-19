@@ -126,6 +126,7 @@ interface PorkComprehensiveRow {
   rib: number | null;
   ham: number | null;
   belly: number | null;
+  synthesized?: boolean;
 }
 
 interface PorkComprehensivePayload {
@@ -385,6 +386,7 @@ function normalizePorkComprehensiveRow(
     rib: row.rib ?? null,
     ham: row.ham ?? null,
     belly: row.belly ?? null,
+    synthesized: row.synthesized === true ? true : undefined,
   };
 }
 
@@ -2003,6 +2005,14 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                 </select>
               </div>
             </div>
+            {porkComprehensiveRowsChrono.some((r) => r.synthesized) && (
+              <p className="admin-panel__hint">
+                USDA stopped publishing LM_PK680 on 2025-06-30. Weeks marked * are
+                derived from LM_PK602 daily negotiated prices averaged per week, so the
+                table stays current — note these reflect negotiated trade only, not the
+                contract/formula blend the original comprehensive report included.
+              </p>
+            )}
             <div className="table-scroll">
               <table>
                 <thead>
@@ -2027,7 +2037,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
                   ) : (
                     porkComprehensiveRowsForTable.map((row) => (
                       <tr key={row.date}>
-                        <td>{row.date}</td>
+                        <td>{row.date}{row.synthesized ? " *" : ""}</td>
                         <td className={row.carcass != null ? "td-br1" : "val-null"}>{fmt(row.carcass)}</td>
                         <td className={row.loin != null ? "td-br2" : "val-null"}>{fmt(row.loin)}</td>
                         <td className={row.butt != null ? "td-br3" : "val-null"}>{fmt(row.butt)}</td>
