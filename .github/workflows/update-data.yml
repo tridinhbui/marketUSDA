@@ -33,6 +33,8 @@ jobs:
         # If USDA_MARS_API_KEY secret is unset, GitHub injects ""; scripts fall back to default key.
         env:
           USDA_MARS_API_KEY: ${{ secrets.USDA_MARS_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python update_data.py
 
       - name: Commit and push if data changed
