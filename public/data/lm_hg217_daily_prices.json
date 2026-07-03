@@ -8,8 +8,8 @@
     "western"
   ],
   "startDate": "2023-01-01",
-  "endDate": "2026-07-02",
-  "generatedAt": "2026-07-02T06:15:57Z",
+  "endDate": "2026-07-03",
+  "generatedAt": "2026-07-03T07:55:02Z",
   "rows": [
     {
       "date": "2023-01-03",
@@ -5362,6 +5362,12 @@
       "national": 96.92,
       "iowaMn": 97.06,
       "western": 97.08
+    },
+    {
+      "date": "2026-07-02",
+      "national": 95.47,
+      "iowaMn": 95.93,
+      "western": 95.77
     }
   ]
 }
