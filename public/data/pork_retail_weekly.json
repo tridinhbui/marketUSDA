@@ -3,7 +3,7 @@
   "report": "AMS_2868",
   "description": "National avg retail feature price ($/lb) for key pork cuts",
   "priceUnit": "$/lb",
-  "generatedAt": "2026-08-13",
+  "generatedAt": "2026-08-14",
   "rows": [
     {
       "week_start": "2023-01-07",
