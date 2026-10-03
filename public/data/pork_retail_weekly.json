@@ -3,7 +3,7 @@
   "report": "AMS_2868",
   "description": "National avg retail feature price ($/lb) for key pork cuts",
   "priceUnit": "$/lb",
-  "generatedAt": "2026-10-02",
+  "generatedAt": "2026-10-03",
   "rows": [
     {
       "week_start": "2023-01-07",
@@ -16140,6 +16140,126 @@
       "type": "St. Louis Spareribs",
       "condition": "Frozen",
       "price_avg": 3.56
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Loin",
+      "type": "Backribs",
+      "condition": "Fresh",
+      "price_avg": 4.0207
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Loin",
+      "type": "Backribs",
+      "condition": "Frozen",
+      "price_avg": 4.7197
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Processed",
+      "type": "Breakfast Sausage",
+      "condition": "Fresh",
+      "price_avg": 4.9466
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Processed",
+      "type": "Breakfast Sausage",
+      "condition": "Frozen",
+      "price_avg": 3.1717
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Shoulder",
+      "type": "Butt Roast",
+      "condition": "Fresh",
+      "price_avg": 2.0193
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Shoulder",
+      "type": "Butt Roast",
+      "condition": "Frozen",
+      "price_avg": 2.49
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Ground",
+      "type": "Ground Pork",
+      "condition": "Fresh",
+      "price_avg": 4.64
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Loin",
+      "type": "Loin Chops (Bone-In)",
+      "condition": "Fresh",
+      "price_avg": 3.0209
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Loin",
+      "type": "Loin Chops (Boneless)",
+      "condition": "Fresh",
+      "price_avg": 3.6082
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Belly",
+      "type": "Pork Belly",
+      "condition": "Fresh",
+      "price_avg": 4.38
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Processed",
+      "type": "Sliced Bacon",
+      "condition": "Fresh",
+      "price_avg": 6.6304
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Rib",
+      "type": "Spareribs",
+      "condition": "Fresh",
+      "price_avg": 3.0851
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Rib",
+      "type": "Spareribs",
+      "condition": "Frozen",
+      "price_avg": 2.7273
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Rib",
+      "type": "St. Louis Spareribs",
+      "condition": "Fresh",
+      "price_avg": 4.17
+    },
+    {
+      "week_start": "2026-09-26",
+      "week_end": "2026-10-02",
+      "section": "Rib",
+      "type": "St. Louis Spareribs",
+      "condition": "Frozen",
+      "price_avg": 2.9826
     }
   ]
 }
