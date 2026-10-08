@@ -69,7 +69,17 @@ function fmtMdY(d: Date): string {
 }
 
 function mapBreastRow(r: Record<string, unknown>): { week_start: string; condition: string; breast_wtd_avg: number } | null {
-  if (r.item !== "Breasts,Boneless/Skinless" || r.class !== "Tom") return null;
+  if (
+    r.item !== "Breasts,Boneless/Skinless" ||
+    r.class !== "Tom" ||
+    r.trade_status !== "Domestic" ||
+    r.condition !== "Fresh" ||
+    r.environment !== "Conventional" ||
+    r.freight !== "Delivered" ||
+    r.grade !== "N/A"
+  ) {
+    return null;
+  }
   const ws = String(r.report_begin_date ?? "");
   const cond = String(r.condition ?? "");
   const wtd = Number(r.wtd_avg_price ?? NaN);
