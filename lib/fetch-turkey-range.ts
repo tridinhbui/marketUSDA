@@ -86,7 +86,14 @@ function mapTurkeyRow(row: TurkeySourceRow, product: "wholeHen" | "breast"): Tur
     row.class === "Hen" &&
     row.size === "8-16 lb" &&
     row.grade === "U.S. Grade A";
-  const isBreast = row.item === "Breasts,Boneless/Skinless" && row.class === "Tom";
+  const isBreast =
+    row.item === "Breasts,Boneless/Skinless" &&
+    row.class === "Tom" &&
+    row.trade_status === "Domestic" &&
+    row.condition === "Fresh" &&
+    row.environment === "Conventional" &&
+    row.freight === "Delivered" &&
+    row.grade === "N/A";
 
   if ((product === "wholeHen" && !isWholeHen) || (product === "breast" && !isBreast)) {
     return null;
