@@ -2,16 +2,6 @@
 
 import { useState, useEffect, useLayoutEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-
 const HOG_URL = "/data/lm_hg217_daily_prices.json";
 const TURKEY_URL = "/data/turkey_hen_weekly.json";
 const PORK_URL = "/data/pork_cutout_daily.json";
@@ -115,8 +105,6 @@ interface PorkPayload {
   rows: PorkRow[];
 }
 
-type PorkCutKey = "carcass" | "loin" | "butt" | "picnic" | "rib" | "ham" | "belly";
-
 interface PorkComprehensiveRow {
   date: string;
   carcass: number | null;
@@ -179,12 +167,6 @@ function formatUpdatedEn(raw?: string) {
     ...(/T\d/.test(s) ? { timeStyle: "short" } : {}),
   } as Intl.DateTimeFormatOptions).format(d);
 }
-
-const HOG_LINE = {
-  national: "#7c2d12",
-  iowaMn: "#b45309",
-  western: "#d97706",
-};
 
 function mergeHogByDate(prev: HogRow[], incoming: HogRow[]): HogRow[] {
   const map = new Map<string, HogRow>();
@@ -332,46 +314,6 @@ function summarizeTurkeySeries(rows: TurkeyRow[]): TurkeySeriesPoint[] {
 
 const TURKEY_LINE = { Fresh: "#92400e", Frozen: "#451a03", BreastFresh: "#c2410c", BreastFrozen: "#7c2d12" };
 
-const PORK_CUT_COLORS: Record<PorkCutKey, string> = {
-  carcass: "#b91c1c",
-  loin: "#d97706",
-  butt: "#16a34a",
-  picnic: "#0891b2",
-  rib: "#7c3aed",
-  ham: "#db2777",
-  belly: "#ea580c",
-};
-
-const PORK_FIELD_LABELS: Record<PorkCutKey, string> = {
-  carcass: "Carcass",
-  loin: "Loin",
-  butt: "Butt",
-  picnic: "Picnic",
-  rib: "Rib",
-  ham: "Ham",
-  belly: "Belly",
-};
-
-const PORK_NEGOTIATED_FIELD_KEYS: Record<PorkCutKey, keyof PorkRow> = {
-  carcass: "pork_carcass",
-  loin: "pork_loin",
-  butt: "pork_butt",
-  picnic: "pork_picnic",
-  rib: "pork_rib",
-  ham: "pork_ham",
-  belly: "pork_belly",
-};
-
-const PORK_NEGOTIATED_LINE = {
-  pork_carcass: PORK_CUT_COLORS.carcass,
-  pork_loin: PORK_CUT_COLORS.loin,
-  pork_butt: PORK_CUT_COLORS.butt,
-  pork_picnic: PORK_CUT_COLORS.picnic,
-  pork_rib: PORK_CUT_COLORS.rib,
-  pork_ham: PORK_CUT_COLORS.ham,
-  pork_belly: PORK_CUT_COLORS.belly,
-};
-
 function normalizePorkComprehensiveRow(
   row: PorkComprehensiveRow & { report_for_date?: string; report_date?: string }
 ): PorkComprehensiveRow | null {
@@ -411,52 +353,6 @@ function toWeekEndingFriday(dateIso: string) {
   const delta = weekday === 0 ? -2 : weekday === 6 ? -1 : 5 - weekday;
   date.setUTCDate(date.getUTCDate() + delta);
   return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
-}
-
-function getPorkNegotiatedCutValue(row: PorkRow, cut: PorkCutKey): number | null {
-  return row[PORK_NEGOTIATED_FIELD_KEYS[cut]] as number | null;
-}
-
-function buildWeeklyNegotiatedPork(rows: PorkRow[]): PorkComprehensiveRow[] {
-  const buckets = new Map<
-    string,
-    {
-      sums: Record<PorkCutKey, number>;
-      counts: Record<PorkCutKey, number>;
-    }
-  >();
-
-  for (const row of rows) {
-    const weekEnding = toWeekEndingFriday(row.date);
-    const bucket =
-      buckets.get(weekEnding) ??
-      {
-        sums: { carcass: 0, loin: 0, butt: 0, picnic: 0, rib: 0, ham: 0, belly: 0 },
-        counts: { carcass: 0, loin: 0, butt: 0, picnic: 0, rib: 0, ham: 0, belly: 0 },
-      };
-
-    (Object.keys(PORK_FIELD_LABELS) as PorkCutKey[]).forEach((cut) => {
-      const value = getPorkNegotiatedCutValue(row, cut);
-      if (value == null) return;
-      bucket.sums[cut] += value;
-      bucket.counts[cut] += 1;
-    });
-
-    buckets.set(weekEnding, bucket);
-  }
-
-  return [...buckets.entries()]
-    .map(([weekEnding, bucket]) => ({
-      date: weekEnding,
-      carcass: bucket.counts.carcass ? bucket.sums.carcass / bucket.counts.carcass : null,
-      loin: bucket.counts.loin ? bucket.sums.loin / bucket.counts.loin : null,
-      butt: bucket.counts.butt ? bucket.sums.butt / bucket.counts.butt : null,
-      picnic: bucket.counts.picnic ? bucket.sums.picnic / bucket.counts.picnic : null,
-      rib: bucket.counts.rib ? bucket.sums.rib / bucket.counts.rib : null,
-      ham: bucket.counts.ham ? bucket.sums.ham / bucket.counts.ham : null,
-      belly: bucket.counts.belly ? bucket.sums.belly / bucket.counts.belly : null,
-    }))
-    .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 const EMPTY_DATA_HINT =
@@ -565,8 +461,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const [porkComprehensiveFull, setPorkComprehensiveFull] = useState<PorkComprehensiveRow[]>([]);
   const [porkComprehensiveRows, setPorkComprehensiveRows] = useState<PorkComprehensiveRow[]>([]);
   const [porkComprehensiveMeta, setPorkComprehensiveMeta] = useState<string | undefined>();
-  const [porkComparisonCut, setPorkComparisonCut] = useState<PorkCutKey>("carcass");
-
   const [status, setStatus] = useState(() => (initialTab === "admin" ? ADMIN_TAB_HINT : EMPTY_DATA_HINT));
   const [fetchingRange, setFetchingRange] = useState(false);
   const [githubBusy, setGithubBusy] = useState(false);
@@ -1317,36 +1211,15 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   }, [porkComprehensiveRowsChrono, tableDateOrder]);
 
   const porkComprehensiveLast = porkComprehensiveRowsChrono[porkComprehensiveRowsChrono.length - 1];
-  const porkNegotiatedWeeklyRows = useMemo(() => buildWeeklyNegotiatedPork(porkRows), [porkRows]);
-  const porkComparisonData = useMemo(() => {
-    const chartMap = new Map<string, { date: string; negotiated?: number | null; comprehensive?: number | null; spread?: number | null }>();
-
-    porkNegotiatedWeeklyRows.forEach((row) => {
-      const value = row[porkComparisonCut];
-      const entry = chartMap.get(row.date) ?? { date: row.date };
-      entry.negotiated = value;
-      chartMap.set(row.date, entry);
-    });
-
-    porkComprehensiveRowsChrono.forEach((row) => {
-      const value = row[porkComparisonCut];
-      const entry = chartMap.get(row.date) ?? { date: row.date };
-      entry.comprehensive = value;
-      chartMap.set(row.date, entry);
-    });
-
-    return [...chartMap.values()]
-      .sort((a, b) => a.date.localeCompare(b.date))
-      .map((row) => ({
-        ...row,
-        spread:
-          row.comprehensive != null && row.negotiated != null
-            ? row.comprehensive - row.negotiated
-            : null,
-      }));
-  }, [porkNegotiatedWeeklyRows, porkComprehensiveRowsChrono, porkComparisonCut]);
-  const porkComparisonLatest = porkComparisonData[porkComparisonData.length - 1];
-
+  const latestPorkCarcassSpread = useMemo(() => {
+    if (!porkComprehensiveLast || porkComprehensiveLast.carcass == null) return null;
+    const negotiated = porkRows
+      .filter((row) => toWeekEndingFriday(row.date) === porkComprehensiveLast.date && row.pork_carcass != null)
+      .map((row) => row.pork_carcass as number);
+    if (negotiated.length === 0) return null;
+    const negotiatedAverage = negotiated.reduce((sum, value) => sum + value, 0) / negotiated.length;
+    return porkComprehensiveLast.carcass - negotiatedAverage;
+  }, [porkComprehensiveLast, porkRows]);
   const turkeyRowsChrono = useMemo(
     () => [...turkeyRows].sort(compareTurkeyRows),
     [turkeyRows]
@@ -1391,29 +1264,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
     ytdFresh.length > 0
       ? ytdFresh.reduce((sum, row) => sum + (row.wtd_avg ?? 0), 0) / ytdFresh.length
       : null;
-
-  const chartData = useMemo(() => {
-    const chartDataMap = new Map<
-      string,
-      { isoDate: string; Fresh?: number; Frozen?: number; BreastFresh?: number; BreastFrozen?: number }
-    >();
-
-    wholeHenSeries.forEach((row) => {
-      const entry = chartDataMap.get(row.isoDate) ?? { isoDate: row.isoDate };
-      if (row.condition === "Fresh" && row.wtd_avg != null) entry.Fresh = row.wtd_avg;
-      if (row.condition === "Frozen" && row.wtd_avg != null) entry.Frozen = row.wtd_avg;
-      chartDataMap.set(row.isoDate, entry);
-    });
-
-    breastSeries.forEach((row) => {
-      const entry = chartDataMap.get(row.isoDate) ?? { isoDate: row.isoDate };
-      if (row.condition === "Fresh" && row.wtd_avg != null) entry.BreastFresh = row.wtd_avg;
-      if (row.condition === "Frozen" && row.wtd_avg != null) entry.BreastFrozen = row.wtd_avg;
-      chartDataMap.set(row.isoDate, entry);
-    });
-
-    return Array.from(chartDataMap.values()).sort((a, b) => a.isoDate.localeCompare(b.isoDate));
-  }, [wholeHenSeries, breastSeries]);
 
   return (
     <main className="shell">
@@ -1808,47 +1658,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </div>
           </section>
 
-          <section className="panel chart-wrap">
-            <h2>Price trend</h2>
-            <div className="legend">
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: HOG_LINE.national }} />
-                National
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: HOG_LINE.iowaMn }} />
-                Iowa/MN
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: HOG_LINE.western }} />
-                Western Cornbelt
-              </span>
-            </div>
-            <div className="chart-box">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={hogRowsChrono} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    tickFormatter={(v: string) => v.slice(0, 7)}
-                    interval="preserveStartEnd"
-                    minTickGap={60}
-                  />
-                  <YAxis
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    domain={["auto", "auto"]}
-                    tickFormatter={(v: number) => v.toFixed(0)}
-                    width={44}
-                  />
-                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
-                  <Line type="monotone" dataKey="national" stroke={HOG_LINE.national} dot={false} strokeWidth={2} connectNulls name="National" />
-                  <Line type="monotone" dataKey="iowaMn" stroke={HOG_LINE.iowaMn} dot={false} strokeWidth={2} connectNulls name="Iowa/MN" />
-                  <Line type="monotone" dataKey="western" stroke={HOG_LINE.western} dot={false} strokeWidth={2} connectNulls name="Western" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </section>
         </>
       )}
 
@@ -1921,50 +1730,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </div>
           </section>
 
-          <section className="panel chart-wrap">
-            <h2>Negotiated price trend ($/cwt)</h2>
-            <div className="legend">
-              {(Object.keys(PORK_NEGOTIATED_LINE) as (keyof typeof PORK_NEGOTIATED_LINE)[]).map((k) => (
-                <span key={k} className="legend-item">
-                  <span className="legend-dot" style={{ background: PORK_NEGOTIATED_LINE[k] }} />
-                  {PORK_FIELD_LABELS[k.replace("pork_", "") as PorkCutKey]}
-                </span>
-              ))}
-            </div>
-            <div className="chart-box">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={porkRowsChrono} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    tickFormatter={(v: string) => v.slice(0, 7)}
-                    interval="preserveStartEnd"
-                    minTickGap={60}
-                  />
-                  <YAxis
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    domain={["auto", "auto"]}
-                    tickFormatter={(v: number) => v.toFixed(0)}
-                    width={44}
-                  />
-                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
-                  {(Object.keys(PORK_NEGOTIATED_LINE) as (keyof typeof PORK_NEGOTIATED_LINE)[]).map((k) => (
-                    <Line
-                      key={k}
-                      type="monotone"
-                      dataKey={k}
-                      stroke={PORK_NEGOTIATED_LINE[k]}
-                      dot={false}
-                      strokeWidth={2}
-                      connectNulls
-                      name={PORK_FIELD_LABELS[k.replace("pork_", "") as PorkCutKey]}
-                    />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </section>
         </>
       )}
 
@@ -1981,7 +1746,7 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </article>
             <article>
               <h2>Latest spread</h2>
-              <p className="metric metric--brown3">{fmt(porkComparisonLatest?.spread ?? null)}</p>
+              <p className="metric metric--brown3">{fmt(latestPorkCarcassSpread)}</p>
             </article>
             <article>
               <h2>Weeks in range</h2>
@@ -2053,92 +1818,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </div>
           </section>
 
-          <section className="panel chart-wrap">
-            <div className="table-wrap-head">
-              <h2>Negotiated vs Comprehensive ($/cwt)</h2>
-              <div className="field field--table-sort">
-                <label htmlFor="porkComparisonCut">Cut for comparison</label>
-                <select
-                  id="porkComparisonCut"
-                  className="select-brown select-brown--compact"
-                  value={porkComparisonCut}
-                  onChange={(e) => setPorkComparisonCut(e.target.value as PorkCutKey)}
-                >
-                  {(Object.keys(PORK_FIELD_LABELS) as PorkCutKey[]).map((cut) => (
-                    <option key={cut} value={cut}>
-                      {PORK_FIELD_LABELS[cut]}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <p className="admin-panel__hint">
-              Negotiated is averaged from LM_PK602 daily rows into weekly Friday buckets so it can be compared directly against LM_PK680 week-ending values.
-            </p>
-            <div className="legend">
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: PORK_CUT_COLORS[porkComparisonCut] }} />
-                Negotiated weekly avg
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: "#1d4ed8" }} />
-                Comprehensive
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: "#57534e" }} />
-                Spread
-              </span>
-            </div>
-            <div className="chart-box">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={porkComparisonData} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    tickFormatter={(v: string) => v.slice(0, 7)}
-                    interval="preserveStartEnd"
-                    minTickGap={60}
-                  />
-                  <YAxis
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    domain={["auto", "auto"]}
-                    tickFormatter={(v: number) => v.toFixed(0)}
-                    width={44}
-                  />
-                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
-                  <Line
-                    type="monotone"
-                    dataKey="negotiated"
-                    stroke={PORK_CUT_COLORS[porkComparisonCut]}
-                    dot={false}
-                    strokeWidth={2}
-                    connectNulls
-                    name="Negotiated weekly avg"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="comprehensive"
-                    stroke="#1d4ed8"
-                    dot={false}
-                    strokeWidth={2}
-                    connectNulls
-                    name="Comprehensive"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="spread"
-                    stroke="#57534e"
-                    strokeDasharray="6 4"
-                    dot={false}
-                    strokeWidth={2}
-                    connectNulls
-                    name="Spread"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </section>
         </>
       )}
 
@@ -2231,52 +1910,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </div>
           </section>
 
-          <section className="panel chart-wrap">
-            <h2>Price trend</h2>
-            <div className="legend">
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: TURKEY_LINE.Fresh }} />
-                Whole Hen Fresh
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: TURKEY_LINE.Frozen }} />
-                Whole Hen Frozen
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: TURKEY_LINE.BreastFresh }} />
-                Breast Tom Fresh
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: TURKEY_LINE.BreastFrozen }} />
-                Breast Tom Frozen
-              </span>
-            </div>
-            <div className="chart-box">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
-                  <XAxis
-                    dataKey="isoDate"
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    tickFormatter={(v: string) => v.slice(0, 7)}
-                    interval="preserveStartEnd"
-                    minTickGap={60}
-                  />
-                  <YAxis
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    domain={["auto", "auto"]}
-                    tickFormatter={(v: number) => v.toFixed(0)}
-                    width={44}
-                  />
-                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
-                  <Line type="monotone" dataKey="Fresh" stroke={TURKEY_LINE.Fresh} dot={false} strokeWidth={2} connectNulls />
-                  <Line type="monotone" dataKey="Frozen" stroke={TURKEY_LINE.Frozen} dot={false} strokeWidth={2} connectNulls />
-                  <Line type="monotone" dataKey="BreastFresh" stroke={TURKEY_LINE.BreastFresh} dot={false} strokeWidth={2} connectNulls />
-                  <Line type="monotone" dataKey="BreastFrozen" stroke={TURKEY_LINE.BreastFrozen} dot={false} strokeWidth={2} connectNulls />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </section>
         </>
       )}
 
