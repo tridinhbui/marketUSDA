@@ -2,15 +2,6 @@
 
 import { useState, useEffect, useLayoutEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import { supabase } from "@/lib/supabase";
 
 const HOG_URL = "/data/lm_hg217_daily_prices.json";
@@ -132,12 +123,6 @@ function formatUpdatedEn(raw?: string) {
   } as Intl.DateTimeFormatOptions).format(d);
 }
 
-const HOG_LINE = {
-  national: "#7c2d12",
-  iowaMn: "#b45309",
-  western: "#d97706",
-};
-
 function mergeHogByDate(prev: HogRow[], incoming: HogRow[]): HogRow[] {
   const map = new Map<string, HogRow>();
   for (const r of prev) map.set(r.date, r);
@@ -166,26 +151,6 @@ function mergeTurkeyRows(prev: TurkeyRow[], incoming: Omit<TurkeyRow, "isoDate">
 }
 
 const TURKEY_LINE = { Fresh: "#92400e", Frozen: "#451a03", BreastFresh: "#c2410c", BreastFrozen: "#7c2d12" };
-
-const PORK_LINE = {
-  pork_carcass: "#b91c1c",
-  pork_loin: "#d97706",
-  pork_butt: "#16a34a",
-  pork_picnic: "#0891b2",
-  pork_rib: "#7c3aed",
-  pork_ham: "#db2777",
-  pork_belly: "#ea580c",
-};
-
-const PORK_FIELD_LABELS: Record<keyof typeof PORK_LINE, string> = {
-  pork_carcass: "Carcass",
-  pork_loin: "Loin",
-  pork_butt: "Butt",
-  pork_picnic: "Picnic",
-  pork_rib: "Rib",
-  pork_ham: "Ham",
-  pork_belly: "Belly",
-};
 
 const EMPTY_DATA_HINT =
   "No data loaded yet. Set a date range and press Refresh to fetch from USDA.";
@@ -968,19 +933,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   const avgFresh =
     ytdFresh.length > 0 ? ytdFresh.reduce((s, r) => s + Number(r.wtd_avg), 0) / ytdFresh.length : null;
 
-  const chartData = useMemo(() => {
-    const chartDataMap = new Map<string, { isoDate: string; Fresh?: number; Frozen?: number; BreastFresh?: number; BreastFrozen?: number }>();
-    turkeyRows.forEach((r) => {
-      const entry = chartDataMap.get(r.isoDate) ?? { isoDate: r.isoDate };
-      if (r.condition === "Fresh") entry.Fresh = Number(r.wtd_avg);
-      if (r.condition === "Frozen") entry.Frozen = Number(r.wtd_avg);
-      if (r.condition === "Fresh" && r.breast_wtd_avg != null) entry.BreastFresh = Number(r.breast_wtd_avg);
-      if (r.condition === "Frozen" && r.breast_wtd_avg != null) entry.BreastFrozen = Number(r.breast_wtd_avg);
-      chartDataMap.set(r.isoDate, entry);
-    });
-    return Array.from(chartDataMap.values()).sort((a, b) => a.isoDate.localeCompare(b.isoDate));
-  }, [turkeyRows]);
-
   return (
     <main className="shell">
       <header className="top-bar">
@@ -1354,47 +1306,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </div>
           </section>
 
-          <section className="panel chart-wrap">
-            <h2>Price trend</h2>
-            <div className="legend">
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: HOG_LINE.national }} />
-                National
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: HOG_LINE.iowaMn }} />
-                Iowa/MN
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: HOG_LINE.western }} />
-                Western Cornbelt
-              </span>
-            </div>
-            <div className="chart-box">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={hogRowsChrono} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    tickFormatter={(v: string) => v.slice(0, 7)}
-                    interval="preserveStartEnd"
-                    minTickGap={60}
-                  />
-                  <YAxis
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    domain={["auto", "auto"]}
-                    tickFormatter={(v: number) => v.toFixed(0)}
-                    width={44}
-                  />
-                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
-                  <Line type="monotone" dataKey="national" stroke={HOG_LINE.national} dot={false} strokeWidth={2} connectNulls name="National" />
-                  <Line type="monotone" dataKey="iowaMn" stroke={HOG_LINE.iowaMn} dot={false} strokeWidth={2} connectNulls name="Iowa/MN" />
-                  <Line type="monotone" dataKey="western" stroke={HOG_LINE.western} dot={false} strokeWidth={2} connectNulls name="Western" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </section>
         </>
       )}
 
@@ -1467,41 +1378,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </div>
           </section>
 
-          <section className="panel chart-wrap">
-            <h2>Price trend ($/cwt)</h2>
-            <div className="legend">
-              {(Object.keys(PORK_LINE) as (keyof typeof PORK_LINE)[]).map((k) => (
-                <span key={k} className="legend-item">
-                  <span className="legend-dot" style={{ background: PORK_LINE[k] }} />
-                  {PORK_FIELD_LABELS[k]}
-                </span>
-              ))}
-            </div>
-            <div className="chart-box">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={porkRowsChrono} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    tickFormatter={(v: string) => v.slice(0, 7)}
-                    interval="preserveStartEnd"
-                    minTickGap={60}
-                  />
-                  <YAxis
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    domain={["auto", "auto"]}
-                    tickFormatter={(v: number) => v.toFixed(0)}
-                    width={44}
-                  />
-                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
-                  {(Object.keys(PORK_LINE) as (keyof typeof PORK_LINE)[]).map((k) => (
-                    <Line key={k} type="monotone" dataKey={k} stroke={PORK_LINE[k]} dot={false} strokeWidth={2} connectNulls name={PORK_FIELD_LABELS[k]} />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </section>
         </>
       )}
 
@@ -1561,52 +1437,6 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
             </div>
           </section>
 
-          <section className="panel chart-wrap">
-            <h2>Price trend</h2>
-            <div className="legend">
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: TURKEY_LINE.Fresh }} />
-                Whole Hen Fresh
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: TURKEY_LINE.Frozen }} />
-                Whole Hen Frozen
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: TURKEY_LINE.BreastFresh }} />
-                Breast Tom Fresh
-              </span>
-              <span className="legend-item">
-                <span className="legend-dot" style={{ background: TURKEY_LINE.BreastFrozen }} />
-                Breast Tom Frozen
-              </span>
-            </div>
-            <div className="chart-box">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e7d5c4" />
-                  <XAxis
-                    dataKey="isoDate"
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    tickFormatter={(v: string) => v.slice(0, 7)}
-                    interval="preserveStartEnd"
-                    minTickGap={60}
-                  />
-                  <YAxis
-                    tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }}
-                    domain={["auto", "auto"]}
-                    tickFormatter={(v: number) => v.toFixed(0)}
-                    width={44}
-                  />
-                  <Tooltip contentStyle={{ fontFamily: "IBM Plex Mono", fontSize: 12 }} formatter={(v: number) => v?.toFixed(2)} />
-                  <Line type="monotone" dataKey="Fresh" stroke={TURKEY_LINE.Fresh} dot={false} strokeWidth={2} connectNulls />
-                  <Line type="monotone" dataKey="Frozen" stroke={TURKEY_LINE.Frozen} dot={false} strokeWidth={2} connectNulls />
-                  <Line type="monotone" dataKey="BreastFresh" stroke={TURKEY_LINE.BreastFresh} dot={false} strokeWidth={2} connectNulls />
-                  <Line type="monotone" dataKey="BreastFrozen" stroke={TURKEY_LINE.BreastFrozen} dot={false} strokeWidth={2} connectNulls />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </section>
         </>
       )}
 
