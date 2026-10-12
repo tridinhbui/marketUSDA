@@ -104,3 +104,19 @@ output = {
 with open('public/data/turkey_hen_weekly.json', 'w') as f:
     json.dump(output, f, indent=2)
 print('Wrote public/data/turkey_hen_weekly.json')
+
+# Keep the Supabase dataset used by the dashboard in sync with the JSON file.
+# USDA can return more than one row for the same week/condition. The dashboard
+# treats week_start + condition as the row identity, so keep the last row just
+# as mergeTurkeyRows does in the frontend before sending a single upsert batch.
+from _supabase_upload import upsert_rows
+
+supabase_rows = {}
+for row in output['rows']:
+    supabase_rows[(row['week_start'], row['condition'])] = row
+
+upsert_rows(
+    'turkey_weekly',
+    list(supabase_rows.values()),
+    on_conflict='week_start,condition',
+)

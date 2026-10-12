@@ -3,6 +3,7 @@
 import { useState, useEffect, useLayoutEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { loadAllRows } from "@/lib/load-all-rows";
 
 const HOG_URL = "/data/lm_hg217_daily_prices.json";
 const TURKEY_URL = "/data/turkey_hen_weekly.json";
@@ -303,31 +304,41 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
   );
 
   const loadHog = useCallback(async (_bust?: boolean) => {
-    const { data, error } = await supabase
-      .from("hog_daily")
-      .select("date, national, iowa_mn, western")
-      .order("date", { ascending: true })
-      .range(0, 4999);
-    if (error) throw new Error(`Hog data error: ${error.message}`);
-    const rows: HogRow[] = (data ?? []).map((r) => ({
+    const data = await loadAllRows((from, to) =>
+      supabase
+        .from("hog_daily")
+        .select("date, national, iowa_mn, western", { count: "exact" })
+        .order("date", { ascending: true })
+        .range(from, to)
+    );
+
+    const rows: HogRow[] = data.map((r) => ({
       date: r.date,
       national: r.national,
       iowaMn: r.iowa_mn,
       western: r.western,
     }));
+
     setHogFull(rows);
     setHogMeta(new Date().toISOString());
+
     return rows;
   }, []);
 
   const loadTurkey = useCallback(async (_bust?: boolean) => {
-    const { data, error } = await supabase
-      .from("turkey_weekly")
-      .select("week_start, week_end, condition, low_price, high_price, wtd_avg, volume_lbs, breast_wtd_avg")
-      .order("week_start", { ascending: true })
-      .range(0, 4999);
-    if (error) throw new Error(`Turkey data error: ${error.message}`);
-    const rows: TurkeyRow[] = (data ?? []).map((r) => ({
+    const data = await loadAllRows((from, to) =>
+      supabase
+        .from("turkey_weekly")
+        .select(
+          "week_start, week_end, condition, low_price, high_price, wtd_avg, volume_lbs, breast_wtd_avg",
+          { count: "exact" }
+        )
+        .order("week_start", { ascending: true })
+        .order("condition", { ascending: true })
+        .range(from, to)
+    );
+
+    const rows: TurkeyRow[] = data.map((r) => ({
       week_start: r.week_start,
       week_end: r.week_end,
       condition: r.condition,
@@ -338,21 +349,30 @@ export default function MarketDashboard({ initialTab }: { initialTab: Tab }) {
       breast_wtd_avg: r.breast_wtd_avg,
       isoDate: toIso(r.week_start),
     }));
+
     setTurkeyFull(rows);
     setTurkeyMeta(new Date().toISOString());
+
     return rows;
   }, []);
 
   const loadPork = useCallback(async (_bust?: boolean) => {
-    const { data, error } = await supabase
-      .from("pork_daily")
-      .select("date, pork_carcass, pork_loin, pork_butt, pork_picnic, pork_rib, pork_ham, pork_belly")
-      .order("date", { ascending: true })
-      .range(0, 4999);
-    if (error) throw new Error(`Pork data error: ${error.message}`);
-    const rows: PorkRow[] = data ?? [];
+    const data = await loadAllRows((from, to) =>
+      supabase
+        .from("pork_daily")
+        .select(
+          "date, pork_carcass, pork_loin, pork_butt, pork_picnic, pork_rib, pork_ham, pork_belly",
+          { count: "exact" }
+        )
+        .order("date", { ascending: true })
+        .range(from, to)
+    );
+
+    const rows: PorkRow[] = data;
+
     setPorkFull(rows);
     setPorkMeta(new Date().toISOString());
+
     return rows;
   }, []);
 
