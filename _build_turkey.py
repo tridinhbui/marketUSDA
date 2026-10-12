@@ -56,6 +56,11 @@ while cur <= END:
         r for r in rows
         if r.get('item') == 'Breasts,Boneless/Skinless'
         and r.get('class') == 'Tom'
+        and r.get('trade_status') == 'Domestic'
+        and r.get('condition') == 'Fresh'
+        and r.get('environment') == 'Conventional'
+        and r.get('freight') == 'Delivered'
+        and r.get('grade') == 'N/A'
     ]
     print(f'{len(filtered)} hen rows, {len(breast)} breast rows')
     all_rows.extend(filtered)
