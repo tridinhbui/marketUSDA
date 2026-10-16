@@ -72,7 +72,10 @@ def fetch_chunk(start: date, end: date, rows: dict):
             return
         except Exception as e:
             if attempt == 2:
-                print(f"  WARNING: skipping chunk {sd}→{ed} after 3 failures: {e}")
+                raise RuntimeError(
+                    f"Failed chunk {sd}→{ed}; "
+                    "refusing to publish incomplete pork data"
+                ) from e
             else:
                 import time; time.sleep(3)
 
@@ -92,6 +95,10 @@ def main():
     with open(OUT, "w") as f:
         json.dump(sorted_rows, f, separators=(",", ":"))
     print(f"\nSaved {len(sorted_rows)} rows → {OUT}")
+
+    # Keep Supabase in sync with the JSON file.
+    from _supabase_upload import upsert_rows
+    upsert_rows("pork_daily", sorted_rows, on_conflict="date")
 
 if __name__ == "__main__":
     main()

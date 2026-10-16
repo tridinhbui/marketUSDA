@@ -2,23 +2,51 @@
 from __future__ import annotations
 
 import json
-import urllib.request
 import os
+import urllib.error
+import urllib.request
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://rtfvkquthwtgegcjxeoz.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+SUPABASE_URL = (
+    os.environ.get("SUPABASE_URL")
+    or "https://rtfvkquthwtgegcjxeoz.supabase.co"
+).strip().rstrip("/")
+
+SUPABASE_KEY = (
+    os.environ.get("SUPABASE_SERVICE_KEY") or ""
+).strip()
 
 
-def upsert_rows(table: str, rows: list[dict], on_conflict: str = "date"):
-    """Upsert rows into a Supabase table using the REST API.
-    
-    on_conflict: comma-separated column names for the unique constraint.
-    """
-    if not SUPABASE_KEY:
-        print(f"  [supabase] SUPABASE_SERVICE_KEY not set — skipping {table} upload.")
+def upsert_rows(
+    table: str,
+    rows: list[dict],
+    on_conflict: str = "date",
+):
+    if os.environ.get("SUPABASE_SKIP_UPLOAD") == "1":
+        print(
+            f"[supabase] Explicit JSON-only mode: "
+            f"skipping {table} upload."
+        )
         return
 
-    url = f"{SUPABASE_URL}/rest/v1/{table}?on_conflict={on_conflict}"
+    if (
+        not SUPABASE_KEY
+        or SUPABASE_KEY.lower() in ("null", "none", "undefined")
+    ):
+        raise RuntimeError(
+            "SUPABASE_SERVICE_KEY is missing; "
+            "JSON was generated but Supabase was NOT synced."
+        )
+
+    if not rows:
+        raise RuntimeError(
+            f"Refusing to sync empty dataset: {table}"
+        )
+
+    url = (
+        f"{SUPABASE_URL}/rest/v1/{table}"
+        f"?on_conflict={on_conflict}"
+    )
+
     headers = {
         "apikey": SUPABASE_KEY,
         "Authorization": f"Bearer {SUPABASE_KEY}",
@@ -26,20 +54,40 @@ def upsert_rows(table: str, rows: list[dict], on_conflict: str = "date"):
         "Prefer": "resolution=merge-duplicates",
     }
 
-    # Supabase REST API handles upsert in batches
-    BATCH = 500
+    batch_size = 500
     total = 0
-    for i in range(0, len(rows), BATCH):
-        batch = rows[i : i + BATCH]
+
+    for i in range(0, len(rows), batch_size):
+        batch = rows[i:i + batch_size]
         body = json.dumps(batch).encode("utf-8")
-        req = urllib.request.Request(url, data=body, headers=headers, method="POST")
+
+        request = urllib.request.Request(
+            url,
+            data=body,
+            headers=headers,
+            method="POST",
+        )
+
         try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                resp.read()
+            with urllib.request.urlopen(
+                request,
+                timeout=30,
+            ) as response:
+                response.read()
+
             total += len(batch)
-        except urllib.error.HTTPError as e:
-            error_body = e.read().decode("utf-8", "ignore")
-            print(f"  [supabase] Error uploading batch to {table}: {e.code} {error_body}")
+
+        except urllib.error.HTTPError as error:
+            error_body = error.read().decode(
+                "utf-8",
+                errors="ignore",
+            )
+
+            print(
+                f"[supabase] Error uploading {table}: "
+                f"{error.code} {error_body}"
+            )
+
             raise
 
-    print(f"  [supabase] Upserted {total} rows into {table}.")
+    print(f"[supabase] Upserted {total} rows into {table}.")
