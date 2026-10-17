@@ -3,7 +3,7 @@
   "report": "AMS_3647 - Weekly National Turkey Report",
   "item": "Whole Young Hen, 8-16 lb, U.S. Grade A",
   "priceUnit": "Cents Per Lb",
-  "generatedAt": "2026-10-16T09:23:34Z",
+  "generatedAt": "2026-10-17T08:55:11Z",
   "rows": [
     {
       "week_start": "01/02/2023",
@@ -3394,6 +3394,16 @@
       "wtd_avg": 181.67,
       "volume_lbs": "120",
       "breast_wtd_avg": 285.38
+    },
+    {
+      "week_start": "10/12/2026",
+      "week_end": "10/16/2026",
+      "condition": "Frozen",
+      "low_price": 177.0,
+      "high_price": 195.0,
+      "wtd_avg": 186,
+      "volume_lbs": "80",
+      "breast_wtd_avg": 305.0
     }
   ]
 }
