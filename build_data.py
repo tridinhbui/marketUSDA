@@ -133,20 +133,24 @@ def main():
     print(f"Wrote {len(rows)} rows to {OUT_PATH}")
 
     # Upload to Supabase
-    try:
-        from _supabase_upload import upsert_rows
-        sb_rows = [
-            {
-                "date": r["date"],
-                "national": r["national"],
-                "iowa_mn": r["iowaMn"],
-                "western": r["western"],
-            }
-            for r in rows
-        ]
-        upsert_rows("hog_daily", sb_rows, on_conflict="date")
-    except Exception as e:
-        print(f"  [supabase] hog upload failed: {e}")
+    # Let upload failures fail the script.
+    from _supabase_upload import upsert_rows
+
+    sb_rows = [
+        {
+            "date": r["date"],
+            "national": r["national"],
+            "iowa_mn": r["iowaMn"],
+            "western": r["western"],
+        }
+        for r in rows
+    ]
+
+    upsert_rows(
+        "hog_daily",
+        sb_rows,
+        on_conflict="date",
+    )
 
 
 if __name__ == "__main__":
