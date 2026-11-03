@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh all JSON under data/ by running each fetch script in order."""
+"""Refresh USDA JSON files and sync dashboard datasets."""
 from __future__ import annotations
 
 import subprocess
@@ -9,23 +9,43 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 
 SCRIPTS = [
-    "build_data.py",         # LM_HG217 hogs — public Datamart API
-    "_build_turkey.py",      # turkey — MARS API (USDA_MARS_API_KEY optional)
-    "_build_pork.py",        # retail pork — MARS API
-    "_build_pork_cutout.py", # LM_PK602 pork cutout + primals — MPR Datamart
+    "build_data.py",
+    "_build_turkey.py",
+    "_build_pork.py",
+    "_build_pork_cutout.py",
 ]
 
 
 def main() -> None:
+    failed = []
+
     for name in SCRIPTS:
         script = ROOT / name
+
         if not script.is_file():
-            print(f"skip (missing): {name}", file=sys.stderr)
+            print(
+                f"skip (missing): {name}",
+                file=sys.stderr,
+            )
             continue
-        print(f"\n=== {name} ===\n")
-        r = subprocess.run([sys.executable, str(script)], cwd=ROOT)
-        if r.returncode != 0:
-            sys.exit(r.returncode)
+
+        print(f"\n=== {name} ===\n", flush=True)
+
+        result = subprocess.run(
+            [sys.executable, str(script)],
+            cwd=ROOT,
+        )
+
+        if result.returncode != 0:
+            failed.append(name)
+
+    if failed:
+        print(
+            "Failed datasets: " + ", ".join(failed),
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     print("\nAll data scripts finished OK.")
 
 
