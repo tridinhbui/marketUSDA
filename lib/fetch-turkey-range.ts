@@ -62,8 +62,8 @@ function* chunkRange(isoStart: string, isoEnd: string): Generator<{ from: Date; 
 }
 
 function fmtMdY(d: Date): string {
-  const m = d.getUTCMonth() + 1;
-  const day = d.getUTCDate();
+  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
   const y = d.getUTCFullYear();
   return `${m}/${day}/${y}`;
 }
