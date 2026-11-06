@@ -2,7 +2,6 @@ import base64
 import json
 import logging
 import math
-import os
 import socket
 import time
 import urllib.error
@@ -17,15 +16,13 @@ END = date.today()
 CHUNK_DAYS = 365
 OUT_PATH = Path("public/data/turkey_hen_weekly.json")
 MAX_ATTEMPTS = 3
+MARS_API_KEY = "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs="
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 
 def get_mars_api_key() -> str:
-    key = (os.environ.get("USDA_MARS_API_KEY") or "").strip()
-    if not key or key.lower() in ("null", "undefined", "none"):
-        raise RuntimeError("The USDA_MARS_API_KEY environment variable is required.")
-    return key
+    return MARS_API_KEY
 
 
 def _price_or_none(value):

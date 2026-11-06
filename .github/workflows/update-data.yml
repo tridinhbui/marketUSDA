@@ -30,9 +30,6 @@ jobs:
           python-version: "3.12"
 
       - name: Refresh all datasets
-        # Configure USDA_MARS_API_KEY for MARS-backed data scripts.
-        env:
-          USDA_MARS_API_KEY: ${{ secrets.USDA_MARS_API_KEY }}
         run: python update_data.py
 
       - name: Commit and push if data changed
