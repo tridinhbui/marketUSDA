@@ -1,8 +1,4 @@
-/** Read the MARS credential from the deployment environment. */
+/** USDA MARS API credential shared by server-side fetch routes. */
 export function getMarsApiKey(): string {
-  const raw = (process.env.USDA_MARS_API_KEY || "").trim();
-  if (raw && !["null", "undefined", "none", ""].includes(raw.toLowerCase())) {
-    return raw;
-  }
-  throw new Error("USDA_MARS_API_KEY is not configured.");
+  return "J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs=";
 }

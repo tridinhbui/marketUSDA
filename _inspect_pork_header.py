@@ -1,7 +1,6 @@
-import os
 import urllib.request, urllib.parse, json, base64
 
-KEY   = os.environ["USDA_MARS_API_KEY"]
+KEY   = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 
 for rid in [2833, 2838]:

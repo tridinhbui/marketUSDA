@@ -5,16 +5,10 @@ Fetch USDA AMS Weekly Grocery Store Pork Feature Activity (AMS_2868)
             Butt Roast Bone-In, Breakfast Sausage
 - Saves data/pork_retail_weekly.json
 """
-import os
 import urllib.request, urllib.parse, json, base64
 from datetime import date, timedelta
 
-_raw = (os.environ.get("USDA_MARS_API_KEY") or "").strip()
-KEY = (
-    _MARS_DEFAULT
-    if (not _raw or _raw.lower() in ("null", "undefined", "none", ""))
-    else _raw
-)
+KEY        = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
 CREDS      = base64.b64encode(f'{KEY}:'.encode()).decode()
 BASE       = 'https://marsapi.ams.usda.gov/services/v1.1/reports/2868'
 CHUNK_DAYS = 90  # keep requests small enough
