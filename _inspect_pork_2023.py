@@ -1,6 +1,7 @@
+import os
 import urllib.request, urllib.parse, json, base64
 
-KEY   = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
+KEY   = os.environ["USDA_MARS_API_KEY"]
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 
 def fetch_details(start, end):

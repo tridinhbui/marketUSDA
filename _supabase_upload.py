@@ -2,18 +2,17 @@
 from __future__ import annotations
 
 import json
-import urllib.request
 import os
+import time
+import urllib.error
+import urllib.request
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://rtfvkquthwtgegcjxeoz.supabase.co")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 
 
 def upsert_rows(table: str, rows: list[dict], on_conflict: str = "date"):
-    """Upsert rows into a Supabase table using the REST API.
-    
-    on_conflict: comma-separated column names for the unique constraint.
-    """
+    """Upsert rows into Supabase using the REST API."""
     if not SUPABASE_KEY:
         print(f"  [supabase] SUPABASE_SERVICE_KEY not set — skipping {table} upload.")
         return
@@ -26,20 +25,28 @@ def upsert_rows(table: str, rows: list[dict], on_conflict: str = "date"):
         "Prefer": "resolution=merge-duplicates",
     }
 
-    # Supabase REST API handles upsert in batches
-    BATCH = 500
+    batch_size = 500
     total = 0
-    for i in range(0, len(rows), BATCH):
-        batch = rows[i : i + BATCH]
+    for i in range(0, len(rows), batch_size):
+        batch = rows[i : i + batch_size]
         body = json.dumps(batch).encode("utf-8")
         req = urllib.request.Request(url, data=body, headers=headers, method="POST")
-        try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                resp.read()
-            total += len(batch)
-        except urllib.error.HTTPError as e:
-            error_body = e.read().decode("utf-8", "ignore")
-            print(f"  [supabase] Error uploading batch to {table}: {e.code} {error_body}")
-            raise
+        for attempt in range(3):
+            try:
+                with urllib.request.urlopen(req, timeout=30) as resp:
+                    resp.read()
+                total += len(batch)
+                break
+            except urllib.error.HTTPError as e:
+                retryable = e.code == 429 or 500 <= e.code < 600
+                if retryable and attempt < 2:
+                    time.sleep(2**attempt)
+                    continue
+                print(f"  [supabase] Error uploading batch to {table}: HTTP {e.code}")
+                raise
+            except urllib.error.URLError:
+                if attempt == 2:
+                    raise
+                time.sleep(2**attempt)
 
     print(f"  [supabase] Upserted {total} rows into {table}.")

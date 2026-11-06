@@ -1,6 +1,7 @@
+import os
 import urllib.request, urllib.parse, json, base64
 
-key = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
+key = os.environ["USDA_MARS_API_KEY"]
 creds = base64.b64encode(f'{key}:'.encode()).decode()
 params = urllib.parse.urlencode({'q': 'report_begin_date=04/20/2026:04/24/2026', 'reportSection': 'Report Detail', 'allSections': 'true'})
 url = f'https://marsapi.ams.usda.gov/services/v1.1/reports/3647?{params}'

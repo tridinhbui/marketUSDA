@@ -1,19 +1,11 @@
 import https from "node:https";
 import { getMarsApiKey } from "@/lib/mars-credentials";
+import { mapTurkeyBreastRow, normalizeTurkeyWeeklyRows, type TurkeyWeeklyRecord } from "@/lib/turkey-weekly";
 
 const BASE = "https://marsapi.ams.usda.gov/services/v1.1/reports/3647";
 const CHUNK_DAYS = 365;
 
-export interface TurkeyRowRaw {
-  week_start: string;
-  week_end: string;
-  condition: string;
-  low_price: number;
-  high_price: number;
-  wtd_avg: number;
-  volume_lbs: string | null;
-  breast_wtd_avg: number | null;
-}
+export type TurkeyRowRaw = TurkeyWeeklyRecord;
 
 function asArray<T>(x: T | T[] | undefined): T[] {
   if (x == null) return [];
@@ -66,54 +58,6 @@ function fmtMdY(d: Date): string {
   const day = String(d.getUTCDate()).padStart(2, "0");
   const y = d.getUTCFullYear();
   return `${m}/${day}/${y}`;
-}
-
-function mapBreastRow(r: Record<string, unknown>): { week_start: string; condition: string; breast_wtd_avg: number } | null {
-  if (
-    r.item !== "Breasts,Boneless/Skinless" ||
-    r.class !== "Tom" ||
-    r.trade_status !== "Domestic" ||
-    r.condition !== "Fresh" ||
-    r.environment !== "Conventional" ||
-    r.freight !== "Delivered" ||
-    r.grade !== "N/A"
-  ) {
-    return null;
-  }
-  const ws = String(r.report_begin_date ?? "");
-  const cond = String(r.condition ?? "");
-  const wtd = Number(r.wtd_avg_price ?? NaN);
-  if (!ws || !Number.isFinite(wtd)) return null;
-  return { week_start: ws, condition: cond, breast_wtd_avg: wtd };
-}
-
-function mapRow(r: Record<string, unknown>): TurkeyRowRaw | null {
-  if (
-    r.item !== "Whole Young" ||
-    r.class !== "Hen" ||
-    r.size !== "8-16 lb" ||
-    r.grade !== "U.S. Grade A"
-  ) {
-    return null;
-  }
-  const ws = String(r.report_begin_date ?? "");
-  const we = String(r.report_end_date ?? "");
-  const cond = String(r.condition ?? "");
-  const low = Number(r.low_price);
-  const high = Number(r.high_price);
-  const wtd = Number(r.wtd_avg_price ?? r.wtd_avg ?? NaN);
-  if (!ws || !Number.isFinite(wtd)) return null;
-  const vol = r.volume != null && r.volume !== "" ? String(r.volume) : null;
-  return {
-    week_start: ws,
-    week_end: we,
-    condition: cond,
-    low_price: Number.isFinite(low) ? low : 0,
-    high_price: Number.isFinite(high) ? high : 0,
-    wtd_avg: wtd,
-    volume_lbs: vol,
-    breast_wtd_avg: null,
-  };
 }
 
 function getJsonViaHttps(
@@ -183,20 +127,9 @@ async function fetchChunk(from: Date, to: Date, creds: string): Promise<TurkeyRo
   for (const sec of sections as Record<string, unknown>[]) {
     if (sec.reportSection === "Report Detail") {
       const results = asArray<Record<string, unknown>>(sec.results as Record<string, unknown>[] | undefined);
-      const breastMap = new Map<string, number>();
-      for (const r of results) {
-        const b = mapBreastRow(r);
-        if (b) breastMap.set(b.week_start, b.breast_wtd_avg);
-      }
-      const out: TurkeyRowRaw[] = [];
-      for (const r of results) {
-        const row = mapRow(r);
-        if (row) {
-          row.breast_wtd_avg = breastMap.get(row.week_start) ?? null;
-          out.push(row);
-        }
-      }
-      return out;
+      return results
+        .map(mapTurkeyBreastRow)
+        .filter((row): row is TurkeyRowRaw => row !== null);
     }
   }
   return [];
@@ -218,21 +151,10 @@ export async function fetchTurkeyDateRange(isoStart: string, isoEnd: string): Pr
     merged.push(...rows);
   }
 
-  const seen = new Set<string>();
-  const dedup: TurkeyRowRaw[] = [];
-  for (const r of merged) {
-    const k = `${r.week_start}|${r.condition}`;
-    if (seen.has(k)) continue;
-    seen.add(k);
-    dedup.push(r);
+  const { rows: dedup, conflicts } = normalizeTurkeyWeeklyRows(merged);
+  if (conflicts.length > 0) {
+    throw new Error(`USDA returned conflicting breast prices for ${conflicts.length} Turkey week(s).`);
   }
-
-  dedup.sort((a, b) => {
-    const ta = Date.parse(a.week_start.includes("/") ? a.week_start : a.week_start);
-    const tb = Date.parse(b.week_start.includes("/") ? b.week_start : b.week_start);
-    if (!Number.isNaN(ta) && !Number.isNaN(tb) && ta !== tb) return ta - tb;
-    return a.week_start.localeCompare(b.week_start) || a.condition.localeCompare(b.condition);
-  });
 
   const startMs = Date.UTC(s.y, s.m - 1, s.d);
   const endMs = Date.UTC(e.y, e.m - 1, e.d, 23, 59, 59);
