@@ -1,3 +1,4 @@
+import os
 import urllib.request, xml.etree.ElementTree as ET, urllib.parse
 
 # Check MPR datamart for pork using the correct category
@@ -34,7 +35,7 @@ for url in candidates:
 
 # Also try MARS API NW_ reports
 import base64, json
-KEY   = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
+KEY   = os.environ["USDA_MARS_API_KEY"]
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 print('\n--- MARS API NW_ pork reports ---')
 for rid in [2833, 2835, 2838, 2868]:

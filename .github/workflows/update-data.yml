@@ -4,7 +4,7 @@
 name: Update USDA data
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: data-refresh-${{ github.ref }}
   cancel-in-progress: false
 
 on:
@@ -30,11 +30,9 @@ jobs:
           python-version: "3.12"
 
       - name: Refresh all datasets
-        # If USDA_MARS_API_KEY secret is unset, GitHub injects ""; scripts fall back to default key.
+        # Configure USDA_MARS_API_KEY for MARS-backed data scripts.
         env:
           USDA_MARS_API_KEY: ${{ secrets.USDA_MARS_API_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python update_data.py
 
       - name: Commit and push if data changed

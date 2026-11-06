@@ -1,7 +1,8 @@
+import os
 import urllib.request, urllib.parse, json, base64
 from collections import Counter
 
-KEY   = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
+KEY   = os.environ["USDA_MARS_API_KEY"]
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 
 params = urllib.parse.urlencode({'q': 'report_begin_date=04/18/2026:04/24/2026', 'allSections': 'true'})
