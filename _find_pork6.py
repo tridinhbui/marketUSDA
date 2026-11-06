@@ -1,4 +1,3 @@
-import os
 import urllib.request, xml.etree.ElementTree as ET, urllib.parse, json, base64
 
 # Test MPR Datamart with various pork/cutout slugs and categories
@@ -43,7 +42,7 @@ for cat, slug in test_cases:
 
 # Also check report 2868 detail sections
 print('\n--- MARS API report 2868 (Grocery Store Pork Feature) ---')
-KEY   = os.environ["USDA_MARS_API_KEY"]
+KEY   = 'J5v4ZF527NWTlOlFSErtwNYO/2+fa0m2ZLOtZqa3jXs='
 CREDS = base64.b64encode(f'{KEY}:'.encode()).decode()
 params = urllib.parse.urlencode({'q': 'report_begin_date=04/20/2026:04/29/2026', 'allSections': 'true'})
 url = f'https://marsapi.ams.usda.gov/services/v1.1/reports/2868?{params}'

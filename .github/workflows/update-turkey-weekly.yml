@@ -25,7 +25,6 @@ jobs:
 
       - name: Fetch recent USDA data and update both Turkey datasets
         env:
-          USDA_MARS_API_KEY: ${{ secrets.USDA_MARS_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python update_turkey_weekly.py
